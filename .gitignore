@@ -132,3 +132,6 @@ dmypy.json
 
 # wsgi
 /server.wsgi
+
+# videofile
+video/
