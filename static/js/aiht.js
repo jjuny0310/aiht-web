@@ -13,8 +13,8 @@ function onResults(results) {
   drawLandmarks(canvasCtx, results.poseLandmarks,
                 {color: '#ff0000', lineWidth: 2});
 
-  // 좌표 출력문
-  //document.getElementById('print').innerHTML = JSON.stringify(results.poseLandmarks);
+  // 관절좌표 Submit
+  // document.getElementById('joint_data').innerHTML = JSON.stringify(results.poseLandmarks);
 
   canvasCtx.restore();
 
