@@ -2,7 +2,7 @@ const videoElement = document.getElementsByClassName('input_video')[0];
 const canvasElement = document.getElementsByClassName('output_canvas')[0];
 const canvasCtx = canvasElement.getContext('2d');
 
-function onResults(results) {
+function poseOnResults(results) {
 
   canvasCtx.save();
   canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
@@ -13,8 +13,9 @@ function onResults(results) {
   drawLandmarks(canvasCtx, results.poseLandmarks,
                 {color: '#ff0000', lineWidth: 2});
 
-  // 관절좌표 Submit
+  //관절좌표 Submit
   // document.getElementById('joint_data').innerHTML = JSON.stringify(results.poseLandmarks);
+  // document.write(JSON.stringify(results.poseLandmarks));
 
   canvasCtx.restore();
 
@@ -29,7 +30,7 @@ pose.setOptions({
   minDetectionConfidence: 0.5,
   minTrackingConfidence: 0.5
 });
-pose.onResults(onResults);
+pose.onResults(poseOnResults);
 
 const camera = new Camera(videoElement, {
   onFrame: async () => {
