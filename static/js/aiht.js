@@ -13,9 +13,22 @@ function poseOnResults(results) {
   drawLandmarks(canvasCtx, results.poseLandmarks,
                 {color: '#ff0000', lineWidth: 2});
 
-  //관절좌표 Submit
-  // document.getElementById('joint_data').innerHTML = JSON.stringify(results.poseLandmarks);
-  // document.write(JSON.stringify(results.poseLandmarks));
+  // Ajax
+    var joint = JSON.stringify(results.poseLandmarks);
+
+    $.ajax({
+        type: 'POST',
+        url: '/ajax',
+        data: joint,
+        dataType : 'JSON',
+        contentType: "application/json",
+        success: function (data){
+            console.log(data)
+        },
+        error: function (request, status, error){
+            alert(error);
+        }
+    })
 
   canvasCtx.restore();
 
