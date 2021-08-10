@@ -56,6 +56,7 @@ def run(fitness_mode, pose_landmarks):
     keypoints_squat = []
     keypoints_pushup_left = []
     keypoints_pushup_right = []
+
     for idx, landmark in enumerate(pose_landmarks):
         keypoints_x.append(landmark['x'])
         keypoints_y.append(landmark['y'])

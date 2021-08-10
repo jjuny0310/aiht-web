@@ -14,12 +14,24 @@ function poseOnResults(results) {
                 {color: '#ff0000', lineWidth: 2});
 
   // Ajax
-    var keypoints = JSON.stringify(results.poseLandmarks);
+    var input_video = $('#input_video');
+    var trainer_video = $('#trainer_video');
+
+    var input_width = input_video.css('width').replace("px", "");
+    var input_height = input_video.css('height').replace("px", "");
+
+    var trainer_width = trainer_video.css('width').replace("px", "");
+    var trainer_height = trainer_video.css('height').replace("px", "");
+
+    var dataList = {
+        'pose_landmarks' : results.poseLandmarks, 'input_width' : input_width, 'input_height' : input_height,
+        'trainer_width' : trainer_width, 'trainer_height' : trainer_height
+    }
 
     $.ajax({
         type: 'POST',
         url: '/exercise_analysis',
-        data: keypoints,
+        data: JSON.stringify(dataList),
         dataType : 'JSON',
         contentType: "application/json",
         success: function (data){
