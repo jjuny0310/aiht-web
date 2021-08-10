@@ -14,19 +14,19 @@ function poseOnResults(results) {
                 {color: '#ff0000', lineWidth: 2});
 
   // Ajax
-    var joint = JSON.stringify(results.poseLandmarks);
+    var keypoints = JSON.stringify(results.poseLandmarks);
 
     $.ajax({
         type: 'POST',
         url: '/ajax',
-        data: joint,
+        data: keypoints,
         dataType : 'JSON',
         contentType: "application/json",
         success: function (data){
             console.log(data)
         },
         error: function (request, status, error){
-            alert(error);
+            // alert(error);
         }
     })
 
