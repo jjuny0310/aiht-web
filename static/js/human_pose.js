@@ -18,7 +18,7 @@ function poseOnResults(results) {
 
     $.ajax({
         type: 'POST',
-        url: '/ajax',
+        url: '/exercise_analysis',
         data: keypoints,
         dataType : 'JSON',
         contentType: "application/json",

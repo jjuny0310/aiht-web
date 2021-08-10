@@ -20,7 +20,8 @@ def squat(model, keypoints):
     else:
         print("NOTHING")
 
-def pushup(left_model, right_model, keypoints_left, keypoints_right, keypoints):
+
+def push_up(left_model, right_model, keypoints_left, keypoints_right, keypoints):
     left_keypoints_array = np.array([keypoints_left])
     right_keypoints_array = np.array([keypoints_right])
     left_predict = left_model.predict(left_keypoints_array)

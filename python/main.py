@@ -49,7 +49,8 @@ pushup_left_model = load_model('python/classification/model/left_pushup_model.h5
 pushup_right_model = load_model('python/classification/model/right_pushup_model.h5')
 squat_model = load_model('python/classification/model/squat_model.h5')
 
-def run(FITNESS_MODE, pose_landmarks):
+
+def run(fitness_mode, pose_landmarks):
     keypoints_x = []
     keypoints_y = []
     keypoints_squat = []
@@ -58,12 +59,12 @@ def run(FITNESS_MODE, pose_landmarks):
     for idx, landmark in enumerate(pose_landmarks):
         keypoints_x.append(landmark['x'])
         keypoints_y.append(landmark['y'])
-        if FITNESS_MODE == "SQUAT":
+        if fitness_mode == "SQUAT":
             if idx in squat_parts:
                 keypoints_squat.append(landmark['x'])
                 keypoints_squat.append(landmark['y'])
 
-        elif FITNESS_MODE == "PUSH_UP":
+        elif fitness_mode == "PUSH_UP":
             if idx in pushup_left_parts:
                 keypoints_pushup_left.append(landmark['x'])
                 keypoints_pushup_left.append(landmark['y'])
@@ -73,9 +74,9 @@ def run(FITNESS_MODE, pose_landmarks):
 
     keypoints = list(zip(keypoints_x, keypoints_y))
 
-    if FITNESS_MODE == "SQUAT":
+    if fitness_mode == "SQUAT":
         exercise.squat(squat_model, keypoints_squat)
-    elif FITNESS_MODE == "PUSH_UP":
-        exercise.pushup(pushup_left_model, pushup_right_model, keypoints_pushup_left, keypoints_pushup_right, keypoints)
+    elif fitness_mode == "PUSH_UP":
+        exercise.push_up(pushup_left_model, pushup_right_model, keypoints_pushup_left, keypoints_pushup_right, keypoints)
 
     return 0
