@@ -10,28 +10,31 @@ def index():
 
 @app.route('/exercise_analysis', methods=['POST'])
 def exercise_analysis():
-    # 관절좌표 저장
-    data = request.get_json()
-    pose_landmarks = data['pose_landmarks']
-    
-    # 해상도
-    input_width = data['input_width']
-    input_height = data['input_height']
-    trainer_width = data['trainer_width']
-    trainer_height = data['trainer_height']
+    try:
+        # 관절좌표 저장
+        data = request.get_json()
+        pose_landmarks = data['pose_landmarks']
 
-    print(f"캠 사이즈 : {input_width} x {input_height}")
-    print(f"비디오 사이즈 : {trainer_width} x {trainer_height}")
+        # 해상도
+        input_width = data['input_width']
+        input_height = data['input_height']
+        trainer_width = data['trainer_width']
+        trainer_height = data['trainer_height']
 
-    
-    # 운동 선택
-    fitness_mode = "SQUAT"
-    # fitness_mode = "PUSH_UP"
+        # print(f"캠 사이즈 : {input_width} x {input_height}")
+        # print(f"비디오 사이즈 : {trainer_width} x {trainer_height}")
 
-    # 메인 알고리즘
-    run(fitness_mode, pose_landmarks)
+        # 운동 선택
+        fitness_mode = "SQUAT"
+        # fitness_mode = "PUSH_UP"
 
-    return jsonify(result=pose_landmarks)
+        # 메인 알고리즘
+        run(fitness_mode, pose_landmarks)
+
+        return jsonify(result=pose_landmarks)
+    except:
+        print("pose_landmark is None")
+        return jsonify(result=False)
 
 
 if __name__ == '__main__':
