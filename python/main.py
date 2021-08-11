@@ -172,16 +172,16 @@ def run(fitness_mode, pose_landmarks, input_width, input_height):
             else:
                 correct_right_foot = False
 
+            # 스쿼트 자세 상태 저장
+            squat_correct_dict = {'correct_right_knee' : correct_right_knee, 'correct_left_knee' : correct_left_knee,
+                               'correct_right_ankle' : correct_right_ankle, 'correct_left_ankle' : correct_left_ankle,
+                               'correct_left_foot' : correct_left_foot, 'correct_right_foot' : correct_right_foot}
+
             # 스쿼트 자세 판별
             if correct_right_knee and correct_left_knee and correct_right_ankle and correct_left_ankle and correct_left_foot and correct_right_foot:
                 squat_correct_pose = True
             else:
                 squat_correct_pose = False
-
-            # 스쿼트 자세 상태 저장
-            squat_correct_dict = {'correct_right_knee' : correct_right_knee, 'correct_left_knee' : correct_left_knee,
-                               'correct_right_ankle' : correct_right_ankle, 'correct_left_ankle' : correct_left_ankle,
-                               'correct_left_foot' : correct_left_foot, 'correct_right_foot' : correct_right_foot}
 
             if squat_correct_pose and squat_check and left_leg_angle > 170 and right_leg_angle > 170:
                 squat_count += 1

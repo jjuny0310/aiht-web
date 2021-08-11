@@ -6,12 +6,12 @@ function poseOnResults(results) {
 
   canvasCtx.save();
   canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
-  canvasCtx.drawImage(
-      results.image, 0, 0, canvasElement.width, canvasElement.height);
+  canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height);
   drawConnectors(canvasCtx, results.poseLandmarks, POSE_CONNECTIONS,
-                 {color: '#00ff00', lineWidth: 4});
+                 {color: '#ffffff', lineWidth: 4});
   drawLandmarks(canvasCtx, results.poseLandmarks,
-                {color: '#ff0000', lineWidth: 2});
+                {color: '#BDBDBD', lineWidth: 2});
+
 
   // Ajax
     var input_video = $('#input_video');
@@ -49,6 +49,9 @@ function poseOnResults(results) {
             // alert(error);
         }
     })
+
+    // canvasCtx.font = "30px Arial";
+    // canvasCtx.fillText("안녕하세요", 10, 50)
 
   canvasCtx.restore();
 
