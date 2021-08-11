@@ -6,7 +6,7 @@ def squat(model, keypoints):
     keypoints_array = np.array([keypoints])
     predict = model.predict(keypoints_array)
 
-    # Nothing 자세 정확도
+    # Nothing 자세 기준치
     if predict[0][2] > 0.8:
         squat_state = np.argmax(predict[0])
     else:

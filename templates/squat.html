@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+    <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+    <style>
+        {# 좌우반전 #}
+        #video_in
+        {
+        transform: rotateY(180deg);
+        -webkit-transform:rotateY(180deg); /* Safari and Chrome */
+        -moz-transform:rotateY(180deg); /* Firefox */
+        }
+        {# 좌우반전 #}
+        #video_out
+        {
+        transform: rotateY(180deg);
+        -webkit-transform:rotateY(180deg); /* Safari and Chrome */
+        -moz-transform:rotateY(180deg); /* Firefox */
+        }
+    </style>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/control_utils_3d.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    {# 트레이너 비디오 재생 #}
+    <div style="float: left">
+        <video id="trainer_video" src="../static/video/1.mp4" width="480px" height="480px" autoplay muted></video>
+    </div>
+
+    {# 캠 화면 #}
+    <div class="container">
+        <video id="input_video" class="input_video" style="display: none"></video>
+        <canvas id="output_canvas" class="output_canvas" width="400px" height="400px"></canvas>
+    </div>
+
+<script src="../static/js/human_pose.js"></script>
+
+</body>
+</html>
