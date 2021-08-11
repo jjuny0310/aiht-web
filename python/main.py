@@ -45,6 +45,10 @@ squat_parts = [NOSE, LEFT_SHOULDER, RIGHT_SHOULDER, LEFT_ELBOW, RIGHT_ELBOW,
                LEFT_WRIST, RIGHT_WRIST, LEFT_HIP, RIGHT_HIP, LEFT_KNEE, RIGHT_KNEE,
                LEFT_ANKLE, RIGHT_ANKLE]
 
+# pushup_left_model = load_model('classification/model/left_pushup_model.h5')
+# pushup_right_model = load_model('classification/model/right_pushup_model.h5')
+# squat_model = load_model('classification/model/squat_model.h5')
+
 pushup_left_model = load_model('python/classification/model/left_pushup_model.h5')
 pushup_right_model = load_model('python/classification/model/right_pushup_model.h5')
 squat_model = load_model('python/classification/model/squat_model.h5')
