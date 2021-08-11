@@ -35,7 +35,15 @@ function poseOnResults(results) {
         dataType : 'JSON',
         contentType: "application/json",
         success: function (data){
-            console.log(data)
+            switch (data.fitness_mode){
+                case "SQUAT":
+                    console.log(data);
+                    break;
+                case "PUSH_UP":
+                    console.log(data);
+                    break;
+            }
+
         },
         error: function (request, status, error){
             // alert(error);

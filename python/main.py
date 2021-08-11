@@ -62,7 +62,7 @@ squat_check = False
 pushup_count = 0
 pushup_check = False
 
-def run(fitness_mode, pose_landmarks):
+def run(fitness_mode, pose_landmarks, input_width, input_height):
     keypoints_x = []
     keypoints_y = []
     keypoints_squat = []
@@ -95,11 +95,31 @@ def run(fitness_mode, pose_landmarks):
         predict = squat_model.predict(keypoints_array)
 
         # 다리 각도
-        left_leg_angle = getAngle3P(keypoints[RIGHT_HIP], keypoints[RIGHT_KNEE],
+        right_leg_angle = getAngle3P(keypoints[RIGHT_HIP], keypoints[RIGHT_KNEE],
                                     keypoints[RIGHT_ANKLE])
-        right_leg_angle = getAngle3P(keypoints[LEFT_HIP], keypoints[LEFT_KNEE], keypoints[LEFT_ANKLE])
+        left_leg_angle = getAngle3P(keypoints[LEFT_HIP], keypoints[LEFT_KNEE], keypoints[LEFT_ANKLE])
 
         squat_down_angle = 130
+
+        # 자세 교정 변수
+        good_left_knee_ragne = [keypoints[LEFT_SHOULDER][0] - 60 / int(input_width),
+                                 keypoints[LEFT_SHOULDER][0] + 60 / int(input_width)]
+        good_right_knee_ragne = [keypoints[RIGHT_SHOULDER][0] - 60 / int(input_width),
+                                keypoints[RIGHT_SHOULDER][0] + 60 / int(input_width)]
+
+        good_left_ankle_ragne = [keypoints[LEFT_SHOULDER][0] - 40 / int(input_width),
+                                  keypoints[LEFT_SHOULDER][0] + 40 / int(input_width)]
+        good_right_ankle_ragne = [keypoints[RIGHT_SHOULDER][0] - 40 / int(input_width),
+                                 keypoints[RIGHT_SHOULDER][0] + 40 / int(input_width)]
+
+        good_foot_angle = [25, 85]
+
+        right_foot_angle = getAngle3P(keypoints[RIGHT_FOOT_INDEX], keypoints[RIGHT_HEEL],
+                                     [keypoints[RIGHT_HEEL][0], keypoints[RIGHT_FOOT_INDEX][1]])
+
+        left_foot_angle = getAngle3P(keypoints[LEFT_FOOT_INDEX], keypoints[LEFT_HEEL],
+                                      [keypoints[LEFT_HEEL][0], keypoints[LEFT_FOOT_INDEX][1]])
+        squat_correct_dict = {}
 
         # Nothing 자세 기준치
         if predict[0][2] > 0.8:
@@ -110,11 +130,62 @@ def run(fitness_mode, pose_landmarks):
         # 자세 분류
         if squat_state == 0:
             state = "UP"
-            if squat_check and left_leg_angle > 170 and right_leg_angle > 170:
+
+            # 자세 교정
+            # 오른쪽 무릎 자세 교정
+            if good_right_knee_ragne[0] < keypoints[RIGHT_KNEE][0] < good_right_knee_ragne[1]:
+                # 바른 자세
+                correct_right_knee = True
+            else:
+                # 틀린 자세
+                correct_right_knee = False
+
+            # 왼쪽 무릎 자세 교정
+            if good_left_knee_ragne[0] < keypoints[LEFT_KNEE][0] < good_left_knee_ragne[1]:
+                correct_left_knee = True
+            else:
+                correct_left_knee = False
+
+            # 오른쪽 발목 자세 교정
+            if good_right_ankle_ragne[0] < keypoints[RIGHT_ANKLE][0] < good_right_ankle_ragne[1]:
+                correct_right_ankle = True
+            else:
+                correct_right_ankle = False
+
+            # 왼쪽 발목 자세 교정
+            if good_left_ankle_ragne[0] < keypoints[LEFT_ANKLE][0] < good_left_ankle_ragne[1]:
+                correct_left_ankle = True
+            else:
+                correct_left_ankle = False
+
+            # 왼쪽 발 각도
+            if good_foot_angle[0] < left_foot_angle < good_foot_angle[1] and keypoints[LEFT_FOOT_INDEX][0] < \
+                    keypoints[LEFT_HEEL][0]:
+                correct_left_foot = True
+            else:
+                correct_left_foot = False
+
+            # 오른쪽 발 각도
+            if good_foot_angle[0] < right_foot_angle < good_foot_angle[1] and keypoints[RIGHT_FOOT_INDEX][0] > \
+                    keypoints[RIGHT_HEEL][0]:
+                correct_right_foot = True
+            else:
+                correct_right_foot = False
+
+            # 스쿼트 자세 판별
+            if correct_right_knee and correct_left_knee and correct_right_ankle and correct_left_ankle and correct_left_foot and correct_right_foot:
+                squat_correct_pose = True
+            else:
+                squat_correct_pose = False
+
+            # 스쿼트 자세 상태 저장
+            squat_correct_dict = {'correct_right_knee' : correct_right_knee, 'correct_left_knee' : correct_left_knee,
+                               'correct_right_ankle' : correct_right_ankle, 'correct_left_ankle' : correct_left_ankle,
+                               'correct_left_foot' : correct_left_foot, 'correct_right_foot' : correct_right_foot}
+
+            if squat_correct_pose and squat_check and left_leg_angle > 170 and right_leg_angle > 170:
                 squat_count += 1
                 squat_check = False
-                sound_once = True
-                # print(F"스쿼트 갯수: {squat_count}")
 
         elif squat_state == 1:
             state = "DOWN"
@@ -124,7 +195,8 @@ def run(fitness_mode, pose_landmarks):
         else:
             state = "NOTHING"
 
-        return state, squat_count
+        return state, squat_count, squat_correct_dict
+
     # 푸쉬업
     elif fitness_mode == "PUSH_UP":
         left_keypoints_array = np.array([keypoints_pushup_left])
@@ -147,7 +219,7 @@ def run(fitness_mode, pose_landmarks):
             else:
                 state = "RIGHT_NOTHING"
 
-        return state
+        return state, pushup_count
 
 # 두 점 사이의 거리
 def getPoint2D(p1, p2):
