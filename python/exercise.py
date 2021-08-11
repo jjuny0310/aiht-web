@@ -1,6 +1,8 @@
 import numpy as np
 from python import main
 
+squat_count = 0
+pushup_count = 0
 
 def squat(model, keypoints):
     keypoints_array = np.array([keypoints])
@@ -13,12 +15,16 @@ def squat(model, keypoints):
         squat_state = np.argmax(predict[0][0:2])
 
     # 자세 분류
+    state = ""
     if squat_state == 0:
-        print("UP")
+        state = "UP"
     elif squat_state == 1:
-        print("DOWN")
+        state = "DOWN"
     else:
-        print("NOTHING")
+        state = "NOTHING"
+
+    return state
+
 
 
 def push_up(left_model, right_model, keypoints_left, keypoints_right, keypoints):

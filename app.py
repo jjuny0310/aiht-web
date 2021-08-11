@@ -34,12 +34,11 @@ def exercise_analysis():
         # fitness_mode = "PUSH_UP"
 
         # 메인 알고리즘
-        run(fitness_mode, pose_landmarks)
+        state, count = run(fitness_mode, pose_landmarks)
 
-        return jsonify(result=pose_landmarks)
+        return jsonify(state=state, count=count )
     except:
-        print("pose_landmark is None")
-        return jsonify(result=False)
+        return jsonify(success=False)
 
 
 if __name__ == '__main__':
