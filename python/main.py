@@ -1,6 +1,7 @@
 from tensorflow.keras.models import load_model
 import numpy as np
 import math
+import os
 
 # 관절 정의
 NOSE = 0
@@ -46,13 +47,15 @@ squat_parts = [NOSE, LEFT_SHOULDER, RIGHT_SHOULDER, LEFT_ELBOW, RIGHT_ELBOW,
                LEFT_WRIST, RIGHT_WRIST, LEFT_HIP, RIGHT_HIP, LEFT_KNEE, RIGHT_KNEE,
                LEFT_ANKLE, RIGHT_ANKLE]
 
-# pushup_left_model = load_model('classification/model/left_pushup_model.h5')
-# pushup_right_model = load_model('classification/model/right_pushup_model.h5')
-# squat_model = load_model('classification/model/squat_model.h5')
-
+# Flask 자체실행 모델 경로
 pushup_left_model = load_model('python/classification/model/left_pushup_model.h5')
 pushup_right_model = load_model('python/classification/model/right_pushup_model.h5')
 squat_model = load_model('python/classification/model/squat_model.h5')
+
+# # Apache로 실행할때 모델 경로
+# pushup_left_model = load_model('C:/Users/LeeYongJun/Desktop/AIHT/aiht-web/python/classification/model/left_pushup_model.h5')
+# pushup_right_model = load_model('C:/Users/LeeYongJun/Desktop/AIHT/aiht-web/python/classification/model/right_pushup_model.h5')
+# squat_model = load_model('C:/Users/LeeYongJun/Desktop/AIHT/aiht-web/python/classification/model/squat_model.h5')
 
 # 스쿼트 변수
 squat_count = 0

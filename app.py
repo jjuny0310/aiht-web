@@ -12,7 +12,6 @@ def start():
     return render_template('start.html')
 
 
-
 @app.route('/exercise_analysis', methods=['POST'])
 def exercise_analysis():
     try:
