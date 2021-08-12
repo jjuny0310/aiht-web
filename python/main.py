@@ -65,6 +65,7 @@ squat_correct_pose = False
 # 푸쉬업 변수
 pushup_count = 0
 pushup_check = False
+pushup_correct_pose = False
 
 def run(fitness_mode, pose_landmarks, input_width, input_height):
     # 관절 좌표 저장(분리해서)
@@ -188,6 +189,7 @@ def run(fitness_mode, pose_landmarks, input_width, input_height):
                 squat_correct_pose = True
             else:
                 squat_correct_pose = False
+                squat_check = False
 
             if squat_correct_pose and squat_check and left_leg_angle > 170 and right_leg_angle > 170:
                 squat_count += 1
@@ -198,6 +200,7 @@ def run(fitness_mode, pose_landmarks, input_width, input_height):
             if squat_correct_pose and right_leg_angle < squat_down_angle and left_leg_angle < squat_down_angle:
                 squat_check = True
 
+
         else:
             state = "NOTHING"
 
@@ -205,6 +208,9 @@ def run(fitness_mode, pose_landmarks, input_width, input_height):
 
     # 푸쉬업
     elif fitness_mode == "PUSH_UP":
+        global pushup_check, pushup_count, pushup_correct_pose
+
+        # LEFT 푸쉬업
         if keypoints[LEFT_SHOULDER][0] < keypoints[NOSE][0] or keypoints[RIGHT_SHOULDER][0] < \
                 keypoints[NOSE][0]:
             left_keypoints_array = np.array([keypoints_pushup_left])
@@ -216,6 +222,8 @@ def run(fitness_mode, pose_landmarks, input_width, input_height):
                 state = "LEFT_DOWN"
             else:
                 state = "NOTHING"
+        
+        # RIGHT 푸쉬업
         else:
             right_keypoints_array = np.array([keypoints_pushup_right])
             right_predict = pushup_right_model.predict(right_keypoints_array)
@@ -229,6 +237,7 @@ def run(fitness_mode, pose_landmarks, input_width, input_height):
 
         return state, pushup_count
 
+
 # 두 점 사이의 거리
 def getPoint2D(p1, p2):
     x1, y1 = p1
@@ -236,6 +245,7 @@ def getPoint2D(p1, p2):
     dist = (x2 - x1) ** 2 + (y2 - y1) ** 2
     dist = math.sqrt(dist)
     return dist
+
 
 # 삼각형 세변 길이의 각도(좌표를 받아서 각도 출력)
 def getAngle3P(p1, p2, p3):
