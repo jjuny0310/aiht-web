@@ -2,18 +2,30 @@ const videoElement = document.getElementsByClassName('input_video')[0];
 const canvasElement = document.getElementsByClassName('output_canvas')[0];
 const canvasCtx = canvasElement.getContext('2d');
 
+var state = "NOTHING";
+var count = 0;
 function poseOnResults(results) {
+    // Draw
+    if(state==="NOTHING"){
+        canvasCtx.save();
+        canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+        canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height);
+        drawConnectors(canvasCtx, results.poseLandmarks, POSE_CONNECTIONS,
+                     {color: '#ff0000', lineWidth: 3});
+        drawLandmarks(canvasCtx, results.poseLandmarks,
+                    {color: '#BDBDBD', lineWidth: 1});
+    }
+    else{
+        canvasCtx.save();
+        canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+        canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height);
+        drawConnectors(canvasCtx, results.poseLandmarks, POSE_CONNECTIONS,
+                     {color: '#ffffff', lineWidth: 3});
+        drawLandmarks(canvasCtx, results.poseLandmarks,
+                    {color: '#BDBDBD', lineWidth: 1});
+    }
 
-  canvasCtx.save();
-  canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
-  canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height);
-  drawConnectors(canvasCtx, results.poseLandmarks, POSE_CONNECTIONS,
-                 {color: '#ffffff', lineWidth: 4});
-  drawLandmarks(canvasCtx, results.poseLandmarks,
-                {color: '#BDBDBD', lineWidth: 2});
-
-
-  // Ajax
+    // Ajax
     var input_video = $('#input_video');
     var trainer_video = $('#trainer_video');
 
@@ -37,8 +49,10 @@ function poseOnResults(results) {
         success: function (data){
             switch (data.fitness_mode){
                 case "SQUAT":
+                    state = data.state
+                    document.getElementById('count').innerHTML = "횟수 : " + data.count
                     console.log(data);
-                    console.log(data.correct_dict['correct_left_foot'])
+
                     break;
                 case "PUSH_UP":
                     console.log(data);
@@ -50,9 +64,6 @@ function poseOnResults(results) {
             // alert(error);
         }
     })
-
-    // canvasCtx.font = "30px Arial";
-    // canvasCtx.fillText("안녕하세요", 10, 50)
 
   canvasCtx.restore();
 
@@ -73,7 +84,7 @@ const camera = new Camera(videoElement, {
   onFrame: async () => {
     await pose.send({image: videoElement});
   },
-  width: 400,
-  height: 400
+  width: 480,
+  height: 480
 });
 camera.start();
