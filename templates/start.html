@@ -5,14 +5,14 @@
     <script src="https://code.jquery.com/jquery-latest.min.js"></script>
     <style>
         {# 좌우반전 #}
-        #video_in
+        #input_video
         {
         transform: rotateY(180deg);
         -webkit-transform:rotateY(180deg); /* Safari and Chrome */
         -moz-transform:rotateY(180deg); /* Firefox */
         }
         {# 좌우반전 #}
-        #video_out
+        #output_canvas
         {
         transform: rotateY(180deg);
         -webkit-transform:rotateY(180deg); /* Safari and Chrome */
@@ -28,7 +28,7 @@
 
 <body>
     {# 트레이너 비디오 재생 #}
-    <div style="float: left">
+    <div style="display: none">
         <video id="trainer_video" src="../static/video/1.mp4" width="480px" height="480px" autoplay muted></video>
     </div>
 

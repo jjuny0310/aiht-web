@@ -57,12 +57,14 @@ squat_model = load_model('python/classification/model/squat_model.h5')
 # 스쿼트 변수
 squat_count = 0
 squat_check = False
+squat_correct_pose = False
 
 # 푸쉬업 변수
 pushup_count = 0
 pushup_check = False
 
 def run(fitness_mode, pose_landmarks, input_width, input_height):
+    # 관절 좌표 저장(분리해서)
     keypoints_x = []
     keypoints_y = []
     keypoints_squat = []
@@ -89,7 +91,7 @@ def run(fitness_mode, pose_landmarks, input_width, input_height):
     
     # 스쿼트
     if fitness_mode == "SQUAT":
-        global squat_check, squat_count
+        global squat_check, squat_count, squat_correct_pose
 
         keypoints_array = np.array([keypoints_squat])
         predict = squat_model.predict(keypoints_array)
@@ -121,13 +123,14 @@ def run(fitness_mode, pose_landmarks, input_width, input_height):
                                       [keypoints[LEFT_HEEL][0], keypoints[LEFT_FOOT_INDEX][1]])
         squat_correct_dict = {}
 
-        # Nothing 자세 기준치
+
+        # Nothing 자세 기준점
         if predict[0][2] > 0.8:
             squat_state = np.argmax(predict[0])
         else:
             squat_state = np.argmax(predict[0][0:2])
 
-        # 자세 분류
+        # 스쿼트 자세 분류
         if squat_state == 0:
             state = "UP"
 
@@ -159,14 +162,14 @@ def run(fitness_mode, pose_landmarks, input_width, input_height):
                 correct_left_ankle = False
 
             # 왼쪽 발 각도
-            if good_foot_angle[0] < left_foot_angle < good_foot_angle[1] and keypoints[LEFT_FOOT_INDEX][0] < \
+            if good_foot_angle[0] < left_foot_angle < good_foot_angle[1] and keypoints[LEFT_FOOT_INDEX][0] > \
                     keypoints[LEFT_HEEL][0]:
                 correct_left_foot = True
             else:
                 correct_left_foot = False
 
             # 오른쪽 발 각도
-            if good_foot_angle[0] < right_foot_angle < good_foot_angle[1] and keypoints[RIGHT_FOOT_INDEX][0] > \
+            if good_foot_angle[0] < right_foot_angle < good_foot_angle[1] and keypoints[RIGHT_FOOT_INDEX][0] < \
                     keypoints[RIGHT_HEEL][0]:
                 correct_right_foot = True
             else:
@@ -189,7 +192,7 @@ def run(fitness_mode, pose_landmarks, input_width, input_height):
 
         elif squat_state == 1:
             state = "DOWN"
-            if right_leg_angle < squat_down_angle and left_leg_angle < squat_down_angle:
+            if squat_correct_pose and right_leg_angle < squat_down_angle and left_leg_angle < squat_down_angle:
                 squat_check = True
 
         else:

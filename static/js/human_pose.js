@@ -38,6 +38,7 @@ function poseOnResults(results) {
             switch (data.fitness_mode){
                 case "SQUAT":
                     console.log(data);
+                    console.log(data.correct_dict['correct_left_foot'])
                     break;
                 case "PUSH_UP":
                     console.log(data);
