@@ -49,8 +49,8 @@ function poseOnResults(results) {
         success: function (data){
             switch (data.fitness_mode){
                 case "SQUAT":
-                    state = data.state
-                    document.getElementById('count').innerHTML = "횟수 : " + data.count
+                    state = data.state;
+                    document.getElementById('count').innerHTML = "횟수 : " + data.count;
                     console.log(data);
 
                     break;
