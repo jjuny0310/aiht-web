@@ -205,25 +205,27 @@ def run(fitness_mode, pose_landmarks, input_width, input_height):
 
     # 푸쉬업
     elif fitness_mode == "PUSH_UP":
-        left_keypoints_array = np.array([keypoints_pushup_left])
-        right_keypoints_array = np.array([keypoints_pushup_right])
-        left_predict = pushup_left_model.predict(left_keypoints_array)
-        right_predict = pushup_right_model.predict(right_keypoints_array)
         if keypoints[LEFT_SHOULDER][0] < keypoints[NOSE][0] or keypoints[RIGHT_SHOULDER][0] < \
                 keypoints[NOSE][0]:
+            left_keypoints_array = np.array([keypoints_pushup_left])
+            left_predict = pushup_left_model.predict(left_keypoints_array)
+
             if np.argmax(left_predict[0]) == 0:
                 state = "LEFT_UP"
             elif np.argmax(left_predict[0]) == 1:
                 state = "LEFT_DOWN"
             else:
-                state = "LEFT_NOTHING"
+                state = "NOTHING"
         else:
+            right_keypoints_array = np.array([keypoints_pushup_right])
+            right_predict = pushup_right_model.predict(right_keypoints_array)
+
             if np.argmax(right_predict[0]) == 0:
                 state = "RIGHT_UP"
             elif np.argmax(right_predict[0]) == 1:
                 state = "RIGHT_DOWN"
             else:
-                state = "RIGHT_NOTHING"
+                state = "NOTHING"
 
         return state, pushup_count
 

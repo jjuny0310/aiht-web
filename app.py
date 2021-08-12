@@ -29,8 +29,8 @@ def exercise_analysis():
         # print(f"비디오 사이즈 : {trainer_width} x {trainer_height}")
 
         # 운동 선택
-        fitness_mode = "SQUAT"
-        # fitness_mode = "PUSH_UP"
+        # fitness_mode = "SQUAT"
+        fitness_mode = "PUSH_UP"
 
         # 메인 알고리즘
         if fitness_mode == "SQUAT":
