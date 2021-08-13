@@ -90,7 +90,7 @@ def train(FITNESS_MODE):
 if __name__ == '__main__':
     # 학습할 운동 선택
     # FITNESS_MODE = "LEFT_PUSH_UP"
-    # FITNESS_MODE = "RIGHT_PUSH_UP"
-    FITNESS_MODE = "SQUAT"
+    FITNESS_MODE = "RIGHT_PUSH_UP"
+    # FITNESS_MODE = "SQUAT"
 
     train(FITNESS_MODE)

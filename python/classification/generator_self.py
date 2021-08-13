@@ -19,20 +19,6 @@ def init_variable(FITNESS_MODE):
         keypoints_name = ['nose_x', 'nose_y',
                           'left_shoulder_x', 'left_shoulder_y',
                           'right_shoulder_x', 'right_shoulder_y',
-                          'right_elbow_x', 'right_elbow_y',
-                          'right_wrist_x', 'right_wrist_y',
-                          'left_hip_x', 'left_hip_y',
-                          'right_hip_x', 'right_hip_y',
-                          'right_knee_x', 'right_knee_y',
-                          'right_ankle_x', 'right_ankle_y']
-
-        # 9개의 관절 좌표만 저장(좌우반전이므로 실제 left는 화면상의 right)
-        sel_keypoints = [0, 11, 12, 14, 16, 23, 24, 26, 28]
-        keypoints_num = 9
-    elif FITNESS_MODE == "RIGHT_PUSH_UP":
-        keypoints_name = ['nose_x', 'nose_y',
-                          'left_shoulder_x', 'left_shoulder_y',
-                          'right_shoulder_x', 'right_shoulder_y',
                           'left_elbow_x', 'left_elbow_y',
                           'left_wrist_x', 'left_wrist_y',
                           'left_hip_x', 'left_hip_y',
@@ -41,6 +27,20 @@ def init_variable(FITNESS_MODE):
                           'left_ankle_x', 'left_ankle_y']
 
         sel_keypoints = [0, 11, 12, 13, 15, 23, 24, 25, 27]
+        keypoints_num = 9
+    elif FITNESS_MODE == "RIGHT_PUSH_UP":
+        keypoints_name = ['nose_x', 'nose_y',
+                          'left_shoulder_x', 'left_shoulder_y',
+                          'right_shoulder_x', 'right_shoulder_y',
+                          'right_elbow_x', 'right_elbow_y',
+                          'right_wrist_x', 'right_wrist_y',
+                          'left_hip_x', 'left_hip_y',
+                          'right_hip_x', 'right_hip_y',
+                          'right_knee_x', 'right_knee_y',
+                          'right_ankle_x', 'right_ankle_y']
+
+        # 9개의 관절 좌표만 저장
+        sel_keypoints = [0, 11, 12, 14, 16, 23, 24, 26, 28]
         keypoints_num = 9
     else:
         keypoints_name = ['nose_x', 'nose_y',
@@ -132,18 +132,25 @@ def csv_generate(path, save_frequency, ready, pose_choice, FITNESS_MODE):
         height, width, _ = frame.shape
 
         # Frame 처리
-        frame = cv2.cvtColor(cv2.flip(frame, 1), cv2.COLOR_BGR2RGB)
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+
         results = pose.process(frame)
         frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
         mp_drawing.draw_landmarks(frame, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
 
         # 관절 좌표 저장
         if results.pose_landmarks != None:
+            keypoints_x = []
+            keypoints_y = []
+
             keypoints = []
             visibilitys = []
             for i, landmark in enumerate(results.pose_landmarks.landmark):
                 # 의미있는 좌표만 추출
                 if i in sel_keypoints:
+                    keypoints_x.append(landmark.x)  # 실제좌표 : x * width
+                    keypoints_y.append(landmark.y)  # 실제좌표 : y * height
+
                     keypoints.append(landmark.x)      # 실제좌표 : x * width
                     keypoints.append(landmark.y)      # 실제좌표 : y * height
                     visibilitys.append(landmark.visibility)
@@ -157,6 +164,9 @@ def csv_generate(path, save_frequency, ready, pose_choice, FITNESS_MODE):
             # 모든 관절 정확도 80% 이상이면 True
             if visibility_count == keypoints_num:
                 visibility_check = True
+
+        # 좌우 반전
+        frame = cv2.flip(frame, 1)  # 좌우반전
 
         # 텍스트 출력
         if initial_state:
@@ -183,7 +193,7 @@ def csv_generate(path, save_frequency, ready, pose_choice, FITNESS_MODE):
 
 if __name__ == '__main__':
     # 초기 옵션
-    save_frequency = 200    # 전체 저장 횟수
+    save_frequency = 800    # 전체 저장 횟수
     ready = 20               # 준비 시간
     
     # 경로 설정
@@ -191,13 +201,13 @@ if __name__ == '__main__':
 
     # 운동 선택
     # FITNESS_MODE = "LEFT_PUSH_UP"
-    # FITNESS_MODE = "RIGHT_PUSH_UP"
-    FITNESS_MODE = "SQUAT"
+    FITNESS_MODE = "RIGHT_PUSH_UP"
+    # FITNESS_MODE = "SQUAT"
 
     # 수집할 자세 선택
-    pose_choice = 'UP'
+    # pose_choice = 'UP'
     # pose_choice = 'DOWN'
-    # pose_choice = 'NOTHING'
+    pose_choice = 'NOTHING'
 
     init_variable(FITNESS_MODE)
     csv_generate(path, save_frequency, ready, pose_choice=pose_choice, FITNESS_MODE=FITNESS_MODE)
