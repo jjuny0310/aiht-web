@@ -39,17 +39,20 @@ LEFT_FOOT_INDEX = 31
 RIGHT_FOOT_INDEX = 32
 
 # 모델 로드
-pushup_left_parts = [NOSE, LEFT_SHOULDER, RIGHT_SHOULDER, RIGHT_ELBOW,
+pushup_right_parts = [NOSE, LEFT_SHOULDER, RIGHT_SHOULDER, RIGHT_ELBOW,
                      RIGHT_WRIST, LEFT_HIP, RIGHT_HIP, RIGHT_KNEE, RIGHT_ANKLE]
-pushup_right_parts = [NOSE, LEFT_SHOULDER, RIGHT_SHOULDER, LEFT_ELBOW,
+pushup_left_parts = [NOSE, LEFT_SHOULDER, RIGHT_SHOULDER, LEFT_ELBOW,
                       LEFT_WRIST, LEFT_HIP, RIGHT_HIP, LEFT_KNEE, LEFT_ANKLE]
 squat_parts = [NOSE, LEFT_SHOULDER, RIGHT_SHOULDER, LEFT_ELBOW, RIGHT_ELBOW,
                LEFT_WRIST, RIGHT_WRIST, LEFT_HIP, RIGHT_HIP, LEFT_KNEE, RIGHT_KNEE,
                LEFT_ANKLE, RIGHT_ANKLE]
 
 # Flask 자체실행 모델 경로
-pushup_left_model = load_model('python/classification/model/left_pushup_model.h5')
-pushup_right_model = load_model('python/classification/model/right_pushup_model.h5')
+# pushup_left_model = load_model('python/classification/model/left_pushup_model.h5')
+# pushup_right_model = load_model('python/classification/model/right_pushup_model.h5')
+
+pushup_left_model = load_model('python/classification/model/left_temp.h5')
+pushup_right_model = load_model('python/classification/model/right_temp.h5')
 squat_model = load_model('python/classification/model/squat_model.h5')
 
 # # Apache로 실행할때 모델 경로
@@ -211,7 +214,7 @@ def run(fitness_mode, pose_landmarks, input_width, input_height):
         global pushup_check, pushup_count, pushup_correct_pose
 
         # LEFT 푸쉬업
-        if keypoints[LEFT_SHOULDER][0] < keypoints[NOSE][0] or keypoints[RIGHT_SHOULDER][0] < \
+        if keypoints[LEFT_SHOULDER][0] > keypoints[NOSE][0] or keypoints[RIGHT_SHOULDER][0] > \
                 keypoints[NOSE][0]:
             left_keypoints_array = np.array([keypoints_pushup_left])
             left_predict = pushup_left_model.predict(left_keypoints_array)

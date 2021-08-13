@@ -5,7 +5,7 @@ const canvasCtx = canvasElement.getContext('2d');
 var state = "NOTHING";
 var count = 0;
 function poseOnResults(results) {
-    // Draw
+    // 관절선 그리기
     if(state==="NOTHING"){
         canvasCtx.save();
         canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
