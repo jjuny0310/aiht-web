@@ -193,21 +193,21 @@ def csv_generate(path, save_frequency, ready, pose_choice, FITNESS_MODE):
 
 if __name__ == '__main__':
     # 초기 옵션
-    save_frequency = 800    # 전체 저장 횟수
+    save_frequency = 200    # 전체 저장 횟수
     ready = 20               # 준비 시간
     
     # 경로 설정
     path = 0                # 캠
 
     # 운동 선택
-    # FITNESS_MODE = "LEFT_PUSH_UP"
-    FITNESS_MODE = "RIGHT_PUSH_UP"
+    FITNESS_MODE = "LEFT_PUSH_UP"
+    # FITNESS_MODE = "RIGHT_PUSH_UP"
     # FITNESS_MODE = "SQUAT"
 
     # 수집할 자세 선택
-    # pose_choice = 'UP'
+    pose_choice = 'UP'
     # pose_choice = 'DOWN'
-    pose_choice = 'NOTHING'
+    # pose_choice = 'NOTHING'
 
     init_variable(FITNESS_MODE)
     csv_generate(path, save_frequency, ready, pose_choice=pose_choice, FITNESS_MODE=FITNESS_MODE)

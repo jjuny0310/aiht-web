@@ -190,18 +190,18 @@ if __name__ == '__main__':
     path = "video/push_up/1.mp4"
 
     # 수집할 운동 선택
-    # FITNESS_MODE = "LEFT_PUSH_UP"
-    FITNESS_MODE = "RIGHT_PUSH_UP"
+    FITNESS_MODE = "LEFT_PUSH_UP"
+    # FITNESS_MODE = "RIGHT_PUSH_UP"
     # FITNESS_MODE = "SQUAT"
 
     # 수집할 자세 선택
-    # pose_choice = 'UP'
-    pose_choice = 'DOWN'
+    pose_choice = 'UP'
+    # pose_choice = 'DOWN'
     # pose_choice = 'NOTHING'
 
     # 푸쉬업만 선택(좌우반전 여부)
-    # reverse = True
-    reverse = False
+    reverse = True
+    # reverse = False
 
     init_variable(FITNESS_MODE)
     csv_generate(path, pose_choice=pose_choice, FITNESS_MODE=FITNESS_MODE, reverse=reverse)
