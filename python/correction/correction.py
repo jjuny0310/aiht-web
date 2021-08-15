@@ -7,6 +7,41 @@ import math
 mp_drawing = mp.solutions.drawing_utils
 mp_pose = mp.solutions.pose
 
+# 관절 정의
+NOSE = 0
+LEFT_EYE_INNER = 1
+LEFT_EYE = 2
+LEFT_EYE_OUTER = 3
+RIGHT_EYE_INNER = 4
+RIGHT_EYE = 5
+RIGHT_EYE_OUTER = 6
+LEFT_EAR = 7
+RIGHT_EAR = 8
+MOUTH_LEFT = 9
+MOUTH_RIGHT = 10
+LEFT_SHOULDER = 11
+RIGHT_SHOULDER = 12
+LEFT_ELBOW = 13
+RIGHT_ELBOW = 14
+LEFT_WRIST = 15
+RIGHT_WRIST = 16
+LEFT_PINKY = 17
+RIGHT_PINKY = 18
+LEFT_INDEX = 19
+RIGHT_INDEX = 20
+LEFT_THUMB = 21
+RIGHT_THUMB = 22
+LEFT_HIP = 23
+RIGHT_HIP = 24
+LEFT_KNEE = 25
+RIGHT_KNEE = 26
+LEFT_ANKLE = 27
+RIGHT_ANKLE = 28
+LEFT_HEEL = 29
+RIGHT_HEEL = 30
+LEFT_FOOT_INDEX = 31
+RIGHT_FOOT_INDEX = 32
+
 
 # 두 점 사이의 거리
 def getPoint2D(p1, p2):
@@ -37,6 +72,12 @@ def pose_correction(path, FITNESS_MODE):
     keypoints = []
     visibilitys = []
 
+    # 자세 교정 변수
+    leg_angle_list = []
+    min_leg_angle = 999
+    leg_angle_check = False
+
+
     cap = cv2.VideoCapture(path)
     success = True
     while success:
@@ -61,26 +102,39 @@ def pose_correction(path, FITNESS_MODE):
                 visibilitys.append(landmark.visibility)
 
             keypoints = list(zip(keypoints_x, keypoints_y))
-            print(keypoints)
 
-        # 좌우 반전 상시
         if FITNESS_MODE == "SQUAT":
-            # frame = cv2.flip(frame, 1)
-            pass
+            # 다리 각도 저장
+            leg_angle = getAngle3P(keypoints[LEFT_HIP], keypoints[LEFT_KNEE], keypoints[LEFT_ANKLE])
+            if leg_angle <= 150:
+                if min_leg_angle > leg_angle:
+                    min_leg_angle = leg_angle
+                else:
+                    if leg_angle_check:
+                        leg_angle_list.append(min_leg_angle)
+                        min_leg_angle = 999
+                        leg_angle_check = False
+            else:
+                leg_angle_check = True
+
+            # 발 각도 저장
+            right_foot_angle = getAngle3P(keypoints[RIGHT_FOOT_INDEX], keypoints[RIGHT_HEEL],
+                                         [keypoints[RIGHT_HEEL][0], keypoints[RIGHT_FOOT_INDEX][1]])
+
+            left_foot_angle = getAngle3P(keypoints[LEFT_FOOT_INDEX], keypoints[LEFT_HEEL],
+                                          [keypoints[LEFT_HEEL][0], keypoints[LEFT_FOOT_INDEX][1]])
+
 
         elif FITNESS_MODE == "PUSH_UP":
             pass
 
+        frame = cv2.flip(frame, 1)
         # Imshow
-        cv2.imshow('Keypoints DataSet Generate', frame)
+        cv2.imshow('Pose Correction', frame)
         k = cv2.waitKey(1)
         if k == 27:
+            print(f"평균 다리 각도 : {sum(leg_angle_list) / len(leg_angle_list)}")
             break
-        elif k == ord('s') or k == ord('S'):
-            if save_state:
-                save_state = False
-            else:
-                save_state = True
 
     cap.release()
 
