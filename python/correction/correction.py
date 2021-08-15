@@ -154,11 +154,11 @@ def pose_correction(path, FITNESS_MODE):
         if k == 27:
             if FITNESS_MODE == "SQUAT":
                 print(f"<'{FITNESS_MODE}' 트레이너 비디오 종합 결과>")
-                print(f"평균 Down 다리 각도 : {round(sum(leg_angle_list) / len(leg_angle_list), 2)}")
-                print(f"왼발 각도 범위(최소~최대) : {round(min(left_foot_angle_list), 2)} ~ {round(max(left_foot_angle_list), 2)}")
-                print(f"오른발 각도 범위(최소~최대) : {round(min(right_foot_angle_list), 2)} ~ {round(max(right_foot_angle_list), 2)}")
-                print(f"왼쪽 어깨~발목 사이 거리 : {round(min(left_shoulder_to_ankle_list), 2)} ~ {round(max(left_shoulder_to_ankle_list), 2)}")
-                print(f"오른쪽 어깨~발목 사이 거리 : {round(min(right_shoulder_to_ankle_list), 2)} ~ {round(max(right_shoulder_to_ankle_list), 2)}")
+                print(f"평균 Down 다리 각도 : {round(sum(leg_angle_list) / len(leg_angle_list), 2)}°")
+                print(f"왼발 각도 범위(최소~최대) : {round(min(left_foot_angle_list), 2)}° ~ {round(max(left_foot_angle_list), 2)}°")
+                print(f"오른발 각도 범위(최소~최대) : {round(min(right_foot_angle_list), 2)}° ~ {round(max(right_foot_angle_list), 2)}°")
+                print(f"왼쪽 어깨~발목 사이 거리(0~1) : {round(min(left_shoulder_to_ankle_list), 2)} ~ {round(max(left_shoulder_to_ankle_list), 2)}")
+                print(f"오른쪽 어깨~발목 사이 거리(0~1) : {round(min(right_shoulder_to_ankle_list), 2)} ~ {round(max(right_shoulder_to_ankle_list), 2)}")
             elif FITNESS_MODE == "PUSH_UP":
                 print(f"'{FITNESS_MODE}' 트레이너 비디오 종합 결과")
 
