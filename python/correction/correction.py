@@ -85,6 +85,11 @@ def pose_correction(path, FITNESS_MODE):
     right_shoulder_to_ankle_list = []
     left_shoulder_to_ankle_list = []
 
+    # 무릎 범위 변수
+    right_shoulder_to_knee_list = []
+    left_shoulder_to_knee_list = []
+
+
     
 
     cap = cv2.VideoCapture(path)
@@ -140,7 +145,11 @@ def pose_correction(path, FITNESS_MODE):
             right_shoulder_to_ankle_list.append(right_shoulder_to_ankle)
             left_shoulder_to_ankle_list.append(left_shoulder_to_ankle)
 
-
+            # 무릎 범위 저장
+            right_shoulder_to_knee = abs(keypoints[RIGHT_SHOULDER][0] - keypoints[RIGHT_KNEE][0])
+            left_shoulder_to_knee = abs(keypoints[LEFT_SHOULDER][0] - keypoints[LEFT_KNEE][0])
+            right_shoulder_to_knee_list.append(right_shoulder_to_knee)
+            left_shoulder_to_knee_list.append(left_shoulder_to_knee)
 
 
         elif FITNESS_MODE == "PUSH_UP":
@@ -155,14 +164,22 @@ def pose_correction(path, FITNESS_MODE):
             if FITNESS_MODE == "SQUAT":
                 print(f"<'{FITNESS_MODE}' 트레이너 비디오 종합 결과>")
                 print(f"평균 Down 다리 각도 : {round(sum(leg_angle_list) / len(leg_angle_list), 2)}°")
+                print("=================================================================================================")
+
                 print(f"왼발 각도 범위(최소~최대) : {round(min(left_foot_angle_list), 2)}° ~ {round(max(left_foot_angle_list), 2)}°")
                 print(f"오른발 각도 범위(최소~최대) : {round(min(right_foot_angle_list), 2)}° ~ {round(max(right_foot_angle_list), 2)}°")
-                print(f"왼쪽 어깨~발목 사이 거리(0~1) : {round(min(left_shoulder_to_ankle_list), 2)} ~ {round(max(left_shoulder_to_ankle_list), 2)}")
-                print(f"오른쪽 어깨~발목 사이 거리(0~1) : {round(min(right_shoulder_to_ankle_list), 2)} ~ {round(max(right_shoulder_to_ankle_list), 2)}")
+                print("=================================================================================================")
+
+                print(f"왼쪽 어깨~발목 사이 거리(0~1) : {min(left_shoulder_to_ankle_list):.10f} ~ {max(left_shoulder_to_ankle_list):.10f}")
+                print(f"오른쪽 어깨~발목 사이 거리(0~1) : {min(right_shoulder_to_ankle_list):.10f} ~ {max(right_shoulder_to_ankle_list):.10f}")
+                print("=================================================================================================")
+
+                print(f"왼쪽 어깨~무릎 사이 거리(0~1) : {min(left_shoulder_to_knee_list):.10f} ~ {max(left_shoulder_to_knee_list):.10f}")
+                print(f"오른쪽 어깨~무릎 사이 거리(0~1) : {min(right_shoulder_to_knee_list):.10f} ~ {max(right_shoulder_to_knee_list):.10f}")
+                print("=================================================================================================")
+
             elif FITNESS_MODE == "PUSH_UP":
                 print(f"'{FITNESS_MODE}' 트레이너 비디오 종합 결과")
-
-
             break
 
     cap.release()

@@ -70,6 +70,11 @@ pushup_count = 0
 pushup_check = False
 pushup_correct_pose = False
 
+# 스쿼트 자세 교정 변수
+
+# 푸쉬업 자세 교정 변수
+
+
 def run(fitness_mode, pose_landmarks, input_width, input_height):
     # 관절 좌표 저장(분리해서)
     keypoints_x = []
