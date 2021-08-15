@@ -72,10 +72,15 @@ def pose_correction(path, FITNESS_MODE):
     keypoints = []
     visibilitys = []
 
-    # 자세 교정 변수
+    # 다리 각도 변수
     leg_angle_list = []
     min_leg_angle = 999
     leg_angle_check = False
+
+    # 발 각도 변수
+    right_foot_angle_list = []
+    left_foot_angle_list = []
+
 
 
     cap = cv2.VideoCapture(path)
@@ -120,10 +125,10 @@ def pose_correction(path, FITNESS_MODE):
             # 발 각도 저장
             right_foot_angle = getAngle3P(keypoints[RIGHT_FOOT_INDEX], keypoints[RIGHT_HEEL],
                                          [keypoints[RIGHT_HEEL][0], keypoints[RIGHT_FOOT_INDEX][1]])
-
             left_foot_angle = getAngle3P(keypoints[LEFT_FOOT_INDEX], keypoints[LEFT_HEEL],
                                           [keypoints[LEFT_HEEL][0], keypoints[LEFT_FOOT_INDEX][1]])
-
+            right_foot_angle_list.append(right_foot_angle)
+            left_foot_angle_list.append(left_foot_angle)
 
         elif FITNESS_MODE == "PUSH_UP":
             pass
@@ -133,7 +138,15 @@ def pose_correction(path, FITNESS_MODE):
         cv2.imshow('Pose Correction', frame)
         k = cv2.waitKey(1)
         if k == 27:
-            print(f"평균 다리 각도 : {sum(leg_angle_list) / len(leg_angle_list)}")
+            if FITNESS_MODE == "SQUAT":
+                print(f"<'{FITNESS_MODE}' 트레이너 비디오 종합 결과>")
+                print(f"평균 Down 다리 각도 : {sum(leg_angle_list) / len(leg_angle_list)}")
+                print(f"왼발 각도 범위(최소~최대) : {min(left_foot_angle_list)} ~ {max(left_foot_angle_list)}")
+                print(f"오른발 각도 범위(최소~최대) : {min(right_foot_angle_list)} ~ {max(right_foot_angle_list)}")
+            elif FITNESS_MODE == "PUSH_UP":
+                print(f"'{FITNESS_MODE}' 트레이너 비디오 종합 결과")
+
+
             break
 
     cap.release()
