@@ -55,8 +55,9 @@ def login():
         name = request.form['username']
         passwd = request.form['password']
         try:
-            data = User.query.filter_by(username=name).first()
-            if data is not None:
+            old_user = User.query.filter_by(username=name).first()
+
+            if old_user is not None and check_password_hash(old_user.password, passwd):
                 session['login'] = True
                 return redirect(url_for('index'))
             else:
