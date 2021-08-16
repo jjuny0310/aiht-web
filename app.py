@@ -38,14 +38,16 @@ class User(db.Model):
 
 
 @app.route('/')
-def index():
+def home():
     return render_template('index.html')
 
 
 @app.route('/start')
 def start():
-    return render_template('start.html')
-
+    if session['login']:
+        return render_template('start.html')
+    else:
+        return redirect(url_for('login'))
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -60,7 +62,7 @@ def login():
             if old_user is not None and check_password_hash(old_user.password, passwd):
                 session['login'] = True
                 session['nickname'] = old_user.nickname
-                return redirect(url_for('index'))
+                return redirect(url_for('home'))
             else:
                 return "로그인 실패"
         except:
@@ -74,14 +76,14 @@ def signup():
                         nickname=request.form['nickname'])
         db.session.add(new_user)
         db.session.commit()
-        return render_template('login.html')
+        return redirect(url_for('login'))
     return render_template('signup.html')
 
 
 @app.route('/logout')
 def logout():
     session['login'] = False
-    return redirect(url_for('index'))
+    return redirect(url_for('home'))
 
 
 @app.route('/exercise_analysis', methods=['POST'])

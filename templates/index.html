@@ -23,13 +23,13 @@
         <nav id="sidebar-wrapper">
             <ul class="sidebar-nav">
                 {% if session['login'] %}
-                    <li class="sidebar-brand">'{{ session['nickname'] }}'님</li>
+                    <li class="sidebar-brand" style="color: white"><strong>{{ session['nickname'] }}</strong>님</li>
                     <li class="sidebar-nav-item"><a href="/">Home</a></li>
                     <li class="sidebar-nav-item"><a href="#services">내 정보</a></li>
                     <li class="sidebar-nav-item"><a href="#portfolio">운동내역</a></li>
                     <li class="sidebar-nav-item"><a href="/logout">로그아웃</a></li>
                 {% else %}
-                    <li class="sidebar-brand"><a href="/login">로그인 하기</a></li>
+                    <li class="sidebar-brand"><a href="/login"><strong>로그인</strong>하세요</a></li>
                     <li class="sidebar-nav-item"><a href="/">Home</a></li>
                 {% endif %}
             </ul>
@@ -39,7 +39,7 @@
             <div class="container px-4 px-lg-5 text-center">
                 <h1 class="mb-1" style="color: white">AI Home Training</h1>
                 <h3 class="mb-5" style="color: white"><em>지금 바로 시작하세요</em></h3>
-                <a class="btn btn-primary btn-xl" href="/login">START</a>
+                <a class="btn btn-primary btn-xl" href="/start">START</a>
             </div>
         </header>
         <!-- Exercises-->

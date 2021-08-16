@@ -134,5 +134,5 @@ dmypy.json
 /server.wsgi
 
 # videofile
-static/trainer video/
+static/video/
 python/classification/video
