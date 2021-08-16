@@ -59,6 +59,7 @@ def login():
 
             if old_user is not None and check_password_hash(old_user.password, passwd):
                 session['login'] = True
+                session['nickname'] = old_user.nickname
                 return redirect(url_for('index'))
             else:
                 return "로그인 실패"
@@ -75,6 +76,12 @@ def signup():
         db.session.commit()
         return render_template('login.html')
     return render_template('signup.html')
+
+
+@app.route('/logout')
+def logout():
+    session['login'] = False
+    return redirect(url_for('index'))
 
 
 @app.route('/exercise_analysis', methods=['POST'])
@@ -110,4 +117,8 @@ def exercise_analysis():
 
 
 if __name__ == '__main__':
+    # debug 모드는 소스코드 변경시 자동 재시작
     app.run(debug=True)
+    
+    # 서비스 시 debug 해제 해야함
+    # app.run()
