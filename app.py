@@ -67,21 +67,43 @@ def login():
                 session['nickname'] = old_user.nickname
                 return redirect(url_for('home'))
             else:
-                return "로그인 실패"
+                return render_template('login.html', login_fail=True)
         except:
-            return '로그인 실패'
+            return render_template('login.html', login_fail=True)
 
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
-        new_user = User(username=request.form['username'], password=request.form['password'],
-                        nickname=request.form['nickname'])
-        db.session.add(new_user)
-        db.session.commit()
-        return redirect(url_for('login'))
-    return render_template('signup.html')
+        try:
+            # 아이디 규칙(영문과 숫자만)
+            username_rule = False
+            for i in request.form['username']:
+                if i.encode().isalpha() or i.isnumeric():
+                    username_rule = True
+                else:
+                    username_rule = False
+                    break
 
+            # 아이디 길이 제한
+            if len(request.form['username']) < 4:
+                return render_template('signup.html', username_len_fail=True)
+            # 아이디 규칙
+            elif not username_rule:
+                return render_template('signup.html', username_rule_fail=True)
+            # 비밀번호 길이 제한
+            elif len(request.form['password']) < 6:
+                return render_template('signup.html', password_len_fail=True)
+            else:
+                new_user = User(username=request.form['username'], password=request.form['password'],
+                                nickname=request.form['nickname'])
+                db.session.add(new_user)
+                db.session.commit()
+                return redirect(url_for('login'))
+        except:
+            return render_template('signup.html', signup_fail=True)
+    else:
+        return render_template('signup.html')
 
 @app.route('/logout')
 def logout():
@@ -106,8 +128,8 @@ def exercise_analysis():
         # print(f"비디오 사이즈 : {trainer_width} x {trainer_height}")
 
         # 운동 선택
-        # fitness_mode = "SQUAT"
-        fitness_mode = "PUSH_UP"
+        fitness_mode = "SQUAT"
+        # fitness_mode = "PUSH_UP"
 
         # 메인 알고리즘
         if fitness_mode == "SQUAT":

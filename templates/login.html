@@ -40,17 +40,21 @@
 						<i class="zmdi zmdi-font"></i>
 					</span>
 
+                    {% if login_fail %}
+                    <strong style="color: red">아이디 또는 비밀번호를 확인해주세요.</strong>
+                    {% endif %}
+
 					<div class="wrap-input100 validate-input" data-validate = "아이디를 입력해주세요.">
-						<input class="input100" type="text" name="username">
-						<span class="focus-input100" data-placeholder="Username"></span>
+						<input class="input100" type="text" name="username" placeholder="아이디">
+						<span class="focus-input100"></span>
 					</div>
 
 					<div class="wrap-input100 validate-input" data-validate="비밀번호를 입력해주세요.">
 						<span class="btn-show-pass">
 							<i class="zmdi zmdi-eye"></i>
 						</span>
-						<input class="input100" type="password" name="password">
-						<span class="focus-input100" data-placeholder="Password"></span>
+						<input class="input100" type="password" name="password" placeholder="비밀번호">
+						<span class="focus-input100"></span>
 					</div>
 
 					<div class="container-login100-form-btn">
