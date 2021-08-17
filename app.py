@@ -11,6 +11,10 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
+# 운동 선택
+# fitness_mode = "SQUAT"
+fitness_mode = "PUSH_UP"
+
 # 데이터베이스 테이블
 class User(db.Model):
     __tablename__ = 'user'
@@ -46,11 +50,12 @@ def home():
 def start():
     try:
         if session['login']:
-            return render_template('start.html')
+            return render_template('start.html', fitness_mode=fitness_mode)
         else:
             return redirect(url_for('login'))
     except:
         return redirect(url_for('login'))
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -126,10 +131,6 @@ def exercise_analysis():
 
         # print(f"캠 사이즈 : {input_width} x {input_height}")
         # print(f"비디오 사이즈 : {trainer_width} x {trainer_height}")
-
-        # 운동 선택
-        fitness_mode = "SQUAT"
-        # fitness_mode = "PUSH_UP"
 
         # 메인 알고리즘
         if fitness_mode == "SQUAT":

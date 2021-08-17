@@ -69,7 +69,11 @@
                             Trainer Video
                           </p>
                           <div class="panel-block">
-                            <video id="trainer_video" src="../static/video/1.mp4" muted controls></video>
+                              {% if fitness_mode == "SQUAT" %}
+                                <video id="trainer_video" src="../static/video/squat.mp4" muted controls></video>
+                              {% elif fitness_mode == "PUSH_UP" %}
+                                <video id="trainer_video" src="../static/video/pushup.mp4" muted controls></video>
+                              {% endif %}
                           </div>
                         </article>
                       </div>
