@@ -70,9 +70,9 @@
                           </p>
                           <div class="panel-block">
                               {% if fitness_mode == "SQUAT" %}
-                                <video id="trainer_video" src="../static/video/squat.mp4" muted controls></video>
+                                <video id="trainer_video" src="../static/video/squat.mp4" muted autoplay></video>
                               {% elif fitness_mode == "PUSH_UP" %}
-                                <video id="trainer_video" src="../static/video/pushup.mp4" muted controls></video>
+                                <video id="trainer_video" src="../static/video/pushup.mp4" muted autoplay></video>
                               {% endif %}
                           </div>
                         </article>
@@ -80,13 +80,13 @@
 
                       <!-- Webcam -->
                       <div class="column">
-                        <article class="panel is-info">
+                        <article id="canvas_panel" class="panel is-info">
                           <p id="count" class="panel-heading">
                             횟수 : 0
                           </p>
                           <div class="panel-block">
                             <video id="input_video" class="input_video" style="display: none"></video>
-                            <canvas id="output_canvas" class="output_canvas" width="480x" height="480px"></canvas>
+                            <canvas id="output_canvas" class="output_canvas" width="480px" height="480px"></canvas>
                           </div>
                         </article>
                       </div>

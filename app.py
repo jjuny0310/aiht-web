@@ -12,8 +12,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 # 운동 선택
-# fitness_mode = "SQUAT"
-fitness_mode = "PUSH_UP"
+fitness_mode = "SQUAT"
+# fitness_mode = "PUSH_UP"
 
 # 데이터베이스 테이블
 class User(db.Model):
@@ -128,8 +128,11 @@ def exercise_analysis():
         input_height = data['input_height']
         trainer_width = data['trainer_width']
         trainer_height = data['trainer_height']
+        canvas_width = data['canvas_width']
+        canvas_height = data['canvas_height']
 
         # print(f"캠 사이즈 : {input_width} x {input_height}")
+        # print(f"캔버스 사이즈 : {canvas_width} x {canvas_height}")
         # print(f"비디오 사이즈 : {trainer_width} x {trainer_height}")
 
         # 메인 알고리즘

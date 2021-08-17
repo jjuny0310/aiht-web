@@ -5,7 +5,9 @@ const canvasCtx = canvasElement.getContext('2d');
 var state = "NOTHING";
 var count = 0;
 function poseOnResults(results) {
+    canvasElement.style.width = "100%";
     // 관절선 그리기
+
     if(state==="NOTHING"){
         canvasCtx.save();
         canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
@@ -28,16 +30,24 @@ function poseOnResults(results) {
     // Ajax
     var input_video = $('#input_video');
     var trainer_video = $('#trainer_video');
+    var canvas = $('#output_canvas')
 
     var input_width = input_video.css('width').replace("px", "");
     var input_height = input_video.css('height').replace("px", "");
 
+    var canvas_width = canvas.css('width').replace("px", "");
+    var canvas_height = canvas.css('height').replace("px", "");
+
     var trainer_width = trainer_video.css('width').replace("px", "");
     var trainer_height = trainer_video.css('height').replace("px", "");
 
+
+
     var dataList = {
-        'pose_landmarks' : results.poseLandmarks, 'input_width' : input_width, 'input_height' : input_height,
-        'trainer_width' : trainer_width, 'trainer_height' : trainer_height
+        'pose_landmarks' : results.poseLandmarks,
+        'input_width' : input_width, 'input_height' : input_height,
+        'trainer_width' : trainer_width, 'trainer_height' : trainer_height,
+        'canvas_width' : canvas_width, 'canvas_height' : canvas_height,
     }
 
     $.ajax({
