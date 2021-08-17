@@ -44,9 +44,12 @@ def home():
 
 @app.route('/start')
 def start():
-    if session['login']:
-        return render_template('start.html')
-    else:
+    try:
+        if session['login']:
+            return render_template('start.html')
+        else:
+            return redirect(url_for('login'))
+    except:
         return redirect(url_for('login'))
 
 @app.route('/login', methods=['GET', 'POST'])

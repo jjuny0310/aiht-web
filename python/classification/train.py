@@ -82,6 +82,35 @@ def train(FITNESS_MODE):
         model.save('model/squat_model.h5')
         print(f"{FITNESS_MODE} 가중치 저장 완료!")
 
+    # 검증
+    np.set_printoptions(precision=6, suppress=True)
+
+    predict = model.predict(test_x)
+
+    count = 0
+    # 0: up, 1: down, 2:nothing
+    for i, res in enumerate(predict):
+        if np.argmax(res) == 0:
+            if test_y[i] == 0:
+                print(f"UP / True")  # 정답
+                count += 1
+            else:
+                print(f"UP / False")  # 오답
+        elif np.argmax(res) == 1:
+            if test_y[i] == 1:
+                count += 1
+                print(f"DOWN / True")
+            else:
+                print(f"DOWN / False")
+        else:
+            if test_y[i] == 2:
+                count += 1
+                print(f"NOTHING / True")
+            else:
+                print(f"NOTHING / False")
+    accuracy = count / len(predict)
+    print(f"정답/전체 : {count}/{len(predict)} = {accuracy}")
+
     # 정확도 출력
     results = model.evaluate(test_x, test_y)
     print(f"accuracy : {results[1]}")
@@ -90,7 +119,7 @@ def train(FITNESS_MODE):
 if __name__ == '__main__':
     # 학습할 운동 선택
     # FITNESS_MODE = "LEFT_PUSH_UP"
-    FITNESS_MODE = "RIGHT_PUSH_UP"
-    # FITNESS_MODE = "SQUAT"
+    # FITNESS_MODE = "RIGHT_PUSH_UP"
+    FITNESS_MODE = "SQUAT"
 
     train(FITNESS_MODE)
