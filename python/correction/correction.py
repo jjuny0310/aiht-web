@@ -187,7 +187,7 @@ def pose_correction(path, FITNESS_MODE):
 
 if __name__ == '__main__':
     # 트레이너 비디오
-    path = "../../static/trainer video/1.mp4"
+    path = "../../static/video/squat.mp4"
 
     # 운동 선택
     FITNESS_MODE = "SQUAT"

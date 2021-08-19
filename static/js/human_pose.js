@@ -13,7 +13,7 @@ function poseOnResults(results) {
         canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
         canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height);
         drawConnectors(canvasCtx, results.poseLandmarks, POSE_CONNECTIONS,
-                     {color: '#ff0000', lineWidth: 3});
+                     {color: '#ff0000', lineWidth: 2});
         drawLandmarks(canvasCtx, results.poseLandmarks,
                     {color: '#BDBDBD', lineWidth: 1});
     }
@@ -22,7 +22,7 @@ function poseOnResults(results) {
         canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
         canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height);
         drawConnectors(canvasCtx, results.poseLandmarks, POSE_CONNECTIONS,
-                     {color: '#ffffff', lineWidth: 3});
+                     {color: '#ffffff', lineWidth: 2});
         drawLandmarks(canvasCtx, results.poseLandmarks,
                     {color: '#BDBDBD', lineWidth: 1});
     }

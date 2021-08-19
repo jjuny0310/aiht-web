@@ -148,8 +148,8 @@ def exercise_analysis():
 
 
 if __name__ == '__main__':
-    # debug 모드는 소스코드 변경시 자동 재시작
+    # debug는 소스코드 변경시 자동 재시작
     app.run(debug=True)
     
-    # 서비스 시 debug 해제 해야함
+    # 배포 시 debug 해제 해야함
     # app.run()
