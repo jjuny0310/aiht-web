@@ -48,14 +48,14 @@ squat_parts = [NOSE, LEFT_SHOULDER, RIGHT_SHOULDER, LEFT_ELBOW, RIGHT_ELBOW,
                LEFT_ANKLE, RIGHT_ANKLE]
 
 # Flask 자체실행 모델 경로
-# pushup_left_model = load_model('python/classification/model/left_pushup_model.h5')
-# pushup_right_model = load_model('python/classification/model/right_pushup_model.h5')
-# squat_model = load_model('python/classification/model/squat_model.h5')
+pushup_left_model = load_model('python/classification/model/left_pushup_model.h5')
+pushup_right_model = load_model('python/classification/model/right_pushup_model.h5')
+squat_model = load_model('python/classification/model/squat_model.h5')
 
 # # Apache로 실행할때 모델 경로
-pushup_left_model = load_model('C:/Users/LeeYongJun/Desktop/AIHT/aiht-web/python/classification/model/left_pushup_model.h5')
-pushup_right_model = load_model('C:/Users/LeeYongJun/Desktop/AIHT/aiht-web/python/classification/model/right_pushup_model.h5')
-squat_model = load_model('C:/Users/LeeYongJun/Desktop/AIHT/aiht-web/python/classification/model/squat_model.h5')
+# pushup_left_model = load_model('C:/Users/LeeYongJun/Desktop/AIHT/aiht-web/python/classification/model/left_pushup_model.h5')
+# pushup_right_model = load_model('C:/Users/LeeYongJun/Desktop/AIHT/aiht-web/python/classification/model/right_pushup_model.h5')
+# squat_model = load_model('C:/Users/LeeYongJun/Desktop/AIHT/aiht-web/python/classification/model/squat_model.h5')
 
 # 스쿼트 변수
 squat_count = 0
@@ -68,6 +68,8 @@ pushup_check = False
 pushup_correct_pose = False
 
 # 스쿼트 자세 교정 변수
+squat_down_angle = 130
+good_foot_angle = [25, 85]
 
 # 푸쉬업 자세 교정 변수
 
@@ -110,8 +112,6 @@ def run(fitness_mode, pose_landmarks, input_width, input_height):
                                     keypoints[RIGHT_ANKLE])
         left_leg_angle = getAngle3P(keypoints[LEFT_HIP], keypoints[LEFT_KNEE], keypoints[LEFT_ANKLE])
 
-        squat_down_angle = 130
-
         # 자세 교정 변수
         good_left_knee_ragne = [keypoints[LEFT_SHOULDER][0] - 60 / int(input_width),
                                  keypoints[LEFT_SHOULDER][0] + 60 / int(input_width)]
@@ -122,8 +122,6 @@ def run(fitness_mode, pose_landmarks, input_width, input_height):
                                   keypoints[LEFT_SHOULDER][0] + 40 / int(input_width)]
         good_right_ankle_ragne = [keypoints[RIGHT_SHOULDER][0] - 40 / int(input_width),
                                  keypoints[RIGHT_SHOULDER][0] + 40 / int(input_width)]
-
-        good_foot_angle = [25, 85]
 
         right_foot_angle = getAngle3P(keypoints[RIGHT_FOOT_INDEX], keypoints[RIGHT_HEEL],
                                      [keypoints[RIGHT_HEEL][0], keypoints[RIGHT_FOOT_INDEX][1]])
