@@ -49,7 +49,11 @@
             <div class="container px-4 px-lg-5 text-center">
                 <h1 class="mb-1" style="color: white">AI Home Training</h1>
                 <h3 class="mb-5" style="color: white"><em>지금 바로 시작하세요</em></h3>
-                <a id="btn-modal" class="btn btn-primary btn-xl" href="#"><strong>시작하기</strong></a>
+                {% if session['login'] %}
+                <a id="btn-modal" class="btn btn-primary btn-xl"><strong>시작하기</strong></a>
+                {% else %}
+                <a class="btn btn-primary btn-xl" href="/login"><strong>시작하기</strong></a>
+                {% endif %}
             </div>
 
             <!-- 모달 창-->
@@ -61,14 +65,14 @@
                     <div class="close-area">X</div>
                     <hr style="color: white">
                     <div class="content">
-                        <form id="select_option">
+                        <form id="select_option" method="post">
                             <table>
                                 <tr>
                                     <td>운동</td>
                                     <td>
                                         <select name="select_exercise">
-                                            <option selected>스쿼트</option>
-                                            <option>푸쉬업</option>
+                                            <option selected value="SQUAT">스쿼트</option>
+                                            <option value="PUSH_UP">푸쉬업</option>
                                         </select>
                                     </td>
                                 </tr>
@@ -108,7 +112,7 @@
                                 </tr>
                             </table>
                             <div align="right" style="margin-top: 10px">
-                                <button type="submit" class="btn btn-primary"><strong>제출하기</strong></button>
+                                <button type="submit" class="btn btn-primary"><strong>선택 완료</strong></button>
                             </div>
                         </form>
                     </div>

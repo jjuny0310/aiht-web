@@ -12,8 +12,11 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 # 운동 선택
-fitness_mode = "SQUAT"
+fitness_mode = ""
 # fitness_mode = "PUSH_UP"
+set_num = 0
+setpernum = 0
+resttime = 0
 
 # 데이터베이스 테이블
 class User(db.Model):
@@ -41,9 +44,18 @@ class User(db.Model):
         return check_password_hash(self.password, password)
 
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def home():
-    return render_template('index.html')
+    global fitness_mode, set_num, setpernum, resttime
+
+    if request.method == 'GET':
+        return render_template('index.html')
+    else:
+        fitness_mode = request.form['select_exercise']
+        set_num = request.form['select_setnum']
+        setpernum = request.form['select_setpernum']
+        # resttime = request.form['select_resttime']
+        return redirect(url_for('start'))
 
 
 @app.route('/start')
