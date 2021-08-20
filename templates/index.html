@@ -17,6 +17,15 @@
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="../static/css/styles.css" rel="stylesheet" />
         <link href="../static/css/modal.css" rel="stylesheet">
+        <style>
+            table{
+                width: 100%;
+            }
+            td{
+                border-bottom: 1px solid #ffffff;
+                padding: 10px;
+            }
+        </style>
     </head>
     <body id="page-top">
         <!-- Navigation-->
@@ -47,11 +56,61 @@
             <div id="modal" class="modal-overlay">
                 <div class="modal-window">
                     <div class="title">
-                        <h2>운동 옵션</h2>
+                        <h2>Exercise Option</h2>
                     </div>
                     <div class="close-area">X</div>
+                    <hr style="color: white">
                     <div class="content">
-                        <p>안녕하세요</p>
+                        <form id="select_option">
+                            <table>
+                                <tr>
+                                    <td>운동</td>
+                                    <td>
+                                        <select name="select_exercise">
+                                            <option selected>스쿼트</option>
+                                            <option>푸쉬업</option>
+                                        </select>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>세트 수</td>
+                                    <td>
+                                        <select name="select_setnum">
+                                            <option selected>1</option>
+                                            <option disabled>2</option>
+                                            <option disabled>3</option>
+                                            <option disabled>4</option>
+                                            <option disabled>5</option>
+                                        </select>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>세트 당 횟수</td>
+                                    <td>
+                                        <select name="select_setpernum">
+                                            <option disabled>10</option>
+                                            <option selected>20</option>
+                                            <option disabled>30</option>
+                                            <option disabled>40</option>
+                                            <option disabled>50</option>
+                                        </select>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>휴식 시간</td>
+                                    <td>
+                                        <input type="text" name="select_resttime" disabled>
+                                    </td>
+
+                                </tr>
+                            </table>
+                            <div align="right" style="margin-top: 10px">
+                                <button type="submit" class="btn btn-primary"><strong>제출하기</strong></button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
