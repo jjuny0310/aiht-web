@@ -58,7 +58,11 @@
             </ul>
         </nav>
         <!-- 웹캠-->
+        <div id='loadingImg'>
+            <img src='../static/gif/loading.gif' style='position: relative; display: block; margin: 0px auto;'/>
+        </div>
         <header class="masthead d-flex align-items-center">
+
                 <div class="container" style="margin-top: 20px;">
                     <div class="columns">
 
@@ -70,9 +74,9 @@
                           </p>
                           <div class="panel-block">
                               {% if fitness_mode == "SQUAT" %}
-                                <video id="trainer_video" src="../static/video/squat.mp4" muted autoplay></video>
+                                <video id="trainer_video" src="../static/video/squat.mp4" muted></video>
                               {% elif fitness_mode == "PUSH_UP" %}
-                                <video id="trainer_video" src="../static/video/pushup.mp4" muted autoplay></video>
+                                <video id="trainer_video" src="../static/video/pushup.mp4" muted></video>
                               {% endif %}
                           </div>
                         </article>

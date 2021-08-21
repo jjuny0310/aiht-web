@@ -3,7 +3,44 @@ const canvasElement = document.getElementsByClassName('output_canvas')[0];
 const canvasCtx = canvasElement.getContext('2d');
 
 var state = "NOTHING";
-var count = 0;
+// var count = 0;
+
+
+// 로딩
+function LoadingWithMask() {
+    //화면의 높이와 너비를 구합니다.
+    var maskHeight = $(document).height();
+    var maskWidth  = window.document.body.clientWidth;
+
+    //화면에 출력할 마스크를 설정해줍니다.
+    var mask       ="<div id='mask' style='position:absolute; z-index:9000; background-color:#000000; display:none; left:0; top:0;'></div>";
+    var loadingImg ='';
+
+
+    //화면에 레이어 추가
+    $('body')
+        .append(mask)
+
+    //마스크의 높이와 너비를 화면 것으로 만들어 전체 화면을 채웁니다.
+    $('#mask').css({
+            'width' : maskWidth
+            ,'height': maskHeight
+            ,'opacity' :'0.3'
+    });
+
+    //마스크 표시
+    $('#mask').show();
+
+    //로딩중 이미지 표시
+    $('#loadingImg').show();
+}
+
+// 로딩 중 취소
+function closeLoadingWithMask() {
+    $('#mask, #loadingImg').hide();
+    $('#mask, #loadingImg').remove();
+}
+
 function poseOnResults(results) {
     canvasElement.style.width = "100%";
     // 관절선 그리기
@@ -59,12 +96,19 @@ function poseOnResults(results) {
         success: function (data){
             switch (data.fitness_mode){
                 case "SQUAT":
+                    //로딩 완료
+                    closeLoadingWithMask();
+                    $('#trainer_video').get(0).play();
+
                     state = data.state;
                     document.getElementById('count').innerHTML = "횟수 : " + data.count;
                     console.log(data.state);
 
                     break;
                 case "PUSH_UP":
+                    closeLoadingWithMask();
+                    $('#trainer_video').get(0).play();
+
                     state = data.state;
                     document.getElementById('count').innerHTML = "횟수 : " + data.count;
                     console.log(data.state);
@@ -76,10 +120,13 @@ function poseOnResults(results) {
             // alert(error);
         }
     })
-
+    console.log("로딩완료")
   canvasCtx.restore();
-
 }
+
+
+// 메인
+LoadingWithMask();
 
 const pose = new Pose({locateFile: (file) => {
   return `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`;
