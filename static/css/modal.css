@@ -25,7 +25,8 @@
     width: 400px;
     height: 500px;
     position: relative;
-    top: -100px;
+    align-items: center;
+    justify-content: center;
     padding: 10px;
 }
 #modal .title {
