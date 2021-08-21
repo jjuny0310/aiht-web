@@ -1,7 +1,6 @@
 from tensorflow.keras.models import load_model
 import numpy as np
 import math
-import os
 
 # 관절 정의
 NOSE = 0

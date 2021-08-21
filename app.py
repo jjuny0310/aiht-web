@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, session, redirect, url_for
+from flask import Flask, render_template, request, jsonify, session, redirect, url_for, g
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from python.main import run
@@ -13,10 +13,10 @@ db = SQLAlchemy(app)
 
 # 운동 선택
 fitness_mode = ""
-# fitness_mode = "PUSH_UP"
 set_num = 0
 setpernum = 0
 resttime = 0
+
 
 # 데이터베이스 테이블
 class User(db.Model):
@@ -124,7 +124,8 @@ def signup():
 
 @app.route('/logout')
 def logout():
-    session['login'] = False
+    # session['login'] = False
+    session.clear()
     return redirect(url_for('home'))
 
 
@@ -162,7 +163,7 @@ def exercise_analysis():
 
 if __name__ == '__main__':
     # debug는 소스코드 변경시 자동 재시작
-    app.run(debug=True)
+    app.run(debug=True, threaded=True)
     
     # 배포 시 debug 해제 해야함
     # app.run()
