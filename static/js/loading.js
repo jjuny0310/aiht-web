@@ -1,4 +1,4 @@
-// 로딩 시작
+// 로딩
 function LoadingWithMask() {
     //화면의 높이와 너비를 구합니다.
     var maskHeight = $(document).height();

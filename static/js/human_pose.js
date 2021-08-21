@@ -3,9 +3,10 @@ const canvasElement = document.getElementsByClassName('output_canvas')[0];
 const canvasCtx = canvasElement.getContext('2d');
 
 LoadingWithMask();
-
 var state = "NOTHING";
-// var count = 0;
+var count = 0;
+var audio = new Audio('../static/sound/count/1.mp3');
+var countSoundFlag = false;
 
 function poseOnResults(results) {
     canvasElement.style.width = "100%";
@@ -62,22 +63,32 @@ function poseOnResults(results) {
         success: function (data){
             switch (data.fitness_mode){
                 case "SQUAT":
-                    //로딩 완료
+                    // 로딩
                     closeLoadingWithMask();
                     $('#trainer_video').get(0).play();
 
                     state = data.state;
-                    document.getElementById('count').innerHTML = "횟수 : " + data.count;
-                    console.log(data.state);
 
-                    break;
+                    // 갯수 카운트
+                    document.getElementById('count').innerHTML = "횟수 : " + data.count;
+
+                    // 카운트 사운드 출력
+                    if(countSoundFlag){
+                        switch (count){
+                            case 1:
+                            audio.play();
+                            countSoundFlag = false
+                            break;
+                        }
+                    }
+
                 case "PUSH_UP":
+                    // 로딩
                     closeLoadingWithMask();
                     $('#trainer_video').get(0).play();
 
                     state = data.state;
                     document.getElementById('count').innerHTML = "횟수 : " + data.count;
-                    console.log(data.state);
                     break;
             }
 
@@ -86,7 +97,6 @@ function poseOnResults(results) {
             // alert(error);
         }
     })
-    console.log("로딩완료")
   canvasCtx.restore();
 }
 
