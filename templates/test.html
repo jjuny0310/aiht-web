@@ -3,53 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <script src="https://code.jquery.com/jquery-latest.min.js"></script>
 </head>
 <body>
 
-<div id='loadingImg'>
-    <img src='../static/gif/loading.gif' style='position: relative; display: block; margin: 0px auto;'/>
-</div>
-
-<script>
-// 로딩 중 시작
-function LoadingWithMask() {
-    //화면의 높이와 너비를 구합니다.
-    var maskHeight = $(document).height();
-    var maskWidth  = window.document.body.clientWidth;
-
-    //화면에 출력할 마스크를 설정해줍니다.
-    var mask       ="<div id='mask' style='position:absolute; z-index:9000; background-color:#000000; display:none; left:0; top:0;'></div>";
-    var loadingImg ='';
-
-
-    //화면에 레이어 추가
-    $('body')
-        .append(mask)
-
-    //마스크의 높이와 너비를 화면 것으로 만들어 전체 화면을 채웁니다.
-    $('#mask').css({
-            'width' : maskWidth
-            ,'height': maskHeight
-            ,'opacity' :'0.3'
+<script src="https://code.jquery.com/jquery-1.8.0.js" integrity="sha256-00Fh8tkPAe+EmVaHFpD+HovxWk7b97qwqVi7nLvjdgs=" crossorigin="anonymous"></script>
+<script type="text/javascript">
+    $(window).on('load', function () { $("#load").hide();
     });
-
-    //마스크 표시
-    $('#mask').show();
-
-    //로딩중 이미지 표시
-    $('#loadingImg').show();
-}
-
-// 로딩 중 취소
-function closeLoadingWithMask() {
-    $('#mask, #loadingImg').hide();
-    $('#mask, #loadingImg').remove();
-}
-LoadingWithMask()
-
 </script>
-
+<style type="text/css">
+    #load {
+        width: 100%; height: 100%; top: 0; left: 0; position: fixed; display: block; opacity: 0.8; background: white; z-index: 99; text-align: center;
+    }
+    #load > img {
+        position: absolute; top: 50%; left: 50%; z-index: 100;
+    }
+</style>
+<div id="load"> 
+    <img src="../static/gif/loading.gif" alt="loading">
+</div>
 
 </body>
 </html>

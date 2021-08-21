@@ -18,7 +18,7 @@
         <link href="../static/css/styles.css" rel="stylesheet" />
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css">
         <style>
-            {#좌우반전#}
+            /* 좌우반전 */
             #input_video
             {
             transform: rotateY(180deg);
@@ -58,6 +58,7 @@
             </ul>
         </nav>
         <!-- 웹캠-->
+            <!--로딩 창-->
         <div id='loadingImg'>
             <img src='../static/gif/loading.gif' style='position: relative; display: block; margin: 0px auto;'/>
         </div>
@@ -98,7 +99,9 @@
                   </div>
                 </div>
 
+            <script src="../static/js/loading.js"></script>
             <script src="../static/js/human_pose.js"></script>
+
         </header>
         <!-- Scroll to Top Button-->
         <a class="scroll-to-top rounded" href="#page-top"><i class="fas fa-angle-up"></i></a>
