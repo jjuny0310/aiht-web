@@ -65,124 +65,151 @@ def getAngle3P(p1, p2, p3):
 
 # 관절 좌표 데이터셋 생성
 def pose_correction(path, FITNESS_MODE):
-    # Pose 객체 생성
-    pose = mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5)
+    try:
+        # Pose 객체 생성
+        pose = mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5)
 
-    # 관절 정보
-    keypoints = []
-    visibilitys = []
+        # 관절 정보
+        keypoints = []
+        visibilitys = []
 
-    # 다리 각도 변수
-    leg_angle_list = []
-    min_leg_angle = 999
-    leg_angle_check = False
+        # 다리 각도 변수
+        leg_angle_list = []
+        min_leg_angle = 999
+        leg_angle_check = False
 
-    # 발 각도 변수
-    right_foot_angle_list = []
-    left_foot_angle_list = []
-    
-    # 발목 범위 변수
-    right_shoulder_to_ankle_list = []
-    left_shoulder_to_ankle_list = []
+        # 발 각도 변수
+        right_foot_angle_list = []
+        left_foot_angle_list = []
 
-    # 무릎 범위 변수
-    right_shoulder_to_knee_list = []
-    left_shoulder_to_knee_list = []
+        # 발목 범위 변수
+        right_shoulder_to_ankle_list = []
+        left_shoulder_to_ankle_list = []
 
-
-    
-
-    cap = cv2.VideoCapture(path)
-    success = True
-    while success:
-        success, frame = cap.read()
-        frame = imutils.resize(frame, width=1000)
-        height, width, _ = frame.shape
-
-        # Frame 처리
-        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        results = pose.process(frame)
-        frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
-        mp_drawing.draw_landmarks(frame, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
-
-        # 관절 좌표 저장
-        if results.pose_landmarks != None:
-            keypoints_x = []
-            keypoints_y = []
-            visibilitys = []
-            for i, landmark in enumerate(results.pose_landmarks.landmark):
-                keypoints_x.append(landmark.x)  # 실제좌표 : x * width
-                keypoints_y.append(landmark.y)  # 실제좌표 : y * height
-                visibilitys.append(landmark.visibility)
-
-            keypoints = list(zip(keypoints_x, keypoints_y))
-
-        if FITNESS_MODE == "SQUAT":
-            # 다리 각도 저장
-            leg_angle = getAngle3P(keypoints[LEFT_HIP], keypoints[LEFT_KNEE], keypoints[LEFT_ANKLE])
-            if leg_angle <= 150:
-                if min_leg_angle > leg_angle:
-                    min_leg_angle = leg_angle
-                else:
-                    if leg_angle_check:
-                        leg_angle_list.append(min_leg_angle)
-                        min_leg_angle = 999
-                        leg_angle_check = False
-            else:
-                leg_angle_check = True
-
-            # 발 각도 저장
-            right_foot_angle = getAngle3P(keypoints[RIGHT_FOOT_INDEX], keypoints[RIGHT_HEEL],
-                                         [keypoints[RIGHT_HEEL][0], keypoints[RIGHT_FOOT_INDEX][1]])
-            left_foot_angle = getAngle3P(keypoints[LEFT_FOOT_INDEX], keypoints[LEFT_HEEL],
-                                          [keypoints[LEFT_HEEL][0], keypoints[LEFT_FOOT_INDEX][1]])
-            right_foot_angle_list.append(right_foot_angle)
-            left_foot_angle_list.append(left_foot_angle)
-            
-            # 발목 범위 저장
-            right_shoulder_to_ankle = abs(keypoints[RIGHT_SHOULDER][0] - keypoints[RIGHT_ANKLE][0])
-            left_shoulder_to_ankle = abs(keypoints[LEFT_SHOULDER][0] - keypoints[LEFT_ANKLE][0])
-            right_shoulder_to_ankle_list.append(right_shoulder_to_ankle)
-            left_shoulder_to_ankle_list.append(left_shoulder_to_ankle)
-
-            # 무릎 범위 저장
-            right_shoulder_to_knee = abs(keypoints[RIGHT_SHOULDER][0] - keypoints[RIGHT_KNEE][0])
-            left_shoulder_to_knee = abs(keypoints[LEFT_SHOULDER][0] - keypoints[LEFT_KNEE][0])
-            right_shoulder_to_knee_list.append(right_shoulder_to_knee)
-            left_shoulder_to_knee_list.append(left_shoulder_to_knee)
+        # 무릎 범위 변수
+        right_shoulder_to_knee_list = []
+        left_shoulder_to_knee_list = []
 
 
-        elif FITNESS_MODE == "PUSH_UP":
-            pass
 
-        # Imshow
-        frame = cv2.flip(frame, 1)
-        cv2.imshow('Pose Correction', frame)
-        k = cv2.waitKey(1)
 
-        if k == 27:
+        cap = cv2.VideoCapture(path)
+        success = True
+        while success:
+            success, frame = cap.read()
+            frame = imutils.resize(frame, width=1000)
+            height, width, _ = frame.shape
+
+            # Frame 처리
+            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            results = pose.process(frame)
+            frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
+            mp_drawing.draw_landmarks(frame, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
+
+            # 관절 좌표 저장
+            if results.pose_landmarks != None:
+                keypoints_x = []
+                keypoints_y = []
+                visibilitys = []
+                for i, landmark in enumerate(results.pose_landmarks.landmark):
+                    keypoints_x.append(landmark.x)  # 실제좌표 : x * width
+                    keypoints_y.append(landmark.y)  # 실제좌표 : y * height
+                    visibilitys.append(landmark.visibility)
+
+                keypoints = list(zip(keypoints_x, keypoints_y))
+
             if FITNESS_MODE == "SQUAT":
-                print(f"<'{FITNESS_MODE}' 트레이너 비디오 종합 결과>")
-                print(f"평균 Down 다리 각도 : {round(sum(leg_angle_list) / len(leg_angle_list), 2)}°")
-                print("=================================================================================================")
+                # 다리 각도 저장
+                leg_angle = getAngle3P(keypoints[LEFT_HIP], keypoints[LEFT_KNEE], keypoints[LEFT_ANKLE])
+                print(leg_angle)
+                if leg_angle <= 150:
+                    if min_leg_angle > leg_angle:
+                        min_leg_angle = leg_angle
+                    else:
+                        if leg_angle_check:
+                            leg_angle_list.append(min_leg_angle)
+                            min_leg_angle = 999
+                            leg_angle_check = False
+                else:
+                    leg_angle_check = True
 
-                print(f"왼발 각도 범위(최소~최대) : {round(min(left_foot_angle_list), 2)}° ~ {round(max(left_foot_angle_list), 2)}°")
-                print(f"오른발 각도 범위(최소~최대) : {round(min(right_foot_angle_list), 2)}° ~ {round(max(right_foot_angle_list), 2)}°")
-                print("=================================================================================================")
+                # 발 각도 저장
+                right_foot_angle = getAngle3P(keypoints[RIGHT_FOOT_INDEX], keypoints[RIGHT_HEEL],
+                                             [keypoints[RIGHT_HEEL][0], keypoints[RIGHT_FOOT_INDEX][1]])
+                left_foot_angle = getAngle3P(keypoints[LEFT_FOOT_INDEX], keypoints[LEFT_HEEL],
+                                              [keypoints[LEFT_HEEL][0], keypoints[LEFT_FOOT_INDEX][1]])
+                right_foot_angle_list.append(right_foot_angle)
+                left_foot_angle_list.append(left_foot_angle)
 
-                print(f"왼쪽 어깨~발목 사이 거리(0~1) : {min(left_shoulder_to_ankle_list):.10f} ~ {max(left_shoulder_to_ankle_list):.10f}")
-                print(f"오른쪽 어깨~발목 사이 거리(0~1) : {min(right_shoulder_to_ankle_list):.10f} ~ {max(right_shoulder_to_ankle_list):.10f}")
-                print("=================================================================================================")
+                # 발목 범위 저장
+                right_shoulder_to_ankle = abs(keypoints[RIGHT_SHOULDER][0] - keypoints[RIGHT_ANKLE][0])
+                left_shoulder_to_ankle = abs(keypoints[LEFT_SHOULDER][0] - keypoints[LEFT_ANKLE][0])
+                right_shoulder_to_ankle_list.append(right_shoulder_to_ankle)
+                left_shoulder_to_ankle_list.append(left_shoulder_to_ankle)
 
-                print(f"왼쪽 어깨~무릎 사이 거리(0~1) : {min(left_shoulder_to_knee_list):.10f} ~ {max(left_shoulder_to_knee_list):.10f}")
-                print(f"오른쪽 어깨~무릎 사이 거리(0~1) : {min(right_shoulder_to_knee_list):.10f} ~ {max(right_shoulder_to_knee_list):.10f}")
-                print("=================================================================================================")
+                # 무릎 범위 저장
+                right_shoulder_to_knee = abs(keypoints[RIGHT_SHOULDER][0] - keypoints[RIGHT_KNEE][0])
+                left_shoulder_to_knee = abs(keypoints[LEFT_SHOULDER][0] - keypoints[LEFT_KNEE][0])
+                right_shoulder_to_knee_list.append(right_shoulder_to_knee)
+                left_shoulder_to_knee_list.append(left_shoulder_to_knee)
+
 
             elif FITNESS_MODE == "PUSH_UP":
-                print(f"'{FITNESS_MODE}' 트레이너 비디오 종합 결과")
-            break
+                pass
 
-    cap.release()
+            # Imshow
+            frame = cv2.flip(frame, 1)
+            cv2.imshow('Pose Correction', frame)
+            k = cv2.waitKey(1)
+
+            if k == 27:
+                if FITNESS_MODE == "SQUAT":
+                    print(f"<'{FITNESS_MODE}' 트레이너 비디오 종합 결과>")
+                    print(f"평균 Down 다리 각도 : {round(sum(leg_angle_list) / len(leg_angle_list), 2)}°")
+                    print("=================================================================================================")
+
+                    print(f"왼발 각도 범위(최소~최대) : {round(min(left_foot_angle_list), 2)}° ~ {round(max(left_foot_angle_list), 2)}°")
+                    print(f"오른발 각도 범위(최소~최대) : {round(min(right_foot_angle_list), 2)}° ~ {round(max(right_foot_angle_list), 2)}°")
+                    print("=================================================================================================")
+
+                    print(f"왼쪽 어깨~발목 사이 거리(0~1) : {min(left_shoulder_to_ankle_list):.10f} ~ {max(left_shoulder_to_ankle_list):.10f}")
+                    print(f"오른쪽 어깨~발목 사이 거리(0~1) : {min(right_shoulder_to_ankle_list):.10f} ~ {max(right_shoulder_to_ankle_list):.10f}")
+                    print("=================================================================================================")
+
+                    print(f"왼쪽 어깨~무릎 사이 거리(0~1) : {min(left_shoulder_to_knee_list):.10f} ~ {max(left_shoulder_to_knee_list):.10f}")
+                    print(f"오른쪽 어깨~무릎 사이 거리(0~1) : {min(right_shoulder_to_knee_list):.10f} ~ {max(right_shoulder_to_knee_list):.10f}")
+                    print("=================================================================================================")
+
+                elif FITNESS_MODE == "PUSH_UP":
+                    print(f"'{FITNESS_MODE}' 트레이너 비디오 종합 결과")
+                break
+
+        cap.release()
+    except:
+        if FITNESS_MODE == "SQUAT":
+            print(f"<'{FITNESS_MODE}' 트레이너 비디오 종합 결과>")
+            print(f"평균 Down 다리 각도 : {round(sum(leg_angle_list) / len(leg_angle_list), 2)}°")
+            print("=================================================================================================")
+
+            print(f"왼발 각도 범위(최소~최대) : {round(min(left_foot_angle_list), 2)}° ~ {round(max(left_foot_angle_list), 2)}°")
+            print(
+                f"오른발 각도 범위(최소~최대) : {round(min(right_foot_angle_list), 2)}° ~ {round(max(right_foot_angle_list), 2)}°")
+            print("=================================================================================================")
+
+            print(
+                f"왼쪽 어깨~발목 사이 거리(0~1) : {min(left_shoulder_to_ankle_list):.10f} ~ {max(left_shoulder_to_ankle_list):.10f}")
+            print(
+                f"오른쪽 어깨~발목 사이 거리(0~1) : {min(right_shoulder_to_ankle_list):.10f} ~ {max(right_shoulder_to_ankle_list):.10f}")
+            print("=================================================================================================")
+
+            print(
+                f"왼쪽 어깨~무릎 사이 거리(0~1) : {min(left_shoulder_to_knee_list):.10f} ~ {max(left_shoulder_to_knee_list):.10f}")
+            print(
+                f"오른쪽 어깨~무릎 사이 거리(0~1) : {min(right_shoulder_to_knee_list):.10f} ~ {max(right_shoulder_to_knee_list):.10f}")
+            print("=================================================================================================")
+
+        elif FITNESS_MODE == "PUSH_UP":
+            print(f"'{FITNESS_MODE}' 트레이너 비디오 종합 결과")
 
 
 if __name__ == '__main__':

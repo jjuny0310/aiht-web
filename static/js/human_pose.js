@@ -5,6 +5,7 @@ const canvasCtx = canvasElement.getContext('2d');
 LoadingWithMask();
 var state = "NOTHING";
 var count = 0;
+var correct_pose = false;
 
 // 플래그 변수
 var loadingFlag = true;
@@ -13,12 +14,12 @@ function poseOnResults(results) {
     canvasElement.style.width = "100%";
     // 관절선 그리기
 
-    if(state==="NOTHING"){
+    if(correct_pose){
         canvasCtx.save();
         canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
         canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height);
         drawConnectors(canvasCtx, results.poseLandmarks, POSE_CONNECTIONS,
-                     {color: '#ff0000', lineWidth: 2});
+                     {color: '#ffffff', lineWidth: 2});
         drawLandmarks(canvasCtx, results.poseLandmarks,
                     {color: '#BDBDBD', lineWidth: 1});
     }
@@ -27,7 +28,7 @@ function poseOnResults(results) {
         canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
         canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height);
         drawConnectors(canvasCtx, results.poseLandmarks, POSE_CONNECTIONS,
-                     {color: '#ffffff', lineWidth: 2});
+                     {color: '#ff0000', lineWidth: 2});
         drawLandmarks(canvasCtx, results.poseLandmarks,
                     {color: '#BDBDBD', lineWidth: 1});
     }
@@ -73,6 +74,7 @@ function poseOnResults(results) {
                     }
                     // python 에서 전달받은 값
                     state = data.state;
+                    correct_pose = data.correct_pose;
 
                     // 카운트
                     if(count !== data.count){
@@ -80,8 +82,27 @@ function poseOnResults(results) {
                         new Audio('../static/sound/count/' + count + '.mp3').play();
                         document.getElementById('count').innerHTML = "횟수 : " + data.count;
                     }
-                    break;
 
+                    // console.log(data.correct_dict['correct_right_knee']);
+                    // console.log(data.correct_dict['correct_left_knee']);
+                    // console.log(data.correct_dict['correct_right_ankle']);
+                    // console.log(data.correct_dict['correct_left_ankle']);
+                    // console.log(data.correct_dict['correct_left_foot']);
+                    // console.log(data.correct_dict['correct_right_foot']);
+                    // console.log(correct_pose)
+
+
+
+
+
+
+
+
+
+
+
+
+                    break;
                 case "PUSH_UP":
                     // 로딩 완료 시
                     if(loadingFlag){
