@@ -3,17 +3,19 @@ const canvasElement = document.getElementsByClassName('output_canvas')[0];
 const canvasCtx = canvasElement.getContext('2d');
 
 LoadingWithMask();
-var state = "NOTHING";
 var count = 0;
 var correct_pose = false;
 
 // 플래그 변수
 var loadingFlag = true;
+var playSoundFlag = true;
+var upFlag = true;
 
 function poseOnResults(results) {
+    // 캔버스 반응형
     canvasElement.style.width = "100%";
-    // 관절선 그리기
 
+    // 관절선
     if(correct_pose){
         canvasCtx.save();
         canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
@@ -73,23 +75,53 @@ function poseOnResults(results) {
                         loadingFlag = false;
                     }
                     // python 에서 전달받은 값
-                    state = data.state;
                     correct_pose = data.correct_pose;
 
-                    // 카운트
+                    // 카운트 및 각도 체크 사운드
+                    if(upFlag && data.angle_check){
+                        new Audio('../static/sound/pose_correct/up.mp3').play();
+                        upFlag = false;
+                    }
                     if(count !== data.count){
                         count = data.count
                         new Audio('../static/sound/count/' + count + '.mp3').play();
                         document.getElementById('count').innerHTML = "횟수 : " + data.count;
+                        upFlag = true;
                     }
-
-                    // console.log(data.correct_dict['correct_right_knee']);
-                    // console.log(data.correct_dict['correct_left_knee']);
-                    // console.log(data.correct_dict['correct_right_ankle']);
-                    // console.log(data.correct_dict['correct_left_ankle']);
-                    // console.log(data.correct_dict['correct_left_foot']);
-                    // console.log(data.correct_dict['correct_right_foot']);
-                    // console.log(correct_pose)
+                    
+                    // 자세교정 지시음
+                    if(playSoundFlag && data.state==="UP" && data.visibility){
+                        if(!data.correct_dict['correct_left_knee']){
+                            new Audio('../static/sound/pose_correct/fail_left_knee.mp3').play();
+                            playSoundFlag = false;
+                            setTimeout(function() { playSoundFlag = true;}, 5000);
+                        }
+                        else if(!data.correct_dict['correct_right_knee']){
+                            new Audio('../static/sound/pose_correct/fail_right_knee.mp3').play();
+                            playSoundFlag = false;
+                            setTimeout(function() { playSoundFlag = true;}, 5000);
+                        }
+                        else if(!data.correct_dict['correct_left_ankle']){
+                            new Audio('../static/sound/pose_correct/fail_left_ankle.mp3').play();
+                            playSoundFlag = false;
+                            setTimeout(function() { playSoundFlag = true;}, 5000);
+                        }
+                        else if(!data.correct_dict['correct_right_ankle']){
+                            new Audio('../static/sound/pose_correct/fail_right_ankle.mp3').play();
+                            playSoundFlag = false;
+                            setTimeout(function() { playSoundFlag = true;}, 5000);
+                        }
+                        else if(!data.correct_dict['correct_left_foot']){
+                            new Audio('../static/sound/pose_correct/fail_left_foot.mp3').play();
+                            playSoundFlag = false;
+                            setTimeout(function() { playSoundFlag = true;}, 3000);
+                        }
+                        else if(!data.correct_dict['correct_right_foot']){
+                            new Audio('../static/sound/pose_correct/fail_right_foot.mp3').play();
+                            playSoundFlag = false;
+                            setTimeout(function() { playSoundFlag = true;}, 3000);
+                        }
+                    }
 
 
 

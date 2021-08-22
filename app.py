@@ -165,9 +165,9 @@ def exercise_analysis():
 
         # 메인 알고리즘
         if fitness_mode == "SQUAT":
-            state, squat_correct_dict = run(fitness_mode, pose_landmarks, input_width, input_height)
+            state, squat_correct_dict, visibility_check = run(fitness_mode, pose_landmarks, input_width, input_height)
             return jsonify(fitness_mode=fitness_mode, state=state, count=session['squat_count'], correct_dict=squat_correct_dict,
-                           correct_pose=session['pushup_correct_pose'])
+                           correct_pose=session['pushup_correct_pose'], visibility=visibility_check, angle_check=session['squat_check'])
 
         elif fitness_mode == "PUSH_UP":
             state, count = run(fitness_mode, pose_landmarks, input_width, input_height)
