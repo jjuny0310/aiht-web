@@ -13,9 +13,8 @@ db = SQLAlchemy(app)
 
 # 운동 선택
 fitness_mode = ""
-set_num = 0
-setpernum = 0
-resttime = 0
+num = 0
+memo = ""
 
 
 # 초기변수 초기화
@@ -61,15 +60,14 @@ class User(db.Model):
 def home():
     init_value()
 
-    global fitness_mode, set_num, setpernum, resttime
+    global fitness_mode, num, memo
 
     if request.method == 'GET':
         return render_template('index.html')
     else:
         fitness_mode = request.form['select_exercise']
-        set_num = request.form['select_setnum']
-        setpernum = request.form['select_setpernum']
-        # resttime = request.form['select_resttime']
+        num = request.form['select_num']
+        memo = request.form['select_memo']
         return redirect(url_for('start'))
 
 
