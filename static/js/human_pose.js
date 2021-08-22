@@ -5,8 +5,11 @@ const canvasCtx = canvasElement.getContext('2d');
 LoadingWithMask();
 var state = "NOTHING";
 var count = 0;
-var audio = new Audio('../static/sound/count/1.mp3');
-var countSoundFlag = false;
+// var audio = new Audio('../static/sound/count/1.mp3');
+
+// 플래그 변수
+var loadingFlag = true;
+var countChangeFlag = true;
 
 function poseOnResults(results) {
     canvasElement.style.width = "100%";
@@ -64,35 +67,159 @@ function poseOnResults(results) {
         success: function (data){
             switch (data.fitness_mode){
                 case "SQUAT":
-                    // 로딩
-                    closeLoadingWithMask();
-                    $('#trainer_video').get(0).play();
-
+                    // 로딩 완료 시 초기세팅
+                    if(loadingFlag) {
+                        closeLoadingWithMask();
+                        $('#trainer_video').get(0).play();
+                        count = data.count;
+                        loadingFlag = false;
+                    }
+                    // python 에서 전달받은 값
                     state = data.state;
 
-                    // 갯수 카운트
-                    document.getElementById('count').innerHTML = "횟수 : " + data.count;
-
                     // 카운트 사운드 출력
-                    if(countSoundFlag){
-                        switch (count){
+                    if(count !== data.count){
+                        switch (data.count){
                             case 1:
-                            audio.play();
-                            countSoundFlag = false
-                            break;
+                                new Audio('../static/sound/count/1.mp3').play();
+                                count = data.count
+                                break;
+                            case 2:
+                                new Audio('../static/sound/count/2.mp3').play();
+                                count = data.count
+                                break;
+                            case 3:
+                                new Audio('../static/sound/count/3.mp3').play();
+                                count = data.count
+                                break;
+                            case 4:
+                                new Audio('../static/sound/count/4.mp3').play();
+                                count = data.count
+                                break;
+                            case 5:
+                                new Audio('../static/sound/count/5.mp3').play();
+                                count = data.count
+                                break;
+                            case 6:
+                                new Audio('../static/sound/count/6.mp3').play();
+                                count = data.count
+                                break;
+                            case 7:
+                                new Audio('../static/sound/count/7.mp3').play();
+                                count = data.count
+                                break;
+                            case 8:
+                                new Audio('../static/sound/count/8.mp3').play();
+                                count = data.count
+                                break;
+                            case 9:
+                                new Audio('../static/sound/count/9.mp3').play();
+                                count = data.count
+                                break;
+                            case 10:
+                                new Audio('../static/sound/count/10.mp3').play();
+                                count = data.count
+                                break;
+                            case 11:
+                                new Audio('../static/sound/count/11.mp3').play();
+                                count = data.count
+                                break;
+                            case 12:
+                                new Audio('../static/sound/count/12.mp3').play();
+                                count = data.count
+                                break;
+                            case 13:
+                                new Audio('../static/sound/count/13.mp3').play();
+                                count = data.count
+                                break;
+                            case 14:
+                                new Audio('../static/sound/count/14.mp3').play();
+                                count = data.count
+                                break;
+                            case 15:
+                                new Audio('../static/sound/count/15.mp3').play();
+                                count = data.count
+                                break;
+                            case 16:
+                                new Audio('../static/sound/count/16.mp3').play();
+                                count = data.count
+                                break;
+                            case 17:
+                                new Audio('../static/sound/count/17.mp3').play();
+                                count = data.count
+                                break;
+                            case 18:
+                                new Audio('../static/sound/count/18.mp3').play();
+                                count = data.count
+                                break;
+                            case 19:
+                                new Audio('../static/sound/count/19.mp3').play();
+                                count = data.count
+                                break;
+                            case 20:
+                                new Audio('../static/sound/count/20.mp3').play();
+                                count = data.count
+                                break;
+                            case 21:
+                                new Audio('../static/sound/count/21.mp3').play();
+                                count = data.count
+                                break;
+                            case 22:
+                                new Audio('../static/sound/count/22.mp3').play();
+                                count = data.count
+                                break;
+                            case 23:
+                                new Audio('../static/sound/count/23.mp3').play();
+                                count = data.count
+                                break;
+                            case 24:
+                                new Audio('../static/sound/count/24.mp3').play();
+                                count = data.count
+                                break;
+                            case 25:
+                                new Audio('../static/sound/count/25.mp3').play();
+                                count = data.count
+                                break;
+                            case 26:
+                                new Audio('../static/sound/count/26.mp3').play();
+                                count = data.count
+                                break;
+                            case 27:
+                                new Audio('../static/sound/count/27.mp3').play();
+                                count = data.count
+                                break;
+                            case 28:
+                                new Audio('../static/sound/count/28.mp3').play();
+                                count = data.count
+                                break;
+                            case 29:
+                                new Audio('../static/sound/count/29.mp3').play();
+                                count = data.count
+                                break;
+                            case 30:
+                                new Audio('../static/sound/count/30.mp3').play();
+                                count = data.count
+                                break;
                         }
                     }
 
+                    // 갯수 카운트
+                    document.getElementById('count').innerHTML = "횟수 : " + data.count;
+                    break;
+
                 case "PUSH_UP":
-                    // 로딩
-                    closeLoadingWithMask();
-                    $('#trainer_video').get(0).play();
+                    // 로딩 완료 시
+                    if(loadingFlag){
+                        closeLoadingWithMask();
+                        $('#trainer_video').get(0).play();
+                        loadingFlag = false;
+                    }
 
                     state = data.state;
                     document.getElementById('count').innerHTML = "횟수 : " + data.count;
                     break;
-            }
 
+            }
         },
         error: function (request, status, error){
             // alert(error);
