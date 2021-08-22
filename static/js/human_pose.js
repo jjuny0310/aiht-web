@@ -123,17 +123,6 @@ function poseOnResults(results) {
                         }
                     }
 
-
-
-
-
-
-
-
-
-
-
-
                     break;
                 case "PUSH_UP":
                     // 로딩 완료 시
