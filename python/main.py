@@ -1,3 +1,4 @@
+import app
 from tensorflow.keras.models import load_model
 import numpy as np
 import math
@@ -56,15 +57,6 @@ squat_model = load_model('python/classification/model/squat_model.h5')
 # pushup_right_model = load_model('C:/Users/LeeYongJun/Desktop/AIHT/aiht-web/python/classification/model/right_pushup_model.h5')
 # squat_model = load_model('C:/Users/LeeYongJun/Desktop/AIHT/aiht-web/python/classification/model/squat_model.h5')
 
-# 스쿼트 변수
-squat_count = 0
-squat_check = False
-squat_correct_pose = False
-
-# 푸쉬업 변수
-pushup_count = 0
-pushup_check = False
-pushup_correct_pose = False
 
 # 스쿼트 자세 교정 변수
 squat_down_angle = 130
@@ -101,8 +93,6 @@ def run(fitness_mode, pose_landmarks, input_width, input_height):
     
     # 스쿼트
     if fitness_mode == "SQUAT":
-        global squat_check, squat_count, squat_correct_pose
-
         keypoints_array = np.array([keypoints_squat])
         predict = squat_model.predict(keypoints_array)
 
@@ -188,30 +178,27 @@ def run(fitness_mode, pose_landmarks, input_width, input_height):
 
             # 스쿼트 자세 판별
             if correct_right_knee and correct_left_knee and correct_right_ankle and correct_left_ankle and correct_left_foot and correct_right_foot:
-                squat_correct_pose = True
+                app.session['pushup_correct_pose'] = True
             else:
-                squat_correct_pose = False
-                squat_check = False
+                app.session['pushup_correct_pose'] = False
+                app.session['squat_check'] = False
 
-            if squat_correct_pose and squat_check and left_leg_angle > 170 and right_leg_angle > 170:
-                squat_count += 1
-                squat_check = False
+            if app.session['pushup_correct_pose'] and app.session['squat_check'] and left_leg_angle > 170 and right_leg_angle > 170:
+                app.session['squat_count'] += 1
+                app.session['squat_check'] = False
 
         elif squat_state == 1:
             state = "DOWN"
-            if squat_correct_pose and right_leg_angle < squat_down_angle and left_leg_angle < squat_down_angle:
-                squat_check = True
-
+            if app.session['pushup_correct_pose'] and right_leg_angle < squat_down_angle and left_leg_angle < squat_down_angle:
+                app.session['squat_check'] = True
 
         else:
             state = "NOTHING"
 
-        return state, squat_count, squat_correct_dict
+        return state, squat_correct_dict
 
     # 푸쉬업
     elif fitness_mode == "PUSH_UP":
-        global pushup_check, pushup_count, pushup_correct_pose
-
         # LEFT 푸쉬업
         if keypoints[LEFT_SHOULDER][0] > keypoints[NOSE][0] or keypoints[RIGHT_SHOULDER][0] > \
                 keypoints[NOSE][0]:
@@ -237,7 +224,7 @@ def run(fitness_mode, pose_landmarks, input_width, input_height):
             else:
                 state = "NOTHING"
 
-        return state, pushup_count
+        return state
 
 
 # 두 점 사이의 거리

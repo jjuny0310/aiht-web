@@ -18,6 +18,19 @@ setpernum = 0
 resttime = 0
 
 
+# 초기변수 초기화
+def init_value():
+    # 스쿼트 변수
+    session['squat_count'] = 0
+    session['squat_check'] = False
+    session['squat_correct_pose'] = False
+
+    # 푸쉬업 변수
+    session['pushup_count'] = 0
+    session['pushup_check'] = False
+    session['pushup_correct_pose'] = False
+
+
 # 데이터베이스 테이블
 class User(db.Model):
     __tablename__ = 'user'
@@ -46,6 +59,8 @@ class User(db.Model):
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
+    init_value()
+
     global fitness_mode, set_num, setpernum, resttime
 
     if request.method == 'GET':
@@ -60,6 +75,8 @@ def home():
 
 @app.route('/start')
 def start():
+    init_value()
+
     try:
         if session['login']:
             return render_template('start.html', fitness_mode=fitness_mode)
@@ -150,9 +167,9 @@ def exercise_analysis():
 
         # 메인 알고리즘
         if fitness_mode == "SQUAT":
-            state, count, squat_correct_dict = run(fitness_mode, pose_landmarks, input_width, input_height)
+            state, squat_correct_dict = run(fitness_mode, pose_landmarks, input_width, input_height)
 
-            return jsonify(fitness_mode=fitness_mode, state=state, count=count, correct_dict=squat_correct_dict)
+            return jsonify(fitness_mode=fitness_mode, state=state, count=session['squat_count'], correct_dict=squat_correct_dict)
 
         elif fitness_mode == "PUSH_UP":
             state, count = run(fitness_mode, pose_landmarks, input_width, input_height)
@@ -163,7 +180,7 @@ def exercise_analysis():
 
 if __name__ == '__main__':
     # debug는 소스코드 변경시 자동 재시작
-    app.run(debug=True, threaded=True)
+    # app.run(debug=True, threaded=True)
     
     # 배포 시 debug 해제 해야함
-    # app.run()
+    app.run()

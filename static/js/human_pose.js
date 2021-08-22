@@ -60,6 +60,7 @@ function poseOnResults(results) {
         data: JSON.stringify(dataList),
         dataType : 'JSON',
         contentType: "application/json",
+        async: false,
         success: function (data){
             switch (data.fitness_mode){
                 case "SQUAT":
