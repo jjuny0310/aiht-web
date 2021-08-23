@@ -87,14 +87,21 @@ function poseOnResults(results) {
         contentType: "application/json",
         async: false,
         success: function (data){
-            switch (data.fitness_mode){
-                case "SQUAT":
-                    // 로딩 완료 시 초기세팅
+                // 로딩 완료 시 초기세팅
                     if(loadingFlag) {
                         closeLoadingWithMask();
                         $('#trainer_video').get(0).play();
                         loadingFlag = false;
                     }
+                // 종료 시
+                if(data.num === count){
+                    new Audio('../static/sound/end/exercise_end.mp3').play();
+                    location.href = "/result";
+                    return 0;
+                }
+
+            switch (data.fitness_mode){
+                case "SQUAT":
                     // python 에서 전달받은 값
                     correct_pose = data.correct_pose;
 
@@ -143,13 +150,6 @@ function poseOnResults(results) {
                     }
                     break;
                 case "PUSH_UP":
-                    // 로딩 완료 시
-                    if(loadingFlag){
-                        closeLoadingWithMask();
-                        $('#trainer_video').get(0).play();
-                        loadingFlag = false;
-                    }
-
                     state = data.state;
                     document.getElementById('count').innerHTML = "횟수 : " + data.count;
                     break;

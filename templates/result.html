@@ -46,13 +46,12 @@
         </nav>
         <!-- Header-->
         <header class="masthead d-flex align-items-center">
-            <!-- 모달 창-->
+            <!-- 결과 창-->
             <div id="modal" class="modal-overlay" style="display: flex">
-                <div class="modal-window">
+                <div class="modal-window" style="width: 50%">
                     <div class="title">
-                        <h2>Exercise Option</h2>
+                        <h2>결과 화면</h2>
                     </div>
-                    <div class="close-area">X</div>
                     <hr style="color: white">
                     <div class="content">
                         <form id="select_option" method="post">
@@ -60,21 +59,42 @@
                                 <tr>
                                     <td>운동 종류</td>
                                     <td>
-                                        <select id="select_exercise" name="select_exercise" onchange="changeExercise()">
-                                            <option selected value="SQUAT">스쿼트</option>
-                                            <option value="PUSH_UP">푸쉬업</option>
-                                        </select>
+                                        <input type="text" name="select_memo" readonly>
                                     </td>
                                 </tr>
 
                                 <tr>
                                     <td>목표 횟수</td>
                                     <td>
-                                        <select name="select_num">
-                                            <option selected>10</option>
-                                            <option>20</option>
-                                            <option>30</option>
-                                        </select>
+                                        <input type="text" name="select_memo" readonly>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>시작 시간</td>
+                                    <td>
+                                        <input type="text" name="select_memo" readonly>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>종료 시간</td>
+                                    <td>
+                                        <input type="text" name="select_memo" readonly>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>순수 운동 시간</td>
+                                    <td>
+                                        <input type="text" name="select_memo" readonly>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>소모 칼로리</td>
+                                    <td>
+                                        <input type="text" name="select_memo" readonly>
                                     </td>
                                 </tr>
 

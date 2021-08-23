@@ -59,7 +59,6 @@ class User(db.Model):
 @app.route('/', methods=['GET', 'POST'])
 def home():
     init_value()
-
     global fitness_mode, num, memo
 
     if request.method == 'GET':
@@ -74,7 +73,6 @@ def home():
 @app.route('/start')
 def start():
     init_value()
-
     try:
         if session['login']:
             return render_template('start.html', fitness_mode=fitness_mode, num=num)
@@ -82,6 +80,11 @@ def start():
             return redirect(url_for('login'))
     except:
         return redirect(url_for('login'))
+
+@app.route('/result')
+def result():
+    return render_template('result.html')
+
 
 
 @app.route('/login', methods=['GET', 'POST'])
