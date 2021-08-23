@@ -14,7 +14,6 @@ db = SQLAlchemy(app)
 # 운동 선택
 fitness_mode = ""
 num = 0
-memo = ""
 
 
 # 초기변수 초기화
@@ -59,14 +58,13 @@ class User(db.Model):
 @app.route('/', methods=['GET', 'POST'])
 def home():
     init_value()
-    global fitness_mode, num, memo
+    global fitness_mode, num
 
     if request.method == 'GET':
         return render_template('index.html')
     else:
         fitness_mode = request.form['select_exercise']
         num = int(request.form['select_num'])
-        memo = request.form['select_memo']
         return redirect(url_for('start'))
 
 

@@ -12,6 +12,7 @@ var loadingFlag = true;
 var playSoundFlag = true;
 var endSoundFlag = true;
 var upFlag = true;
+var exerciseFlag = true;
 
 // 오디오 변수
 var leftKneeSound = new Audio('../static/sound/squat/left_knee.mp3');
@@ -94,10 +95,10 @@ function poseOnResults(results) {
                         loadingFlag = false;
                     }
                 // 종료 시
-                if(data.num === count){
+                if(data.num === count && exerciseFlag){
+                    exerciseFlag = false;
                     new Audio('../static/sound/end/exercise_end.mp3').play();
-                    location.href = "/result";
-                    return 0;
+                    setTimeout(function() { location.href = "/result"; }, 4000);
                 }
 
             switch (data.fitness_mode){
