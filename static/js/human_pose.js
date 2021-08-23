@@ -98,7 +98,6 @@ function poseOnResults(results) {
                     // python 에서 전달받은 값
                     correct_pose = data.correct_pose;
 
-
                     // 사용자가 지정한 횟수까지 수행
                     if(count < data.num){
                          // 카운트 및 각도 체크 사운드
@@ -142,7 +141,6 @@ function poseOnResults(results) {
                                 setTimeout(function() { playSoundFlag = true;}, soundDelay);
                         }   
                     }
-
                     break;
                 case "PUSH_UP":
                     // 로딩 완료 시
@@ -155,11 +153,9 @@ function poseOnResults(results) {
                     state = data.state;
                     document.getElementById('count').innerHTML = "횟수 : " + data.count;
                     break;
-
             }
         },
         error: function (request, status, error){
-            // alert(error);
         }
     })
   canvasCtx.restore();

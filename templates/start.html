@@ -78,9 +78,9 @@
                                   {% if num == 10 %}
                                       <video id="trainer_video" src="../static/video/squat_10.mp4" muted onended="endVideo()"></video>
                                   {% elif num == 20 %}
-                                      <video id="trainer_video" src="../static/video/squat_20.mp4" muted></video>
+                                      <video id="trainer_video" src="../static/video/squat_20.mp4" muted onended="endVideo()"></video>
                                   {% elif num == 30 %}
-                                      <video id="trainer_video" src="../static/video/squat_30.mp4" muted></video>
+                                      <video id="trainer_video" src="../static/video/squat_30.mp4" muted onended="endVideo()"></video>
                                   {% endif %}
                               {% elif fitness_mode == "PUSH_UP" %}
                                 <video id="trainer_video" src="../static/video/pushup.mp4" muted></video>

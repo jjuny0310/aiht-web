@@ -90,6 +90,7 @@ def run(fitness_mode, pose_landmarks, input_width, input_height):
             if idx in squat_parts:
                 keypoints_squat.append(landmark['x'])
                 keypoints_squat.append(landmark['y'])
+            if idx in squat_parts[7:]:
                 visibilitys_squat.append(landmark['visibility'])
 
         elif fitness_mode == "PUSH_UP":
@@ -111,10 +112,10 @@ def run(fitness_mode, pose_landmarks, input_width, input_height):
         visibility_count = 0
         visibility_check = False
         for visibility in visibilitys_squat:
-            if visibility > 0.6:
+            if visibility > 0.8:
                 visibility_count += 1
             # 모든 관절 정확도 60% 이상이면 True
-            if visibility_count == len(squat_parts):
+            if visibility_count == len(squat_parts[7:]):
                 visibility_check = True
 
         keypoints_array = np.array([keypoints_squat])
