@@ -66,7 +66,7 @@ def home():
         return render_template('index.html')
     else:
         fitness_mode = request.form['select_exercise']
-        num = request.form['select_num']
+        num = int(request.form['select_num'])
         memo = request.form['select_memo']
         return redirect(url_for('start'))
 
@@ -77,7 +77,7 @@ def start():
 
     try:
         if session['login']:
-            return render_template('start.html', fitness_mode=fitness_mode)
+            return render_template('start.html', fitness_mode=fitness_mode, num=num)
         else:
             return redirect(url_for('login'))
     except:

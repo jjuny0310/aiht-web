@@ -5,11 +5,32 @@ const canvasCtx = canvasElement.getContext('2d');
 LoadingWithMask();
 var count = 0;
 var correct_pose = false;
+var soundDelay = 4000;
 
 // 플래그 변수
 var loadingFlag = true;
 var playSoundFlag = true;
+var endSoundFlag = true;
 var upFlag = true;
+
+// 오디오 변수
+var leftKneeSound = new Audio('../static/sound/squat/left_knee.mp3');
+var rightKneeSound = new Audio('../static/sound/squat/right_knee.mp3');
+var ankleSound = new Audio('../static/sound/squat/ankle.mp3');
+var footSound = new Audio('../static/sound/squat/foot.mp3');
+var nothingSound = new Audio('../static/sound/squat/nothing.mp3');
+
+function endVideo(){
+    endSoundFlag = false;
+    leftKneeSound.pause();
+    rightKneeSound.pause();
+    ankleSound.pause();
+    footSound.pause();
+    nothingSound.pause();
+
+    new Audio('../static/sound/end/trainer_end.mp3').play();
+    setTimeout(function() { endSoundFlag = true;}, 6000);
+}
 
 function poseOnResults(results) {
     // 캔버스 반응형
@@ -76,47 +97,50 @@ function poseOnResults(results) {
                     }
                     // python 에서 전달받은 값
                     correct_pose = data.correct_pose;
-                    console.log(data.state);
 
-                    // 카운트 및 각도 체크 사운드
-                    if(upFlag && data.angle_check){
-                        new Audio('../static/sound/squat/up.mp3').play();
-                        upFlag = false;
-                    }
-                    if(count !== data.count){
-                        count = data.count
-                        new Audio('../static/sound/count/' + count + '.mp3').play();
-                        document.getElementById('count').innerHTML = "횟수 : " + data.count;
-                        upFlag = true;
-                    }
-                    
-                    // 자세교정 지시음
-                    if(playSoundFlag && data.state==="UP" && data.visibility){
-                        if(!data.correct_dict['correct_left_knee']){
-                            new Audio('../static/sound/squat/left_knee.mp3').play();
-                            playSoundFlag = false;
-                            setTimeout(function() { playSoundFlag = true;}, 5000);
+
+                    // 사용자가 지정한 횟수까지 수행
+                    if(count < data.num){
+                         // 카운트 및 각도 체크 사운드
+                        if(upFlag && data.angle_check){
+                            new Audio('../static/sound/squat/up.mp3').play();
+                            upFlag = false;
                         }
-                        else if(!data.correct_dict['correct_right_knee']){
-                            new Audio('../static/sound/squat/right_knee.mp3').play();
-                            playSoundFlag = false;
-                            setTimeout(function() { playSoundFlag = true;}, 5000);
+                        if(count !== data.count){
+                            count = data.count
+                            new Audio('../static/sound/count/' + count + '.mp3').play();
+                            document.getElementById('count').innerHTML = "횟수 : " + data.count;
+                            upFlag = true;
                         }
-                        else if(!data.correct_dict['correct_left_ankle'] || !data.correct_dict['correct_right_ankle']){
-                            new Audio('../static/sound/squat/ankle.mp3').play();
-                            playSoundFlag = false;
-                            setTimeout(function() { playSoundFlag = true;}, 5000);
+                        
+                        // 자세교정 지시음
+                        if(playSoundFlag && endSoundFlag && data.state==="UP" && data.visibility){
+                            if(!data.correct_dict['correct_left_knee']){
+                                leftKneeSound.play();
+                                playSoundFlag = false;
+                                setTimeout(function() { playSoundFlag = true;}, soundDelay);
+                            }
+                            else if(!data.correct_dict['correct_right_knee']){
+                                rightKneeSound.play();
+                                playSoundFlag = false;
+                                setTimeout(function() { playSoundFlag = true;}, soundDelay);
+                            }
+                            else if(!data.correct_dict['correct_left_ankle'] || !data.correct_dict['correct_right_ankle']){
+                                ankleSound.play();
+                                playSoundFlag = false;
+                                setTimeout(function() { playSoundFlag = true;}, soundDelay);
+                            }
+                            else if(!data.correct_dict['correct_left_foot'] || !data.correct_dict['correct_right_foot']){
+                                footSound.play();
+                                playSoundFlag = false;
+                                setTimeout(function() { playSoundFlag = true;}, soundDelay);
+                            }
                         }
-                        else if(!data.correct_dict['correct_left_foot'] || !data.correct_dict['correct_right_foot']){
-                            new Audio('../static/sound/squat/foot.mp3').play();
-                            playSoundFlag = false;
-                            setTimeout(function() { playSoundFlag = true;}, 5000);
-                        }
-                    }
-                    else if(playSoundFlag && data.state==="NOTHING"){
-                            new Audio('../static/sound/squat/nothing.mp3').play();
-                            playSoundFlag = false;
-                            setTimeout(function() { playSoundFlag = true;}, 5000);
+                        else if(playSoundFlag && data.state==="NOTHING"){
+                                nothingSound.play();
+                                playSoundFlag = false;
+                                setTimeout(function() { playSoundFlag = true;}, soundDelay);
+                        }   
                     }
 
                     break;
