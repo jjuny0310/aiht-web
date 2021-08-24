@@ -61,10 +61,14 @@ squat_model = load_model('C:/Users/LeeYongJun/Desktop/AIHT/aiht-web/python/class
 # 스쿼트 자세 교정 변수
 squat_up_angle = 150
 squat_down_angle = 100
+
 good_foot_angle = [30, 70]
+
 # ankle_distance_range = [0.000002, 0.01]
 # knee_distance_range = [0.000003, 0.04]
+
 ankle_distance_range = [0, 0.05]
+
 knee_distance_range = [0, 0.1]
 
 # 푸쉬업 자세 교정 변수
@@ -182,10 +186,8 @@ def run(fitness_mode, pose_landmarks, input_width, input_height):
 
             # 오른쪽 무릎 자세 교정
             if knee_distance_range[0] <= right_shoulder_to_knee <= knee_distance_range[1]:
-                # 바른 자세
                 correct_right_knee = True
             else:
-                # 틀린 자세
                 correct_right_knee = False
 
             # 왼쪽 무릎 자세 교정

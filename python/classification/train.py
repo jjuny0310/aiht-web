@@ -21,7 +21,6 @@ def train(FITNESS_MODE):
     # 데이터 전처리 --> 1행 삭제, (26, ?) -> (?, 26)으로 변경
     up_pose_data = np.loadtxt(up_data_path, unpack=True, delimiter=',', skiprows=1, dtype=np.float64).transpose()
     down_pose_data = np.loadtxt(down_data_path, unpack=True, delimiter=',', skiprows=1, dtype=np.float64).transpose()
-
     nothing_pose_data = np.loadtxt(nothing_data_path, unpack=True, delimiter=',', skiprows=1, dtype=np.float64).transpose()
 
     print(up_pose_data.shape)
@@ -66,7 +65,7 @@ def train(FITNESS_MODE):
                   loss='sparse_categorical_crossentropy',
                   metrics=['accuracy'])
 
-    model.summary()     # 모델 요약
+    model.summary()
     
     # 학습
     model.fit(train_x, train_y, batch_size=50, epochs=100, verbose=1)

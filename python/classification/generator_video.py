@@ -200,7 +200,7 @@ if __name__ == '__main__':
     # pose_choice = 'DOWN'
     # pose_choice = 'NOTHING'
 
-    # 푸쉬업만 선택(좌우반전 여부)
+    # 푸쉬업만 선택(좌우반전 여부, EX) LEFT_PUSH_UP 이면 영상에서 왼팔이 캠앞에 있어야함(오른팔이 뒤로) )
     reverse = True
     # reverse = False
 
