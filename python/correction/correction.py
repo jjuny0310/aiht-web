@@ -157,6 +157,8 @@ def pose_correction(path, FITNESS_MODE):
             elif FITNESS_MODE == "PUSH_UP":
                 pass
 
+
+
             # Imshow
             frame = cv2.flip(frame, 1)
             cv2.imshow('Pose Correction', frame)
@@ -212,12 +214,16 @@ def pose_correction(path, FITNESS_MODE):
             print(f"'{FITNESS_MODE}' 트레이너 비디오 종합 결과")
 
 
+
+
 if __name__ == '__main__':
     # 트레이너 비디오
-    path = "../../static/video/squat.mp4"
+    # path = "../../static/video/squat.mp4"
+    path = "../../static/video/pushup.mp4"
+
 
     # 운동 선택
-    FITNESS_MODE = "SQUAT"
-    # FITNESS_MODE = "PUSH_UP"
+    # FITNESS_MODE = "SQUAT"
+    FITNESS_MODE = "PUSH_UP"
 
     pose_correction(path, FITNESS_MODE=FITNESS_MODE)
