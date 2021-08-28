@@ -70,8 +70,8 @@ knee_distance_range = [0, 0.1]
 # 푸쉬업 자세 교정 변수
 pushup_up_angle = 150
 pushup_down_angle = 100
-hip_distance_range = [0., 0.05]
-elbow_distance_range = [0.1, 0.5]
+hip_distance_range = [0, 0.2]
+elbow_distance_range = [0.1, 1]
 
 
 def run(fitness_mode, pose_landmarks, input_width, input_height):
@@ -234,7 +234,7 @@ def run(fitness_mode, pose_landmarks, input_width, input_height):
 
             # 팔의 각도
             left_arm_angle = getAngle3P(keypoints[LEFT_SHOULDER], keypoints[LEFT_ELBOW],
-                                        keypoints[LEFT_WRIST])  # 왼팔 각도
+                                        keypoints[LEFT_WRIST])
 
             # 엉덩이 범위
             shoulder_to_hip = abs(keypoints[LEFT_SHOULDER][1] - keypoints[LEFT_HIP][1])
