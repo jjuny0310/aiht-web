@@ -21,6 +21,7 @@ var ankleSound = new Audio('../static/sound/squat/ankle.mp3');
 var footSound = new Audio('../static/sound/squat/foot.mp3');
 var nothingSound = new Audio('../static/sound/squat/nothing.mp3');
 
+// 트레이너 비디오 종료 시 처리
 function endVideo(){
     trainerEndFlag = false;
     leftKneeSound.pause();
@@ -57,7 +58,7 @@ function poseOnResults(results) {
                     {color: '#BDBDBD', lineWidth: 1});
     }
 
-    // Ajax
+    // AJAX 통신
     var input_video = $('#input_video');
     var trainer_video = $('#trainer_video');
     var canvas = $('#output_canvas')
@@ -70,7 +71,6 @@ function poseOnResults(results) {
 
     var trainer_width = trainer_video.css('width').replace("px", "");
     var trainer_height = trainer_video.css('height').replace("px", "");
-
 
 
     var dataList = {
