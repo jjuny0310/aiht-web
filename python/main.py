@@ -70,8 +70,8 @@ knee_distance_range = [0, 0.1]
 # 푸쉬업 자세 교정 변수
 pushup_up_angle = 150
 pushup_down_angle = 100
-hip_distance_range = [0, 0.15]
-elbow_distance_range = [0, 0.1]
+hip_distance_range = [0, 0.3]
+elbow_distance_range = [0, 0.3]
 
 
 def run(fitness_mode, pose_landmarks, input_width, input_height):

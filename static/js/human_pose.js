@@ -151,6 +151,9 @@ function poseOnResults(results) {
                     }
                     break;
                 case "PUSH_UP":
+                    // python 에서 전달받은 값
+                    correct_pose = data.correct_pose;
+
                     console.log(data.state)
 
                     document.getElementById('count').innerHTML = "횟수 : " + data.count;
@@ -158,6 +161,7 @@ function poseOnResults(results) {
             }
         },
         error: function (request, status, error){
+            console.log("오류발생")
         }
     })
   canvasCtx.restore();
