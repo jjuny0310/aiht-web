@@ -193,7 +193,6 @@ def pose_correction(path, FITNESS_MODE, reverse):
                 # 팔꿈치 범위
                 wrist_to_elbow = abs(keypoints[LEFT_WRIST][0] - keypoints[LEFT_ELBOW][0])
                 wrist_to_elbow_list.append(wrist_to_elbow)
-                print(wrist_to_elbow)
 
         # Imshow
         if FITNESS_MODE == "SQUAT":
@@ -243,8 +242,8 @@ def pose_correction(path, FITNESS_MODE, reverse):
 
 if __name__ == '__main__':
     # 트레이너 비디오
-    # path = "../../static/video/squat_10.mp4"
-    path = "../../static/video/pushup.mp4"
+    # path = "../../static/video/squat_30.mp4"
+    path = "../../static/video/pushup_30.mp4"
 
 
     # 운동 선택

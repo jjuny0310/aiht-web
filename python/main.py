@@ -70,8 +70,8 @@ knee_distance_range = [0, 0.1]
 # 푸쉬업 자세 교정 변수
 pushup_up_angle = 150
 pushup_down_angle = 100
-hip_distance_range = [0, 0.2]
-elbow_distance_range = [0.1, 1]
+hip_distance_range = [0, 0.15]
+elbow_distance_range = [0, 0.1]
 
 
 def run(fitness_mode, pose_landmarks, input_width, input_height):
@@ -265,6 +265,8 @@ def run(fitness_mode, pose_landmarks, input_width, input_height):
                     correct_elbow = True
                 else:
                     correct_elbow = False
+
+                pushup_correct_dict = {'correct_hand': correct_hand, 'correct_hip': correct_hip, 'correct_elbow': correct_elbow}
 
                 # 푸쉬업 자세 판별
                 if correct_hand and correct_hip and correct_elbow:
