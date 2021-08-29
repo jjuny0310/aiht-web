@@ -296,12 +296,63 @@ def run(fitness_mode, pose_landmarks, input_width, input_height):
             right_keypoints_array = np.array([keypoints_pushup_right])
             right_predict = pushup_right_model.predict(right_keypoints_array)
 
+            # 팔의 각도
+            right_arm_angle = getAngle3P(keypoints[RIGHT_SHOULDER], keypoints[RIGHT_ELBOW],
+                                        keypoints[RIGHT_WRIST])
+
+            # 엉덩이 범위
+            shoulder_to_hip = abs(keypoints[RIGHT_SHOULDER][1] - keypoints[RIGHT_HIP][1])
+
+            # 팔꿈치 범위
+            wrist_to_elbow = abs(keypoints[RIGHT_WRIST][0] - keypoints[RIGHT_ELBOW][0])
+
             if np.argmax(right_predict[0]) == 0:
                 state = "RIGHT_UP"
+
+                # 푸쉬업 자세교정
+                # 손 방향 자세교정
+                if keypoints[RIGHT_PINKY][0] > keypoints[RIGHT_WRIST][0] and\
+                   keypoints[RIGHT_INDEX][0] > keypoints[RIGHT_WRIST] and \
+                   keypoints[RIGHT_THUMB][0] > keypoints[RIGHT_WRIST][0]:
+                    correct_hand = True
+                else:
+                    correct_hand = False
+
+                # 엉덩이 자세교정
+                if hip_distance_range[0] <= shoulder_to_hip <= hip_distance_range[1] and keypoints[RIGHT_SHOULDER][1] <= keypoints[RIGHT_HIP][1]:
+                    correct_hip = True
+                else:
+                    correct_hip = False
+
+                # 팔꿈치 방향 자세교정
+                if keypoints[RIGHT_ELBOW][0] < keypoints[RIGHT_WRIST][0] and elbow_distance_range[0] <= wrist_to_elbow <= elbow_distance_range[1]:
+                    correct_elbow = True
+                else:
+                    correct_elbow = False
+
+                pushup_correct_dict = {'correct_hand': correct_hand, 'correct_hip': correct_hip, 'correct_elbow': correct_elbow}
+
+                # 푸쉬업 자세 판별
+                if correct_hand and correct_hip and correct_elbow:
+                    app.session['pushup_correct_pose'] = True
+                else:
+                    app.session['pushup_correct_pose'] = False
+                    app.session['pushup_check'] = False
+
+                if app.session['pushup_correct_pose'] and app.session['pushup_check'] and right_arm_angle > pushup_up_angle:
+                    app.session['pushup_count'] += 1
+                    app.session['pushup_check'] = False
+
+
             elif np.argmax(right_predict[0]) == 1:
                 state = "RIGHT_DOWN"
+                if app.session['pushup_correct_pose'] and right_arm_angle < pushup_down_angle:
+                    app.session['pushup_check'] = True
+
             else:
                 state = "NOTHING"
+                app.session['pushup_correct_pose'] = False
+                app.session['pushup_check'] = False
 
         return state, pushup_correct_dict
 
