@@ -151,7 +151,7 @@ function poseOnResults(results) {
                     }
                     break;
                 case "PUSH_UP":
-                    console.log(data)
+                    console.log(data.state)
 
                     document.getElementById('count').innerHTML = "횟수 : " + data.count;
                     break;

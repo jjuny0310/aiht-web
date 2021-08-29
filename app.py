@@ -172,8 +172,9 @@ def exercise_analysis():
                            num=num)
 
         elif fitness_mode == "PUSH_UP":
-            state = run(fitness_mode, pose_landmarks, input_width, input_height)
-            return jsonify(fitness_mode=fitness_mode, state=state, count=session['pushup_count'])
+            state, pushup_correct_dict = run(fitness_mode, pose_landmarks, input_width, input_height)
+            return jsonify(fitness_mode=fitness_mode, state=state, count=session['pushup_count'], correct_dict=pushup_correct_dict,
+                           correct_pose=session['pushup_correct_pose'], angle_check=session['pushup_check'], num=num)
     except:
         return jsonify(success=False)
 

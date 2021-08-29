@@ -226,6 +226,8 @@ def run(fitness_mode, pose_landmarks, input_width, input_height):
 
     # 푸쉬업
     elif fitness_mode == "PUSH_UP":
+        pushup_correct_dict = {}
+
         # LEFT 푸쉬업
         if keypoints[LEFT_SHOULDER][0] > keypoints[NOSE][0] or keypoints[RIGHT_SHOULDER][0] > \
                 keypoints[NOSE][0]:
@@ -301,7 +303,7 @@ def run(fitness_mode, pose_landmarks, input_width, input_height):
             else:
                 state = "NOTHING"
 
-        return state
+        return state, pushup_correct_dict
 
 
 # 두 점 사이의 거리
