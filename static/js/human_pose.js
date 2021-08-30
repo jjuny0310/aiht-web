@@ -161,7 +161,6 @@ function poseOnResults(results) {
             }
         },
         error: function (request, status, error){
-            console.log("오류발생")
         }
     })
   canvasCtx.restore();
