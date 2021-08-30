@@ -58,16 +58,14 @@ squat_model = load_model('python/classification/model/squat_model.h5')
 # squat_model = load_model('C:/Users/LeeYongJun/Desktop/AIHT/aiht-web/python/classification/model/squat_model.h5')
 
 
-# 스쿼트 자세 교정 변수
+# 스쿼트 자세 교정 수치
 squat_up_angle = 150
 squat_down_angle = 100
 good_foot_angle = [30, 70]
-# ankle_distance_range = [0.000002, 0.01]
-# knee_distance_range = [0.000003, 0.04]
 ankle_distance_range = [0, 0.05]
 knee_distance_range = [0, 0.1]
 
-# 푸쉬업 자세 교정 변수
+# 푸쉬업 자세 교정 수치
 pushup_up_angle = 150
 pushup_down_angle = 90
 hip_distance_range = [0, 0.15]
@@ -263,7 +261,7 @@ def run(fitness_mode, pose_landmarks, input_width, input_height):
                     correct_hip = False
                 
                 # 팔꿈치 방향 자세교정
-                if keypoints[LEFT_ELBOW][0] > keypoints[LEFT_WRIST][0] and elbow_distance_range[0] <= wrist_to_elbow <= elbow_distance_range[1]:
+                if keypoints[LEFT_ELBOW][0] > keypoints[LEFT_WRIST][0] and elbow_distance_range[0] < wrist_to_elbow < elbow_distance_range[1]:
                     correct_elbow = True
                 else:
                     correct_elbow = False

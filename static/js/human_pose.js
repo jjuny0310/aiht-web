@@ -11,15 +11,20 @@ var soundDelay = 4000;
 var loadingFlag = true;
 var poseSoundFlag = true;
 var trainerEndFlag = true;
-var upSoundFlag = true;
+var downSoundFlag = true;
 var exerciseEndFlag = true;
 
-// 오디오 변수
+// 1.스쿼트 오디오 변수
 var leftKneeSound = new Audio('../static/sound/squat/left_knee.mp3');
 var rightKneeSound = new Audio('../static/sound/squat/right_knee.mp3');
 var ankleSound = new Audio('../static/sound/squat/ankle.mp3');
 var footSound = new Audio('../static/sound/squat/foot.mp3');
 var nothingSound = new Audio('../static/sound/squat/nothing.mp3');
+
+// 2.푸쉬업 오디오 변수
+var hipSound = new Audio('../static/sound/push_up/hip.mp3');
+var handSound = new Audio('../static/sound/push_up/hand.mp3');
+var elbowSound = new Audio('../static/sound/push_up/elbow.mp3');
 
 // 트레이너 비디오 종료 시 처리
 function endVideo(){
@@ -29,6 +34,10 @@ function endVideo(){
     ankleSound.pause();
     footSound.pause();
     nothingSound.pause();
+
+    hipSound.pause();
+    handSound.pause();
+    elbowSound.pause();
 
     new Audio('../static/sound/end/trainer_end.mp3').play();
     setTimeout(function() { trainerEndFlag = true;}, 6000);
@@ -109,15 +118,15 @@ function poseOnResults(results) {
                     // 사용자가 지정한 횟수까지 수행
                     if(count < data.num){
                          // 카운트 및 각도 체크 사운드
-                        if(upSoundFlag && data.angle_check){
-                            new Audio('../static/sound/squat/up.mp3').play();
-                            upSoundFlag = false;
+                        if(downSoundFlag && data.angle_check){
+                            new Audio('../static/sound/count/down.mp3').play();
+                            downSoundFlag = false;
                         }
                         if(count !== data.count){
                             count = data.count
                             new Audio('../static/sound/count/' + count + '.mp3').play();
                             document.getElementById('count').innerHTML = "횟수 : " + data.count;
-                            upSoundFlag = true;
+                            downSoundFlag = true;
                         }
                         
                         // 자세교정 지시음
@@ -154,9 +163,38 @@ function poseOnResults(results) {
                     // python 에서 전달받은 값
                     correct_pose = data.correct_pose;
 
-                    console.log(data.state)
-
-                    document.getElementById('count').innerHTML = "횟수 : " + data.count;
+                    // 사용자가 지정한 횟수까지 수행
+                    if(count < data.num) {
+                        // 카운트 및 각도 체크 사운드
+                        if (downSoundFlag && data.angle_check) {
+                            new Audio('../static/sound/count/down.mp3').play();
+                            downSoundFlag = false;
+                        }
+                        if (count !== data.count) {
+                            count = data.count
+                            new Audio('../static/sound/count/' + count + '.mp3').play();
+                            document.getElementById('count').innerHTML = "횟수 : " + data.count;
+                            downSoundFlag = true;
+                        }
+                    }
+                    // 자세교정 지시음
+                    if(poseSoundFlag && trainerEndFlag && data.state==="UP"){
+                        if(!data.correct_dict['correct_hand']){
+                            handSound.play();
+                            poseSoundFlag = false;
+                            setTimeout(function() { poseSoundFlag = true;}, soundDelay);
+                        }
+                        else if(!data.correct_dict['correct_elbow']){
+                            elbowSound.play();
+                            poseSoundFlag = false;
+                            setTimeout(function() { poseSoundFlag = true;}, soundDelay);
+                        }
+                        else if(!data.correct_dict['correct_hip']){
+                            hipSound.play();
+                            poseSoundFlag = false;
+                            setTimeout(function() { poseSoundFlag = true;}, soundDelay);
+                        }
+                    }
                     break;
             }
         },
