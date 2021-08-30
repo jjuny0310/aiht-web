@@ -60,16 +60,16 @@ def run(path, FITNESS_MODE):
 
     # 자세 분류기 모델 불러오기
     if FITNESS_MODE == "PUSH_UP":  # 푸쉬업 모델
-        left_pushup_model = load_model('classification/model/left_pushup_model.h5')
+        left_pushup_model = load_model('model/left_pushup_model.h5')
         left_sel_keypoints = [NOSE, LEFT_SHOULDER, RIGHT_SHOULDER, LEFT_ELBOW,
                                LEFT_WRIST, LEFT_HIP, RIGHT_HIP, LEFT_KNEE, LEFT_ANKLE]
 
-        right_pushup_model = load_model('classification/model/right_pushup_model.h5')
+        right_pushup_model = load_model('model/right_pushup_model.h5')
         right_sel_keypoints = [NOSE, LEFT_SHOULDER, RIGHT_SHOULDER, RIGHT_ELBOW,
                               RIGHT_WRIST, LEFT_HIP, RIGHT_HIP, RIGHT_KNEE, RIGHT_ANKLE]
 
     else:  # 스쿼트 모델
-        model = load_model('classification/model/squat_model.h5')
+        model = load_model('model/squat_model.h5')
         sel_keypoints = [NOSE, LEFT_SHOULDER, RIGHT_SHOULDER, LEFT_ELBOW, RIGHT_ELBOW,
                          LEFT_WRIST, RIGHT_WRIST, LEFT_HIP, RIGHT_HIP, LEFT_KNEE, RIGHT_KNEE,
                          LEFT_ANKLE, RIGHT_ANKLE]
@@ -157,6 +157,7 @@ def run(path, FITNESS_MODE):
                 else:       # NOTHING 상태
                     print("NOTHING")
 
+        frame = cv2.flip(frame, 1)
         cv2.imshow("Smart Fitness", frame)
 
         # 입력 대기
@@ -179,8 +180,8 @@ if __name__ == '__main__':
     # path = "classification/video/push_up/3.mp4"  # 동영상
 
     # 운동 선택
-    FITNESS_MODE = "SQUAT"
-    # FITNESS_MODE = "PUSH_UP"
+    # FITNESS_MODE = "SQUAT"
+    FITNESS_MODE = "PUSH_UP"
 
 
     run(path, FITNESS_MODE)
