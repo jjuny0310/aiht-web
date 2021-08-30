@@ -163,6 +163,8 @@ function poseOnResults(results) {
                     // python 에서 전달받은 값
                     correct_pose = data.correct_pose;
 
+                    console.log(data.state)
+
                     // 사용자가 지정한 횟수까지 수행
                     if(count < data.num) {
                         // 카운트 및 각도 체크 사운드

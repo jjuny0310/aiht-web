@@ -67,7 +67,7 @@ knee_distance_range = [0, 0.1]
 
 # 푸쉬업 자세 교정 수치
 pushup_up_angle = 150
-pushup_down_angle = 90
+pushup_down_angle = 100
 hip_distance_range = [0, 0.15]
 elbow_distance_range = [0, 0.1]
 
@@ -243,11 +243,11 @@ def run(fitness_mode, pose_landmarks, input_width, input_height):
             wrist_to_elbow = abs(keypoints[LEFT_WRIST][0] - keypoints[LEFT_ELBOW][0])
 
             if np.argmax(left_predict[0]) == 0:
-                state = "LEFT_UP"
+                state = "UP"
                 
                 # 푸쉬업 자세교정
                 # 손 방향 자세교정
-                if keypoints[LEFT_PINKY][0] < keypoints[LEFT_WRIST][0] and\
+                if keypoints[LEFT_PINKY][0] < keypoints[LEFT_WRIST][0] and \
                    keypoints[LEFT_INDEX][0] < keypoints[LEFT_WRIST][0] and \
                    keypoints[LEFT_THUMB][0] < keypoints[LEFT_WRIST][0]:
                     correct_hand = True
@@ -280,7 +280,7 @@ def run(fitness_mode, pose_landmarks, input_width, input_height):
                     app.session['pushup_check'] = False
 
             elif np.argmax(left_predict[0]) == 1:
-                state = "LEFT_DOWN"
+                state = "DOWN"
                 if app.session['pushup_correct_pose'] and left_arm_angle < pushup_down_angle:
                     app.session['pushup_check'] = True
 
@@ -305,7 +305,7 @@ def run(fitness_mode, pose_landmarks, input_width, input_height):
             wrist_to_elbow = abs(keypoints[RIGHT_WRIST][0] - keypoints[RIGHT_ELBOW][0])
 
             if np.argmax(right_predict[0]) == 0:
-                state = "RIGHT_UP"
+                state = "UP"
 
                 # 푸쉬업 자세교정
                 # 손 방향 자세교정
@@ -343,7 +343,7 @@ def run(fitness_mode, pose_landmarks, input_width, input_height):
 
 
             elif np.argmax(right_predict[0]) == 1:
-                state = "RIGHT_DOWN"
+                state = "DOWN"
                 if app.session['pushup_correct_pose'] and right_arm_angle < pushup_down_angle:
                     app.session['pushup_check'] = True
 
