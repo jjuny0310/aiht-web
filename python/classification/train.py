@@ -53,6 +53,7 @@ def train(FITNESS_MODE):
             tf.keras.layers.Dense(64, input_shape=(18,), activation='relu'),
             tf.keras.layers.Dense(64, activation='relu'),
             tf.keras.layers.Dense(3, activation='softmax')
+
         ])
     else:
         model = tf.keras.Sequential([
