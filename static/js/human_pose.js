@@ -19,11 +19,12 @@ var leftKneeSound = new Audio('../static/sound/squat/left_knee.mp3');
 var rightKneeSound = new Audio('../static/sound/squat/right_knee.mp3');
 var ankleSound = new Audio('../static/sound/squat/ankle.mp3');
 var footSound = new Audio('../static/sound/squat/foot.mp3');
-var nothingSound = new Audio('../static/sound/squat/nothing.mp3');
+var squatNothingSound = new Audio('../static/sound/squat/nothing.mp3');
 
 // 2.푸쉬업 오디오 변수
 var hipSound = new Audio('../static/sound/push_up/hip.mp3');
 var handSound = new Audio('../static/sound/push_up/hand.mp3');
+var pushupNothingSound = new Audio('../static/sound/push_up/nothing.mp3');
 
 // 트레이너 비디오 종료 시 처리
 function endVideo(){
@@ -32,10 +33,11 @@ function endVideo(){
     rightKneeSound.pause();
     ankleSound.pause();
     footSound.pause();
-    nothingSound.pause();
+    squatNothingSound.pause();
 
     hipSound.pause();
     handSound.pause();
+    pushupNothingSound.pause();
 
     new Audio('../static/sound/end/trainer_end.mp3').play();
     setTimeout(function() { trainerEndFlag = true;}, 6000);
@@ -104,7 +106,7 @@ function poseOnResults(results) {
                 // 종료 시
                 if(data.num === count && exerciseEndFlag){
                     exerciseEndFlag = false;
-                    setTimeout(function() { new Audio('../static/sound/end/exercise_end.mp3').play(); }, 1000);
+                    setTimeout(function() { new Audio('../static/sound/end/exercise_end.mp3').play(); }, 500);
                     setTimeout(function() { location.href = "/result"; }, 5000);
                 }
 
@@ -150,8 +152,8 @@ function poseOnResults(results) {
                                 setTimeout(function() { poseSoundFlag = true;}, soundDelay);
                             }
                         }
-                        else if(poseSoundFlag && data.state==="NOTHING"){
-                                nothingSound.play();
+                        else if(poseSoundFlag && trainerEndFlag && data.state==="NOTHING" && data.visibility){
+                                squatNothingSound.play();
                                 poseSoundFlag = false;
                                 setTimeout(function() { poseSoundFlag = true;}, soundDelay);
                         }   
@@ -186,6 +188,11 @@ function poseOnResults(results) {
                                 poseSoundFlag = false;
                                 setTimeout(function() { poseSoundFlag = true;}, soundDelay);
                             }
+                        }
+                        else if(poseSoundFlag && trainerEndFlag && data.state==="NOTHING" && data.visibility){
+                            pushupNothingSound.play();
+                            poseSoundFlag = false;
+                            setTimeout(function() { poseSoundFlag = true;}, soundDelay);
                         }
                     }
                     break;

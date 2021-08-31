@@ -71,6 +71,8 @@ pushup_down_angle = 100
 hip_distance_range = [0, 0.15]
 min_hand_angle = 130
 
+# 지시음 최소 신뢰도 값
+visibility_rate = 0.9
 
 def run(fitness_mode, pose_landmarks, input_width, input_height):
     # 관절 좌표 저장(분리해서)
@@ -118,9 +120,8 @@ def run(fitness_mode, pose_landmarks, input_width, input_height):
         visibility_count = 0
         visibility_check = False
         for visibility in visibilitys_squat:
-            if visibility > 0.8:
+            if visibility > visibility_rate:
                 visibility_count += 1
-            # 모든 관절 정확도 60% 이상이면 True
             if visibility_count == len(squat_parts[7:]):
                 visibility_check = True
 
@@ -237,9 +238,8 @@ def run(fitness_mode, pose_landmarks, input_width, input_height):
             visibility_count = 0
             visibility_check = False
             for visibility in visibilitys_pushup_left:
-                if visibility > 0.8:
+                if visibility > visibility_rate:
                     visibility_count += 1
-                # 모든 관절 정확도 60% 이상이면 True
                 if visibility_count == len(list(set(pushup_left_parts) - {RIGHT_SHOULDER, RIGHT_HIP})):
                     visibility_check = True
 
@@ -303,9 +303,8 @@ def run(fitness_mode, pose_landmarks, input_width, input_height):
             visibility_count = 0
             visibility_check = False
             for visibility in visibilitys_pushup_right:
-                if visibility > 0.8:
+                if visibility > visibility_rate:
                     visibility_count += 1
-                # 모든 관절 정확도 60% 이상이면 True
                 if visibility_count == len(list(set(pushup_right_parts) - {LEFT_SHOULDER, LEFT_HIP})):
                     visibility_check = True
 
