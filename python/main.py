@@ -69,7 +69,7 @@ knee_distance_range = [0, 0.1]
 pushup_up_angle = 150
 pushup_down_angle = 100
 hip_distance_range = [0, 0.15]
-elbow_distance_range = [0, 0.1]
+min_hand_angle = 130
 
 
 def run(fitness_mode, pose_landmarks, input_width, input_height):
@@ -236,11 +236,11 @@ def run(fitness_mode, pose_landmarks, input_width, input_height):
             left_arm_angle = getAngle3P(keypoints[LEFT_SHOULDER], keypoints[LEFT_ELBOW],
                                         keypoints[LEFT_WRIST])
 
+            # 손의 각도
+            left_hand_angle = getAngle3P(keypoints[LEFT_ELBOW], keypoints[LEFT_WRIST], keypoints[LEFT_INDEX])
+
             # 엉덩이 범위
             shoulder_to_hip = abs(keypoints[LEFT_SHOULDER][1] - keypoints[LEFT_HIP][1])
-
-            # 팔꿈치 범위
-            wrist_to_elbow = abs(keypoints[LEFT_WRIST][0] - keypoints[LEFT_ELBOW][0])
 
             if np.argmax(left_predict[0]) == 0:
                 state = "UP"
@@ -249,7 +249,7 @@ def run(fitness_mode, pose_landmarks, input_width, input_height):
                 # 손 방향 자세교정
                 if keypoints[LEFT_PINKY][0] < keypoints[LEFT_WRIST][0] and \
                    keypoints[LEFT_INDEX][0] < keypoints[LEFT_WRIST][0] and \
-                   keypoints[LEFT_THUMB][0] < keypoints[LEFT_WRIST][0]:
+                   keypoints[LEFT_THUMB][0] < keypoints[LEFT_WRIST][0] and left_hand_angle < min_hand_angle:
                     correct_hand = True
                 else:
                     correct_hand = False
@@ -259,17 +259,11 @@ def run(fitness_mode, pose_landmarks, input_width, input_height):
                     correct_hip = True
                 else:
                     correct_hip = False
-                
-                # 팔꿈치 방향 자세교정
-                if keypoints[LEFT_ELBOW][0] > keypoints[LEFT_WRIST][0] and elbow_distance_range[0] < wrist_to_elbow < elbow_distance_range[1]:
-                    correct_elbow = True
-                else:
-                    correct_elbow = False
 
-                pushup_correct_dict = {'correct_hand': correct_hand, 'correct_hip': correct_hip, 'correct_elbow': correct_elbow}
+                pushup_correct_dict = {'correct_hand': correct_hand, 'correct_hip': correct_hip}
 
                 # 푸쉬업 자세 판별
-                if correct_hand and correct_hip and correct_elbow:
+                if correct_hand and correct_hip:
                     app.session['pushup_correct_pose'] = True
                 else:
                     app.session['pushup_correct_pose'] = False
@@ -298,11 +292,11 @@ def run(fitness_mode, pose_landmarks, input_width, input_height):
             right_arm_angle = getAngle3P(keypoints[RIGHT_SHOULDER], keypoints[RIGHT_ELBOW],
                                         keypoints[RIGHT_WRIST])
 
+            # 손의 각도
+            right_hand_angle = getAngle3P(keypoints[RIGHT_ELBOW], keypoints[RIGHT_WRIST], keypoints[RIGHT_INDEX])
+
             # 엉덩이 범위
             shoulder_to_hip = abs(keypoints[RIGHT_SHOULDER][1] - keypoints[RIGHT_HIP][1])
-
-            # 팔꿈치 범위
-            wrist_to_elbow = abs(keypoints[RIGHT_WRIST][0] - keypoints[RIGHT_ELBOW][0])
 
             if np.argmax(right_predict[0]) == 0:
                 state = "UP"
@@ -311,7 +305,7 @@ def run(fitness_mode, pose_landmarks, input_width, input_height):
                 # 손 방향 자세교정
                 if keypoints[RIGHT_PINKY][0] > keypoints[RIGHT_WRIST][0] and\
                    keypoints[RIGHT_INDEX][0] > keypoints[RIGHT_WRIST][0] and \
-                   keypoints[RIGHT_THUMB][0] > keypoints[RIGHT_WRIST][0]:
+                   keypoints[RIGHT_THUMB][0] > keypoints[RIGHT_WRIST][0] and right_hand_angle < min_hand_angle:
                     correct_hand = True
                 else:
                     correct_hand = False
@@ -322,16 +316,10 @@ def run(fitness_mode, pose_landmarks, input_width, input_height):
                 else:
                     correct_hip = False
 
-                # 팔꿈치 방향 자세교정
-                if keypoints[RIGHT_ELBOW][0] < keypoints[RIGHT_WRIST][0] and elbow_distance_range[0] <= wrist_to_elbow <= elbow_distance_range[1]:
-                    correct_elbow = True
-                else:
-                    correct_elbow = False
-
-                pushup_correct_dict = {'correct_hand': correct_hand, 'correct_hip': correct_hip, 'correct_elbow': correct_elbow}
+                pushup_correct_dict = {'correct_hand': correct_hand, 'correct_hip': correct_hip}
 
                 # 푸쉬업 자세 판별
-                if correct_hand and correct_hip and correct_elbow:
+                if correct_hand and correct_hip:
                     app.session['pushup_correct_pose'] = True
                 else:
                     app.session['pushup_correct_pose'] = False

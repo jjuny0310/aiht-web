@@ -4,6 +4,7 @@ import mediapipe as mp
 import cv2
 import numpy as np
 import imutils
+import math
 
 mp_drawing = mp.solutions.drawing_utils
 mp_pose = mp.solutions.pose
@@ -43,6 +44,12 @@ RIGHT_HEEL = 30
 LEFT_FOOT_INDEX = 31
 RIGHT_FOOT_INDEX = 32
 
+# 푸쉬업 자세 교정 수치
+pushup_up_angle = 150
+pushup_down_angle = 100
+hip_distance_range = [0, 0.15]
+min_hand_angle = 130
+
 
 def run(path, FITNESS_MODE):
     print(f"선택한 운동 : {FITNESS_MODE}")
@@ -60,11 +67,11 @@ def run(path, FITNESS_MODE):
 
     # 자세 분류기 모델 불러오기
     if FITNESS_MODE == "PUSH_UP":  # 푸쉬업 모델
-        left_pushup_model = load_model('model/left_pushup_model.h5')
+        left_pushup_model = load_model('../classification/model/left_pushup_model.h5')
         left_sel_keypoints = [NOSE, LEFT_SHOULDER, RIGHT_SHOULDER, LEFT_ELBOW,
                                LEFT_WRIST, LEFT_HIP, RIGHT_HIP, LEFT_KNEE, LEFT_ANKLE]
 
-        right_pushup_model = load_model('model/right_pushup_model.h5')
+        right_pushup_model = load_model('../classification/model/right_pushup_model.h5')
         right_sel_keypoints = [NOSE, LEFT_SHOULDER, RIGHT_SHOULDER, RIGHT_ELBOW,
                               RIGHT_WRIST, LEFT_HIP, RIGHT_HIP, RIGHT_KNEE, RIGHT_ANKLE]
 
@@ -116,23 +123,57 @@ def run(path, FITNESS_MODE):
 
             # 푸쉬업 카운터 및 자세교정
             if FITNESS_MODE == "PUSH_UP":
-                left_keypoints_array = np.array([classifier_left_keypoints])
-                right_keypoints_array = np.array([classifier_right_keypoints])
-                left_predict = left_pushup_model.predict(left_keypoints_array)
-                right_predict = right_pushup_model.predict(right_keypoints_array)
 
                 # 푸쉬업
                 if keypoints[LEFT_SHOULDER][0] > keypoints[NOSE][0] or keypoints[RIGHT_SHOULDER][0] > \
                         keypoints[NOSE][0]:
+                    left_keypoints_array = np.array([classifier_left_keypoints])
+                    left_predict = left_pushup_model.predict(left_keypoints_array)
+
+                    # 손의 각도
+                    left_hand_angle = getAngle3P(keypoints[LEFT_ELBOW], keypoints[LEFT_WRIST], keypoints[LEFT_INDEX])
+
                     if np.argmax(left_predict[0]) == 0:  # UP 상태
                         print("LEFT_UP")
+
+                        # 손 방향 자세교정
+                        if keypoints[LEFT_PINKY][0] < keypoints[LEFT_WRIST][0] and \
+                                keypoints[LEFT_INDEX][0] < keypoints[LEFT_WRIST][0] and \
+                                keypoints[LEFT_THUMB][0] < keypoints[LEFT_WRIST][
+                            0] and left_hand_angle < min_hand_angle:
+                            correct_hand = True
+                        else:
+                            correct_hand = False
+
+                        print(correct_hand)
+
                     elif np.argmax(left_predict[0]) == 1:  # DOWN 상태
                         print("LEFT_DOWN")
+
                     else:  # NOTHING 상태
                         print("LEFT_NOTHING")
+                        pass
                 else:
+                    right_keypoints_array = np.array([classifier_right_keypoints])
+                    right_predict = right_pushup_model.predict(right_keypoints_array)
+
+                    # 손의 각도
+                    right_hand_angle = getAngle3P(keypoints[RIGHT_ELBOW], keypoints[RIGHT_WRIST],
+                                                  keypoints[RIGHT_INDEX])
+
                     if np.argmax(right_predict[0]) == 0:  # UP 상태
                         print("RIGHT_UP")
+
+                        # 손 방향 자세교정
+                        if keypoints[RIGHT_PINKY][0] > keypoints[RIGHT_WRIST][0] and \
+                                keypoints[RIGHT_INDEX][0] > keypoints[RIGHT_WRIST][0] and \
+                                keypoints[RIGHT_THUMB][0] > keypoints[RIGHT_WRIST][
+                            0] and right_hand_angle < min_hand_angle:
+                            correct_hand = True
+                        else:
+                            correct_hand = False
+                        print(correct_hand)
+
                     elif np.argmax(right_predict[0]) == 1:  # DOWN 상태
                         print("RIGHT_DOWN")
                     else:  # NOTHING 상태
@@ -171,6 +212,26 @@ def run(path, FITNESS_MODE):
                 delay = 1
 
     cap.release()
+
+# 두 점 사이의 거리
+def getPoint2D(p1, p2):
+    x1, y1 = p1
+    x2, y2 = p2
+    dist = (x2 - x1) ** 2 + (y2 - y1) ** 2
+    dist = math.sqrt(dist)
+    return dist
+
+
+# 삼각형 세변 길이의 각도(좌표를 받아서 각도 출력)
+def getAngle3P(p1, p2, p3):
+    dist1 = getPoint2D(p1, p2)
+    dist2 = getPoint2D(p2, p3)
+    dist3 = getPoint2D(p3, p1)
+
+    radian = math.acos((dist1 ** 2 + dist2 ** 2 - dist3 ** 2) / (2 * dist1 * dist2))
+    angle = math.degrees(radian)
+    return angle
+
 
 if __name__ == '__main__':
     # 경로 설정
