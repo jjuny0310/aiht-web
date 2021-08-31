@@ -24,7 +24,6 @@ var nothingSound = new Audio('../static/sound/squat/nothing.mp3');
 // 2.푸쉬업 오디오 변수
 var hipSound = new Audio('../static/sound/push_up/hip.mp3');
 var handSound = new Audio('../static/sound/push_up/hand.mp3');
-var elbowSound = new Audio('../static/sound/push_up/elbow.mp3');
 
 // 트레이너 비디오 종료 시 처리
 function endVideo(){
@@ -37,7 +36,6 @@ function endVideo(){
 
     hipSound.pause();
     handSound.pause();
-    elbowSound.pause();
 
     new Audio('../static/sound/end/trainer_end.mp3').play();
     setTimeout(function() { trainerEndFlag = true;}, 6000);
@@ -163,8 +161,6 @@ function poseOnResults(results) {
                     // python 에서 전달받은 값
                     correct_pose = data.correct_pose;
 
-                    console.log(data.state)
-
                     // 사용자가 지정한 횟수까지 수행
                     if(count < data.num) {
                         // 카운트 및 각도 체크 사운드
@@ -178,23 +174,18 @@ function poseOnResults(results) {
                             document.getElementById('count').innerHTML = "횟수 : " + data.count;
                             downSoundFlag = true;
                         }
-                    }
-                    // 자세교정 지시음
-                    if(poseSoundFlag && trainerEndFlag && data.state==="UP"){
-                        if(!data.correct_dict['correct_hand']){
-                            handSound.play();
-                            poseSoundFlag = false;
-                            setTimeout(function() { poseSoundFlag = true;}, soundDelay);
-                        }
-                        else if(!data.correct_dict['correct_elbow']){
-                            elbowSound.play();
-                            poseSoundFlag = false;
-                            setTimeout(function() { poseSoundFlag = true;}, soundDelay);
-                        }
-                        else if(!data.correct_dict['correct_hip']){
-                            hipSound.play();
-                            poseSoundFlag = false;
-                            setTimeout(function() { poseSoundFlag = true;}, soundDelay);
+                        // 자세교정 지시음
+                        if(poseSoundFlag && trainerEndFlag && data.state==="UP"){
+                            if(!data.correct_dict['correct_hand']){
+                                handSound.play();
+                                poseSoundFlag = false;
+                                setTimeout(function() { poseSoundFlag = true;}, soundDelay);
+                            }
+                            else if(!data.correct_dict['correct_hip']){
+                                hipSound.play();
+                                poseSoundFlag = false;
+                                setTimeout(function() { poseSoundFlag = true;}, soundDelay);
+                            }
                         }
                     }
                     break;
