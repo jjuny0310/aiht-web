@@ -175,7 +175,7 @@ function poseOnResults(results) {
                             downSoundFlag = true;
                         }
                         // 자세교정 지시음
-                        if(poseSoundFlag && trainerEndFlag && data.state==="UP"){
+                        if(poseSoundFlag && trainerEndFlag && data.state==="UP" && data.visibility){
                             if(!data.correct_dict['correct_hand']){
                                 handSound.play();
                                 poseSoundFlag = false;

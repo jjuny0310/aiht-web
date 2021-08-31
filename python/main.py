@@ -83,7 +83,8 @@ def run(fitness_mode, pose_landmarks, input_width, input_height):
     visibilitys_squat = []
     visibilitys_pushup_left = []
     visibilitys_pushup_right = []
-
+    
+    # 관절 좌표 저장
     for idx, landmark in enumerate(pose_landmarks):
         keypoints_x.append(landmark['x'])
         keypoints_y.append(landmark['y'])
@@ -99,10 +100,13 @@ def run(fitness_mode, pose_landmarks, input_width, input_height):
             if idx in pushup_left_parts:
                 keypoints_pushup_left.append(landmark['x'])
                 keypoints_pushup_left.append(landmark['y'])
+            if idx in list(set(pushup_left_parts) - {RIGHT_SHOULDER, RIGHT_HIP}):
                 visibilitys_pushup_left.append(landmark['visibility'])
+
             if idx in pushup_right_parts:
                 keypoints_pushup_right.append(landmark['x'])
                 keypoints_pushup_right.append(landmark['y'])
+            if idx in list(set(pushup_right_parts) - {LEFT_SHOULDER, LEFT_HIP}):
                 visibilitys_pushup_right.append(landmark['visibility'])
 
 
@@ -229,6 +233,16 @@ def run(fitness_mode, pose_landmarks, input_width, input_height):
         # LEFT 푸쉬업
         if keypoints[LEFT_SHOULDER][0] > keypoints[NOSE][0] or keypoints[RIGHT_SHOULDER][0] > \
                 keypoints[NOSE][0]:
+            # visibility 체크(관절이 정확히 나오면 자세교정 사운드 출력)
+            visibility_count = 0
+            visibility_check = False
+            for visibility in visibilitys_pushup_left:
+                if visibility > 0.8:
+                    visibility_count += 1
+                # 모든 관절 정확도 60% 이상이면 True
+                if visibility_count == len(list(set(pushup_left_parts) - {RIGHT_SHOULDER, RIGHT_HIP})):
+                    visibility_check = True
+
             left_keypoints_array = np.array([keypoints_pushup_left])
             left_predict = pushup_left_model.predict(left_keypoints_array)
 
@@ -285,6 +299,16 @@ def run(fitness_mode, pose_landmarks, input_width, input_height):
         
         # RIGHT 푸쉬업
         else:
+            # visibility 체크(관절이 정확히 나오면 자세교정 사운드 출력)
+            visibility_count = 0
+            visibility_check = False
+            for visibility in visibilitys_pushup_right:
+                if visibility > 0.8:
+                    visibility_count += 1
+                # 모든 관절 정확도 60% 이상이면 True
+                if visibility_count == len(list(set(pushup_right_parts) - {LEFT_SHOULDER, LEFT_HIP})):
+                    visibility_check = True
+
             right_keypoints_array = np.array([keypoints_pushup_right])
             right_predict = pushup_right_model.predict(right_keypoints_array)
 
@@ -340,7 +364,7 @@ def run(fitness_mode, pose_landmarks, input_width, input_height):
                 app.session['pushup_correct_pose'] = False
                 app.session['pushup_check'] = False
 
-        return state, pushup_correct_dict
+        return state, pushup_correct_dict, visibility_check
 
 
 # 두 점 사이의 거리
