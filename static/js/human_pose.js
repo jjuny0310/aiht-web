@@ -26,6 +26,14 @@ var hipSound = new Audio('../static/sound/push_up/hip.mp3');
 var handSound = new Audio('../static/sound/push_up/hand.mp3');
 var pushupNothingSound = new Audio('../static/sound/push_up/nothing.mp3');
 
+// 결과 페이지 변수
+var now = new Date();
+var monthDate = (now.getMonth()+1) + "월 " + now.getDate() + "일";
+var startTime = 0;
+var endTime = 0;
+
+var exerciseType = ""
+
 // 트레이너 비디오 종료 시 처리
 function endVideo(){
     trainerEndFlag = false;
@@ -99,21 +107,30 @@ function poseOnResults(results) {
         success: function (data){
                 // 로딩 완료 시 초기세팅
                     if(loadingFlag) {
+                        startTime = new Date().getTime() / 1000;
+
                         closeLoadingWithMask();
                         $('#trainer_video').get(0).play();
                         loadingFlag = false;
                     }
                 // 종료 시
                 if(data.num === count && exerciseEndFlag){
+                    endTime = new Date().getTime() / 1000;
+                    var exerciseTime = parseInt(endTime-startTime);
+                    exerciseTime = parseInt(exerciseTime / 60) + "분 " + (exerciseTime % 60) + "초";
+
                     exerciseEndFlag = false;
                     setTimeout(function() { new Audio('../static/sound/end/exercise_end.mp3').play(); }, 500);
-                    setTimeout(function() { location.href = "/result"; }, 5000);
+                    setTimeout(function() {
+                        location.href = "/result?date=" + monthDate + "&exercise="+exerciseType + "&result_num=" + (count+"/"+data.num)
+                                        + "&exercise_time=" + exerciseTime; }, 5000);
                 }
 
             switch (data.fitness_mode){
                 case "SQUAT":
                     // python 에서 전달받은 값
                     correct_pose = data.correct_pose;
+                    exerciseType = "스쿼트"
 
                     // 사용자가 지정한 횟수까지 수행
                     if(count < data.num){
@@ -162,6 +179,7 @@ function poseOnResults(results) {
                 case "PUSH_UP":
                     // python 에서 전달받은 값
                     correct_pose = data.correct_pose;
+                    exerciseType = "푸쉬업"
 
                     // 사용자가 지정한 횟수까지 수행
                     if(count < data.num) {

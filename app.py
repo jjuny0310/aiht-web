@@ -79,9 +79,22 @@ def start():
     except:
         return redirect(url_for('login'))
 
-@app.route('/result')
+@app.route('/result', methods=['GET', 'POST'])
 def result():
-    return render_template('result.html')
+    if request.method == "GET":
+        return render_template('result.html')
+    else:
+        date = request.form['result_date']
+        exercise = request.form['result_exercise']
+        result_num = request.form['result_num']
+        exercise_time = request.form['result_exercise_time']
+        memo = request.form['result_memo']
+        print(date)
+        print(exercise)
+        print(result_num)
+        print(exercise_time)
+        print(memo)
+        return redirect(url_for('home'))
 
 
 

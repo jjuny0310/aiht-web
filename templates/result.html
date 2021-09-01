@@ -50,58 +50,44 @@
             <div id="modal" class="modal-overlay" style="display: flex">
                 <div class="modal-window">
                     <div class="title">
-                        <h2>결과 화면</h2>
+                        <h2>운동 종합결과</h2>
                     </div>
                     <hr style="color: white">
                     <div class="content">
-                        <form id="select_option" method="post">
+                        <form id="exercise_result" method="post">
                             <table>
+                                <tr>
+                                    <td>날짜</td>
+                                    <td>
+                                        <input type="text" name="result_date" value="{{ request.args.get('date')}}" readonly>
+                                    </td>
+                                </tr>
+
                                 <tr>
                                     <td>운동 종류</td>
                                     <td>
-                                        <input type="text" name="select_memo" readonly>
+                                        <input type="text" name="result_exercise" value="{{ request.args.get('exercise')}}" readonly>
                                     </td>
                                 </tr>
 
                                 <tr>
-                                    <td>목표 횟수</td>
+                                    <td>달성/목표 횟수</td>
                                     <td>
-                                        <input type="text" name="select_memo" readonly>
+                                        <input type="text" name="result_num" value="{{ request.args.get('result_num')}}" readonly>
                                     </td>
                                 </tr>
 
                                 <tr>
-                                    <td>시작 시간</td>
+                                    <td>운동 시간</td>
                                     <td>
-                                        <input type="text" name="select_memo" readonly>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>종료 시간</td>
-                                    <td>
-                                        <input type="text" name="select_memo" readonly>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>순수 운동 시간</td>
-                                    <td>
-                                        <input type="text" name="select_memo" readonly>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>소모 칼로리</td>
-                                    <td>
-                                        <input type="text" name="select_memo" readonly>
+                                        <input type="text" name="result_exercise_time" value="{{ request.args.get('exercise_time')}}" readonly>
                                     </td>
                                 </tr>
 
                                 <tr>
                                     <td>메모</td>
                                     <td>
-                                        <input type="text" name="select_memo" placeholder="메모를 적어주세요">
+                                        <input type="text" name="result_memo" placeholder="메모를 적어주세요">
                                     </td>
                                 </tr>
                             </table>
