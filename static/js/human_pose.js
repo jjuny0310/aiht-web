@@ -142,7 +142,7 @@ function poseOnResults(results) {
                         if(count !== data.count){
                             count = data.count
                             new Audio('../static/sound/count/' + count + '.mp3').play();
-                            document.getElementById('count').innerHTML = "현재 횟수 : " + data.count;
+                            document.getElementById('count').innerHTML = "현재 횟수 : " + count;
                             downSoundFlag = true;
                         }
                         
@@ -191,7 +191,7 @@ function poseOnResults(results) {
                         if (count !== data.count) {
                             count = data.count
                             new Audio('../static/sound/count/' + count + '.mp3').play();
-                            document.getElementById('count').innerHTML = "현재 횟수 : " + data.count;
+                            document.getElementById('count').innerHTML = "현재 횟수 : " + count;
                             downSoundFlag = true;
                         }
                         // 자세교정 지시음

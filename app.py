@@ -1,13 +1,15 @@
-from flask import Flask, render_template, request, jsonify, session, redirect, url_for, g
+from flask import Flask, render_template, request, jsonify, session, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import relationship, backref
 from werkzeug.security import generate_password_hash, check_password_hash
 from python.main import run
 
 app = Flask(__name__)
 
 # db연동
-app.config['SECRET_KEY'] = 'this is secret'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+app.config['SECRET_KEY'] = 'qwlem12kkasdniovni2r23nkzx12'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///aiht.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
@@ -35,7 +37,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(80), nullable=False)
-    nickname = db.Column(db.String(80), nullable=False )
+    nickname = db.Column(db.String(80), nullable=False)
 
     def __init__(self, username, nickname, password, **kwargs):
         self.username = username
@@ -53,6 +55,30 @@ class User(db.Model):
     # 암호화된 비밀번호 체크
     def check_password(self, password):
         return check_password_hash(self.password, password)
+
+class Result(db.Model):
+    __tablename__ = 'result'
+    id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.String(80), nullable=False)
+    exercise = db.Column(db.String(80), nullable=False)
+    result_num = db.Column(db.String(80), nullable=False)
+    exercise_time = db.Column(db.String(80), nullable=False)
+    memo = db.Column(db.String(300), nullable=True)
+    user_id = db.Column(db.Integer, ForeignKey('user.username'))
+
+    user = relationship("User", backref=backref('results', order_by=id))
+
+    def __init__(self, date, exercise, result_num, exercise_time, memo, user_id):
+        self.date = date
+        self.exercise = exercise
+        self.result_num = result_num
+        self.exercise_time = exercise_time
+        self.memo = memo
+        self.user_id = user_id
+
+    def __repr__(self):
+        return f"<Result('{self.id}', '{self.date}', '{self.exercise}', '{self.result_num}', '{self.exercise_time}', '{self.memo}', '{self.user_id}')>"
+
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -84,6 +110,13 @@ def result():
     if request.method == "GET":
         return render_template('result.html')
     else:
+
+        new_result = Result(date=request.form['result_date'], exercise=request.form['result_exercise'],
+                            result_num=request.form['result_num'], exercise_time=request.form['result_exercise_time'],
+                            memo=request.form['result_memo'], user_id=session['username'])
+        db.session.add(new_result)
+        db.session.commit()
+
         date = request.form['result_date']
         exercise = request.form['result_exercise']
         result_num = request.form['result_num']
@@ -110,6 +143,7 @@ def login():
 
             if old_user is not None and check_password_hash(old_user.password, passwd):
                 session['login'] = True
+                session['username'] = old_user.username
                 session['nickname'] = old_user.nickname
                 return redirect(url_for('home'))
             else:
