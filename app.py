@@ -63,21 +63,19 @@ class Result(db.Model):
     exercise = db.Column(db.String(80), nullable=False)
     result_num = db.Column(db.String(80), nullable=False)
     exercise_time = db.Column(db.String(80), nullable=False)
-    memo = db.Column(db.String(300), nullable=True)
     user_id = db.Column(db.Integer, ForeignKey('user.username'))
 
     user = relationship("User", backref=backref('results', order_by=id))
 
-    def __init__(self, date, exercise, result_num, exercise_time, memo, user_id):
+    def __init__(self, date, exercise, result_num, exercise_time, user_id):
         self.date = date
         self.exercise = exercise
         self.result_num = result_num
         self.exercise_time = exercise_time
-        self.memo = memo
         self.user_id = user_id
 
     def __repr__(self):
-        return f"<Result('{self.id}', '{self.date}', '{self.exercise}', '{self.result_num}', '{self.exercise_time}', '{self.memo}', '{self.user_id}')>"
+        return f"<Result('{self.id}', '{self.date}', '{self.exercise}', '{self.result_num}', '{self.exercise_time}', '{self.user_id}')>"
 
 
 
@@ -113,21 +111,18 @@ def result():
 
         new_result = Result(date=request.form['result_date'], exercise=request.form['result_exercise'],
                             result_num=request.form['result_num'], exercise_time=request.form['result_exercise_time'],
-                            memo=request.form['result_memo'], user_id=session['username'])
+                            user_id=session['username'])
         db.session.add(new_result)
         db.session.commit()
-
-        date = request.form['result_date']
-        exercise = request.form['result_exercise']
-        result_num = request.form['result_num']
-        exercise_time = request.form['result_exercise_time']
-        memo = request.form['result_memo']
-        print(date)
-        print(exercise)
-        print(result_num)
-        print(exercise_time)
-        print(memo)
         return redirect(url_for('home'))
+
+@app.route('/resultlog', methods=['GET'])
+def resultlog():
+    if session['login']:
+        results = Result.query.filter_by(user_id=session['username']).all()
+        return render_template('resultlog.html', results=results)
+    else:
+        return redirect(url_for('login'))
 
 
 
