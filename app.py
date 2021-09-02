@@ -108,7 +108,6 @@ def result():
     if request.method == "GET":
         return render_template('result.html')
     else:
-
         new_result = Result(date=request.form['result_date'], exercise=request.form['result_exercise'],
                             result_num=request.form['result_num'], exercise_time=request.form['result_exercise_time'],
                             user_id=session['username'])
@@ -116,14 +115,23 @@ def result():
         db.session.commit()
         return redirect(url_for('home'))
 
-@app.route('/resultlog', methods=['GET'])
-def resultlog():
+
+@app.route('/result_log', methods=['GET'])
+def result_log():
     if session['login']:
         results = Result.query.filter_by(user_id=session['username']).all()
-        return render_template('resultlog.html', results=results)
+        return render_template('result_log.html', results=results)
     else:
         return redirect(url_for('login'))
 
+
+@app.route('/result_delete')
+def result_delete():
+    result_id = request.args['id']
+    item = Result.query.filter_by(id=result_id).first()
+    db.session.delete(item)
+    db.session.commit()
+    return redirect(url_for('result_log'))
 
 
 @app.route('/login', methods=['GET', 'POST'])
