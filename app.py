@@ -127,7 +127,7 @@ def result_log():
 
 @app.route('/result_delete')
 def result_delete():
-    result_id = request.args['id']
+    result_id = request.args['result_id']
     item = Result.query.filter_by(id=result_id).first()
     db.session.delete(item)
     db.session.commit()
