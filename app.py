@@ -201,7 +201,7 @@ def exercise_analysis():
         # 관절좌표 저장
         data = request.get_json()
         pose_landmarks = data['pose_landmarks']
-        ready_flag = bool(data['ready_flag'])
+        ready_flag = data['ready_flag']
 
         # # 해상도
         # input_width = data['input_width']

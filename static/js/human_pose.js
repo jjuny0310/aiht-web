@@ -121,14 +121,16 @@ function poseOnResults(results) {
                         closeLoadingWithMask();
                         loadingFlag = false;
 
+                        // 대기시간
                         readySound.play();
                         setTimeout(function() {
-                            startSound.play();}, readyTime);
+                            startSound.play();
 
-                        setTimeout(function() {
+                            setTimeout(function() {
                             startTime = new Date().getTime() / 1000;
                             $('#trainer_video').get(0).play();
-                            readyFlag = true;}, readyTime + 1000);
+                            readyFlag = true;}, 1000);
+                            }, readyTime);
                     }
                 // 종료 시
                 if(data.num === count && exerciseEndFlag){
@@ -163,7 +165,7 @@ function poseOnResults(results) {
                             downSoundFlag = true;
                         }
                         
-                        // 자세교정 지시음
+                        // 자세교정 안내 음성
                         if(poseSoundFlag && trainerEndFlag && data.state==="UP" && data.visibility){
                             if(!data.correct_dict['correct_left_knee']){
                                 leftKneeSound.play();
@@ -211,7 +213,7 @@ function poseOnResults(results) {
                             document.getElementById('count').innerHTML = "현재 횟수 : " + count;
                             downSoundFlag = true;
                         }
-                        // 자세교정 지시음
+                        // 자세교정 안내 음성
                         if(poseSoundFlag && trainerEndFlag && data.state==="UP" && data.visibility){
                             if(!data.correct_dict['correct_hand']){
                                 handSound.play();

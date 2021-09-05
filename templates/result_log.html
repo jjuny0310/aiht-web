@@ -68,7 +68,7 @@
                         <th style="color: white">운동 종류</th>
                         <th style="color: white">달성 / 목표 횟수</th>
                         <th style="color: white">운동 시간</th>
-                        <th></th>
+                        <th style="color: white">삭제</th>
                     </tr>
                     {% for result in results %}
                         <tr>
@@ -76,7 +76,7 @@
                             <td>{{ result.exercise}}</td>
                             <td>{{ result.result_num }}</td>
                             <td>{{ result.exercise_time }}</td>
-                            <td><a href="javascript:resultDelete({{ result.id }})">X</a></td>
+                            <td><a href="javascript:resultDelete({{ result.id }})" style="color: white">X</a></td>
                         </tr>
                     {% endfor %}
                 </table>
