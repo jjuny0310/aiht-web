@@ -71,10 +71,10 @@ pushup_down_angle = 100
 hip_distance_range = [0, 0.15]
 min_hand_angle = 130
 
-# 지시음 최소 신뢰도 값
-visibility_rate = 0.9
+# 안내 음성 최소 신뢰도 값
+visibility_rate = 0.6
 
-def run(fitness_mode, pose_landmarks, input_width, input_height):
+def run(fitness_mode, pose_landmarks):
     # 관절 좌표 저장(분리해서)
     keypoints_x = []
     keypoints_y = []

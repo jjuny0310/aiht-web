@@ -201,28 +201,32 @@ def exercise_analysis():
         # 관절좌표 저장
         data = request.get_json()
         pose_landmarks = data['pose_landmarks']
+        ready_flag = bool(data['ready_flag'])
 
-        # 해상도
-        input_width = data['input_width']
-        input_height = data['input_height']
-        trainer_width = data['trainer_width']
-        trainer_height = data['trainer_height']
-        canvas_width = data['canvas_width']
-        canvas_height = data['canvas_height']
+        # # 해상도
+        # input_width = data['input_width']
+        # input_height = data['input_height']
+        # trainer_width = data['trainer_width']
+        # trainer_height = data['trainer_height']
+        # canvas_width = data['canvas_width']
+        # canvas_height = data['canvas_height']
 
         # print(f"캠 사이즈 : {input_width} x {input_height}")
         # print(f"캔버스 사이즈 : {canvas_width} x {canvas_height}")
         # print(f"비디오 사이즈 : {trainer_width} x {trainer_height}")
 
         # 메인 알고리즘
+        if not ready_flag:
+            return jsonify(success=False)
+
         if fitness_mode == "SQUAT":
-            state, squat_correct_dict, visibility_check = run(fitness_mode, pose_landmarks, input_width, input_height)
+            state, squat_correct_dict, visibility_check = run(fitness_mode, pose_landmarks)
             return jsonify(fitness_mode=fitness_mode, state=state, count=session['squat_count'], correct_dict=squat_correct_dict,
                            correct_pose=session['squat_correct_pose'], visibility=visibility_check, angle_check=session['squat_check'],
                            num=num)
 
         elif fitness_mode == "PUSH_UP":
-            state, pushup_correct_dict, visibility_check = run(fitness_mode, pose_landmarks, input_width, input_height)
+            state, pushup_correct_dict, visibility_check = run(fitness_mode, pose_landmarks)
             return jsonify(fitness_mode=fitness_mode, state=state, count=session['pushup_count'], correct_dict=pushup_correct_dict,
                            correct_pose=session['pushup_correct_pose'], visibility=visibility_check, angle_check=session['pushup_check'],
                            num=num)
