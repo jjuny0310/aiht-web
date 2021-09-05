@@ -1,4 +1,15 @@
 var docV = document.documentElement;
+var isFull = false;
+
+$('#expand').click(function (){
+    isFull = !isFull;
+    if(isFull){
+        openFullScreenMode();
+    }
+    else{
+        closeFullScreenMode();
+    }
+});
 
 // 전체화면 설정
 function openFullScreenMode() {
