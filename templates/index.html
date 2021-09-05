@@ -112,22 +112,22 @@
                     <div class="col-lg-3 col-md-6 mb-5 mb-lg-0">
                         <span class="service-icon rounded-circle mx-auto mb-3"><i class="icon-screen-smartphone"></i></span>
                         <h4><strong>스쿼트</strong></h4>
-                        <p class="text-faded mb-0">정면을 바라보고 스쿼트 준비를 하세요!</p>
+                        <p class="text-faded mb-0">정면을 바라보고 스쿼트 운동을 수행 해주세요</p>
                     </div>
                     <div class="col-lg-3 col-md-6 mb-5 mb-lg-0">
                         <span class="service-icon rounded-circle mx-auto mb-3"><i class="icon-pencil"></i></span>
                         <h4><strong>푸쉬업</strong></h4>
-                        <p class="text-faded mb-0">몸의 왼쪽 또는 오른쪽이 보이게 자세를 잡아요!</p>
+                        <p class="text-faded mb-0">몸의 측면이 보이도록 하여 푸쉬업 운동을 수행 해주세요.</p>
                     </div>
                     <div class="col-lg-3 col-md-6 mb-5 mb-md-0">
                         <span class="service-icon rounded-circle mx-auto mb-3"><i class="icon-like"></i></span>
                         <h4><strong>미구현</strong></h4>
-                        <p class="text-faded mb-0">개발 중 입니다.</p>
+                        <p class="text-faded mb-0">미구현 상태입니다.</p>
                     </div>
                     <div class="col-lg-3 col-md-6">
                         <span class="service-icon rounded-circle mx-auto mb-3"><i class="icon-mustache"></i></span>
                         <h4><strong>미구현</strong></h4>
-                        <p class="text-faded mb-0">개발 중 입니다.</p>
+                        <p class="text-faded mb-0">미구현 상태입니다.</p>
                     </div>
                 </div>
             </div>
@@ -156,18 +156,5 @@
         <!-- Core theme JS-->
         <script src="../static/js/scripts.js"></script>
         <script src="../static/js/modal.js"></script>
-        <script>
-            function changeExercise(){
-            var selectExercise = document.getElementById('select_exercise');
-            switch (selectExercise.options[selectExercise.selectedIndex].value){
-                case "SQUAT":
-                    document.getElementById('caution').innerHTML = "'스쿼트'는 정면을 바라보고 수행 해주세요.";
-                    break;
-                case "PUSH_UP":
-                    document.getElementById('caution').innerHTML = "'푸쉬업'은 몸의 측면이 보이게 하여 운동을 시작 해주세요.(좌우는 상관 없습니다.)";
-                    break;
-            }
-            }
-        </script>
     </body>
 </html>
