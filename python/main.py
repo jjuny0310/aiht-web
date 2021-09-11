@@ -72,8 +72,8 @@ hip_distance_range = [0, 0.15]
 min_hand_angle = 130
 
 # 안내 음성 최소 신뢰도 값
-visibility_rate = 0.6
-
+squat_visibility_rate = 0.3
+pushup_visibility_rate = 0.6
 def run(fitness_mode, pose_landmarks):
     # 관절 좌표 저장(분리해서)
     keypoints_x = []
@@ -120,7 +120,7 @@ def run(fitness_mode, pose_landmarks):
         visibility_count = 0
         visibility_check = False
         for visibility in visibilitys_squat:
-            if visibility > visibility_rate:
+            if visibility > squat_visibility_rate:
                 visibility_count += 1
             if visibility_count == len(squat_parts[7:]):
                 visibility_check = True
@@ -238,7 +238,7 @@ def run(fitness_mode, pose_landmarks):
             visibility_count = 0
             visibility_check = False
             for visibility in visibilitys_pushup_left:
-                if visibility > visibility_rate:
+                if visibility > pushup_visibility_rate:
                     visibility_count += 1
                 if visibility_count == len(list(set(pushup_left_parts) - {RIGHT_SHOULDER, RIGHT_HIP})):
                     visibility_check = True
@@ -303,7 +303,7 @@ def run(fitness_mode, pose_landmarks):
             visibility_count = 0
             visibility_check = False
             for visibility in visibilitys_pushup_right:
-                if visibility > visibility_rate:
+                if visibility > pushup_visibility_rate:
                     visibility_count += 1
                 if visibility_count == len(list(set(pushup_right_parts) - {LEFT_SHOULDER, LEFT_HIP})):
                     visibility_check = True
