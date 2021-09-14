@@ -137,6 +137,5 @@ dmypy.json
 python/classification/video
 
 # images
-python/classification_img/images/test
-python/classification_img/images/train
+python/classification_img/images
 

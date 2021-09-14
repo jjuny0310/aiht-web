@@ -149,6 +149,7 @@ def run(path, FITNESS_MODE):
                 else:
                     squat_state = np.argmax(predict[0][0:2])
 
+
                 # 스쿼트 자세
                 if squat_state == 0:    # UP 상태
                     print("UP")
@@ -175,12 +176,13 @@ def run(path, FITNESS_MODE):
 if __name__ == '__main__':
     # 경로 설정
     path = 0  # 캠
-    # path = "video_data/video2.mp4"                   # 동영상
-    # path = "classification/video/push_up/3.mp4"  # 동영상
+    # path = "video/squat/3.mp4"  # 동영상
+    # path = "video/3.mp4"
 
     # 운동 선택
     FITNESS_MODE = "SQUAT"
     # FITNESS_MODE = "PUSH_UP"
+
 
 
     run(path, FITNESS_MODE)

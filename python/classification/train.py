@@ -36,7 +36,7 @@ def train(FITNESS_MODE):
     label = np.array(up_label + down_label + nothing_label)
 
     # train데이터, test데이터 9:1 비유로 분할(레이블도 알아서 분할됨)
-    train_x, test_x, train_y, test_y = train_test_split(data, label, test_size=0.1, random_state=172)
+    train_x, test_x, train_y, test_y = train_test_split(data, label, test_size=0.1, random_state=121)
     print(train_x.shape)
     print(train_y.shape)
     print(train_y)
@@ -119,7 +119,7 @@ def train(FITNESS_MODE):
 if __name__ == '__main__':
     # 학습할 운동 선택
     # FITNESS_MODE = "LEFT_PUSH_UP"
-    FITNESS_MODE = "RIGHT_PUSH_UP"
-    # FITNESS_MODE = "SQUAT"
+    # FITNESS_MODE = "RIGHT_PUSH_UP"
+    FITNESS_MODE = "SQUAT"
 
     train(FITNESS_MODE)

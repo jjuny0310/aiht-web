@@ -187,8 +187,11 @@ def csv_generate(path, pose_choice, FITNESS_MODE, reverse):
 
 if __name__ == '__main__':
     # 사용할 동영상 선택
-    path = "video/push_up/7.mp4"
+    # path = "video/push_up/7.mp4"
     # path = "video/squat/4.mp4"
+
+    # 임시
+    path = "video/3.mp4"
 
     # 수집할 운동 선택
     # FITNESS_MODE = "LEFT_PUSH_UP"
@@ -196,11 +199,11 @@ if __name__ == '__main__':
     FITNESS_MODE = "SQUAT"
 
     # 수집할 자세 선택
-    pose_choice = 'UP'
-    # pose_choice = 'DOWN'
+    # pose_choice = 'UP'
+    pose_choice = 'DOWN'
     # pose_choice = 'NOTHING'
 
-    # 푸쉬업만 선택(좌우반전 여부, EX) LEFT_PUSH_UP 이면 영상에서 왼팔이 캠앞에 있어야함(오른팔이 뒤로) )
+    # 푸쉬업만 사용(좌우반전 여부, EX) LEFT_PUSH_UP 이면 영상에서 왼팔이 캠앞에 있어야함(오른팔이 뒤로) )
     reverse = True
     # reverse = False
 
