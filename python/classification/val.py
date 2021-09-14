@@ -51,12 +51,10 @@ def run(path, FITNESS_MODE):
     print(f"선택한 운동 : {FITNESS_MODE}")
 
     # 기본 변수
-    keypoints = []
+    runtime_list = []
+
     sel_keypoints = []
     delay = 1
-
-    # 사운드 변수
-    sound_once = True
 
     # Pose 객체 생성
     pose = mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5)
@@ -80,8 +78,6 @@ def run(path, FITNESS_MODE):
     cap = cv2.VideoCapture(path)
     success = True
     while success:
-        start = time.time()
-
         success, frame = cap.read()
         frame = imutils.resize(frame, width=750)  # frame 크기 조절
 
@@ -118,7 +114,7 @@ def run(path, FITNESS_MODE):
 
             keypoints = list(zip(keypoints_x, keypoints_y))
 
-
+            start = time.time()
             # 푸쉬업 카운터 및 자세교정
             if FITNESS_MODE == "PUSH_UP":
                 left_keypoints_array = np.array([classifier_left_keypoints])
@@ -162,8 +158,9 @@ def run(path, FITNESS_MODE):
                 else:       # NOTHING 상태
                     print("NOTHING")
 
-                end = time.time()
-                print(f"{end - start:.5f} sec")
+        end = time.time()
+        runtime_list.append(end - start)
+        print(f"{end - start:.5f} sec")
 
         frame = cv2.flip(frame, 1)
         cv2.imshow("Smart Fitness", frame)
@@ -171,6 +168,7 @@ def run(path, FITNESS_MODE):
         # 입력 대기
         k = cv2.waitKey(delay)
         if k == 27:  # ESC 클릭 시(종료)
+            print(f"평균 수행시간 : {sum(runtime_list)/len(runtime_list)}")
             exit()
         elif k == ord('p') or k == ord('P'):  # P 클릭 시(멈춤)
             if delay == 1:
