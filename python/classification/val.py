@@ -5,6 +5,9 @@ import cv2
 import numpy as np
 import imutils
 
+import math
+import time
+
 mp_drawing = mp.solutions.drawing_utils
 mp_pose = mp.solutions.pose
 
@@ -77,6 +80,8 @@ def run(path, FITNESS_MODE):
     cap = cv2.VideoCapture(path)
     success = True
     while success:
+        start = time.time()
+
         success, frame = cap.read()
         frame = imutils.resize(frame, width=750)  # frame 크기 조절
 
@@ -149,7 +154,6 @@ def run(path, FITNESS_MODE):
                 else:
                     squat_state = np.argmax(predict[0][0:2])
 
-
                 # 스쿼트 자세
                 if squat_state == 0:    # UP 상태
                     print("UP")
@@ -157,6 +161,9 @@ def run(path, FITNESS_MODE):
                     print("DOWN")
                 else:       # NOTHING 상태
                     print("NOTHING")
+
+                end = time.time()
+                print(f"{end - start:.5f} sec")
 
         frame = cv2.flip(frame, 1)
         cv2.imshow("Smart Fitness", frame)
