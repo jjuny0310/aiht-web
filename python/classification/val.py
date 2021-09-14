@@ -119,12 +119,12 @@ def run(path, FITNESS_MODE):
             if FITNESS_MODE == "PUSH_UP":
                 left_keypoints_array = np.array([classifier_left_keypoints])
                 right_keypoints_array = np.array([classifier_right_keypoints])
-                left_predict = left_pushup_model.predict(left_keypoints_array)
-                right_predict = right_pushup_model.predict(right_keypoints_array)
 
                 # 푸쉬업
                 if keypoints[LEFT_SHOULDER][0] > keypoints[NOSE][0] or keypoints[RIGHT_SHOULDER][0] > \
                         keypoints[NOSE][0]:
+                    left_predict = left_pushup_model.predict(left_keypoints_array)
+
                     if np.argmax(left_predict[0]) == 0:  # UP 상태
                         print("LEFT_UP")
                     elif np.argmax(left_predict[0]) == 1:  # DOWN 상태
@@ -132,6 +132,8 @@ def run(path, FITNESS_MODE):
                     else:  # NOTHING 상태
                         print("LEFT_NOTHING")
                 else:
+                    right_predict = right_pushup_model.predict(right_keypoints_array)
+
                     if np.argmax(right_predict[0]) == 0:  # UP 상태
                         print("RIGHT_UP")
                     elif np.argmax(right_predict[0]) == 1:  # DOWN 상태
@@ -158,9 +160,9 @@ def run(path, FITNESS_MODE):
                 else:       # NOTHING 상태
                     print("NOTHING")
 
-        end = time.time()
-        runtime_list.append(end - start)
-        print(f"{end - start:.5f} sec")
+            end = time.time()
+            runtime_list.append(end - start)
+            print(f"{end - start:.5f} sec")
 
         frame = cv2.flip(frame, 1)
         cv2.imshow("Smart Fitness", frame)
