@@ -12,7 +12,9 @@ def run(path, model):
         success, frame = cap.read()
         predict_img = frame.copy()
         frame = imutils.resize(frame, width=1000)
-        predict_img = imutils.resize(predict_img, width=150)
+
+        predict_img = cv2.resize(predict_img, (150, 150))
+        # predict_img = imutils.resize(predict_img, width=150)
 
 
         height, width, _ = frame.shape
@@ -21,11 +23,11 @@ def run(path, model):
 
         predict = model.predict(predict_img)
         if(np.argmax(predict) == 0):
-            print("up")
-        elif(np.argmax(predict) == 1):
             print("down")
-        else:
+        elif(np.argmax(predict) == 1):
             print("nothing")
+        else:
+            print("up")
 
         # Imshow
         frame = cv2.flip(frame, 1)

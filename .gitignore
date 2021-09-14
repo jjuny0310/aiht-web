@@ -135,3 +135,8 @@ dmypy.json
 
 # videofile
 python/classification/video
+
+# images
+python/classification_img/images/test
+python/classification_img/images/train
+

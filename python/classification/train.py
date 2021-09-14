@@ -36,7 +36,7 @@ def train(FITNESS_MODE):
     label = np.array(up_label + down_label + nothing_label)
 
     # train데이터, test데이터 9:1 비유로 분할(레이블도 알아서 분할됨)
-    train_x, test_x, train_y, test_y = train_test_split(data, label, test_size=0.1, random_state=121)
+    train_x, test_x, train_y, test_y = train_test_split(data, label, test_size=0.1, random_state=172)
     print(train_x.shape)
     print(train_y.shape)
     print(train_y)

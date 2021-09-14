@@ -179,8 +179,8 @@ if __name__ == '__main__':
     # path = "classification/video/push_up/3.mp4"  # 동영상
 
     # 운동 선택
-    # FITNESS_MODE = "SQUAT"
-    FITNESS_MODE = "PUSH_UP"
+    FITNESS_MODE = "SQUAT"
+    # FITNESS_MODE = "PUSH_UP"
 
 
     run(path, FITNESS_MODE)

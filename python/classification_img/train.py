@@ -23,7 +23,7 @@ print('Total number of training nothing images:', len(nothing_files))
 TRAINING_DIR = "images/train/"
 training_datagen = ImageDataGenerator(
     rescale = 1./255,
-    rotation_range=40,
+    # rotation_range=40,
     width_shift_range=0.2,
     height_shift_range=0.2,
     shear_range=0.2,
@@ -38,14 +38,14 @@ train_generator = training_datagen.flow_from_directory(
 TRAINING_DIR,
 target_size=(112,150),
 class_mode='categorical',
-batch_size=20
+batch_size=50
 )
 
 validation_generator = validation_datagen.flow_from_directory(
 VALIDATION_DIR,
 target_size=(112,150),
 class_mode='categorical',
-batch_size=20
+batch_size=50
 )
 
 model = tf.keras.models.Sequential([
@@ -75,6 +75,6 @@ model.summary()
 
 model.compile(loss = 'categorical_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
 
-history = model.fit(train_generator, epochs=25, steps_per_epoch=10, validation_data = validation_generator, verbose = 1, validation_steps=3)
+history = model.fit(train_generator, epochs=40, steps_per_epoch=20, validation_data = validation_generator, verbose = 1, validation_steps=3)
 
 model.save("model/squat.h5")
