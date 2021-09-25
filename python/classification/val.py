@@ -162,7 +162,7 @@ def run(path, FITNESS_MODE):
 
             end = time.time()
             runtime_list.append(end - start)
-            print(f"{end - start:.5f} sec")
+            # print(f"{end - start:.5f} sec")
 
         frame = cv2.flip(frame, 1)
         cv2.imshow("Smart Fitness", frame)
@@ -187,8 +187,8 @@ if __name__ == '__main__':
     # path = "video/3.mp4"
 
     # 운동 선택
-    FITNESS_MODE = "SQUAT"
-    # FITNESS_MODE = "PUSH_UP"
+    # FITNESS_MODE = "SQUAT"
+    FITNESS_MODE = "PUSH_UP"
 
 
 
