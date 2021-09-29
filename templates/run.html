@@ -55,19 +55,6 @@
             height: 100%;
             object-fit: cover;
         }
-        /* 좌우반전 */
-        #input_video
-        {
-        transform: rotateY(180deg);
-        -webkit-transform:rotateY(180deg); /* Safari and Chrome */
-        -moz-transform:rotateY(180deg); /* Firefox */
-        }
-        #output_canvas
-        {
-        transform: rotateY(180deg);
-        -webkit-transform:rotateY(180deg); /* Safari and Chrome */
-        -moz-transform:rotateY(180deg); /* Firefox */
-        }
     </style>
 </head>
 
@@ -127,7 +114,7 @@
   <section id="run" class="clearfix">
       <div id="Dish">
           <!-- Trainer Video -->
-          <div class="Camera">
+          <div id="trainer" class="Camera">
               {% if fitness_mode == "SQUAT" %}
                   <!--테스트용-->
                   {% if num == 1 %}
@@ -153,10 +140,13 @@
           </div>
 
           <!-- WebCam -->
-          <div class="Camera">
-              <strong id="count" style="color: white">현재 횟수 : 0</strong> / {{ num }}
+          <div id="webcam" class="Camera">
               <video id="input_video" class="input_video" style="display: none"></video>
               <canvas id="output_canvas" class="output_canvas" width="480px" height="480px"></canvas>
+
+              <div id="count_text" style="display: none;color: #413e66;background-color: white;margin-top: 10px">
+                  <h3><strong id="count">현재 횟수 : 0</strong> / <strong>{{ num }}</strong></h3>
+              </div>
           </div>
       </div>
 
@@ -177,7 +167,7 @@
   <!-- Main JS Files -->
   <script src="../static/main/js/loading.js"></script>
   <script src="../static/main/js/human_pose.js"></script>
-{#  <script src="../static/main/js/fullscreen.js"></script>#}
+  <script src="../static/main/js/fullscreen.js"></script>
 
   </main>
 

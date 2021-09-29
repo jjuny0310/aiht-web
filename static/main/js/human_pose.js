@@ -4,6 +4,7 @@ const canvasCtx = canvasElement.getContext('2d');
 
 LoadingWithMask();
 var count = 0;
+var countText = document.getElementById('count_text');
 var correct_pose = true;
 var soundDelay = 4000;
 var readyTime = 10000;
@@ -63,15 +64,15 @@ function endVideo(){
     trainerEndSound.play();
     setTimeout(function() { trainerEndFlag = true;}, 6000);
 }
-
 function poseOnResults(results) {
-    // 캔버스 반응형
+    // 캔버스 조정
     canvasElement.style.position = "absolute";
     canvasElement.style.left = "0";
     canvasElement.style.top = "0";
     canvasElement.style.width = "100%";
     canvasElement.style.height = "100%";
     canvasElement.style.objectFit = "contain";
+    canvasElement.style.transform = "rotateY(180deg)";
 
     // 관절선
     canvasCtx.save();
@@ -108,6 +109,7 @@ function poseOnResults(results) {
                     if(loadingFlag) {
                         closeLoadingWithMask();
                         loadingFlag = false;
+                        countText.style.display = "inline";
 
                         // 대기시간
                         readySound.play();
@@ -234,6 +236,7 @@ const pose = new Pose({locateFile: (file) => {
 }});
 pose.setOptions({
   modelComplexity: 1,
+  selfieMode: false,
   smoothLandmarks: true,
   minDetectionConfidence: 0.5,
   minTrackingConfidence: 0.5
