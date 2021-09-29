@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>AIHT - Run</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="../static/main/img/favicon.png" rel="icon">
+  <link href="../static/main/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Montserrat:300,400,500,600,700" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="../static/main/vendor/aos/aos.css" rel="stylesheet">
+  <link href="../static/main/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="../static/main/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="../static/main/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="../static/main/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="../static/main/css/style.css" rel="stylesheet">
+
+  <!-- Modal CSS File -->
+  <link href="../static/main/css/modal.css" rel="stylesheet">
+
+  <!-- MediaPipe JS Files -->
+  <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/control_utils_3d.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js" crossorigin="anonymous"></script>
+
+  <!-- Core(동영상 배치) -->
+  <link rel="stylesheet" href="../static/main/core/styles.css">
+  <script src="../static/main/core/script.js"></script>
+
+  <!-- =======================================================
+  * Template Name: Rapid - v4.5.0
+  * Template URL: https://bootstrapmade.com/rapid-multipurpose-bootstrap-business-template/
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+    <style>
+        video{
+            position: absolute;
+            left: 0; top: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        /* 좌우반전 */
+        #input_video
+        {
+        transform: rotateY(180deg);
+        -webkit-transform:rotateY(180deg); /* Safari and Chrome */
+        -moz-transform:rotateY(180deg); /* Firefox */
+        }
+        #output_canvas
+        {
+        transform: rotateY(180deg);
+        -webkit-transform:rotateY(180deg); /* Safari and Chrome */
+        -moz-transform:rotateY(180deg); /* Firefox */
+        }
+    </style>
+</head>
+
+<body>
+  <!-- ======= Header ======= -->
+  <header id="header" class="fixed-top d-flex align-items-center header-transparent">
+    <div class="container d-flex align-items-center">
+
+      <h1 class="logo me-auto"><a href="/">AIHT</a></h1>
+      <!-- Uncomment below if you prefer to use an image logo -->
+      <!-- <a href="index.html" class="logo me-auto"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
+
+      <nav id="navbar" class="navbar order-last order-lg-0">
+        <ul>
+          <li><a class="nav-link scrollto" href="/">메인</a></li>
+          <li><a class="nav-link scrollto" href="#services">서비스</a></li>
+            {% if session['login'] %}
+                <li><a class="nav-link scrollto" href="/result_log">운동 내역</a></li>
+                <li class="dropdown"><a href="#"><span>내 정보</span> <i class="bi bi-chevron-down"></i></a>
+                <ul>
+                  <li><a href="#">Drop Down 1</a></li>
+                  <li class="dropdown"><a href="#"><span>Deep Drop Down</span> <i class="bi bi-chevron-right"></i></a>
+                    <ul>
+                      <li><a href="#">Deep Drop Down 1</a></li>
+                      <li><a href="#">Deep Drop Down 2</a></li>
+                    </ul>
+                  </li>
+                  <li><a href="#">Drop Down 2</a></li>
+                  <li><a href="#">Drop Down 3</a></li>
+                  <li><a href="#">Drop Down 4</a></li>
+                </ul>
+              </li>
+              <li><a class="nav-link scrollto" href="/logout">로그아웃</a></li>
+            {% else %}
+            <li><a class="nav-link scrollto" href="/login">로그인</a></li>
+            {% endif %}
+        </ul>
+        <i class="bi bi-list mobile-nav-toggle"></i>
+      </nav><!-- .navbar -->
+
+      <div class="social-links">
+        <a href="https://github.com/jjuny0310" class="github"><i class="bi bi-github"></i></a>
+        <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
+        <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
+      </div>
+
+    </div>
+  </header><!-- End Header -->
+
+  <!-- ======= Run Section ======= -->
+
+    <!--Loading Section -->
+    <div id='loadingImg'>
+        <img src='../static/loading/gif/loading.gif' style='position: relative; display: block; margin: 0px auto;'/>
+    </div><!-- End Loading -->
+
+  <section id="run" class="clearfix">
+      <div id="Dish">
+          <!-- Trainer Video -->
+          <div class="Camera">
+              {% if fitness_mode == "SQUAT" %}
+                  <!--테스트용-->
+                  {% if num == 1 %}
+                      <video id="trainer_video" src="../static/video/squat_10.mp4" muted onended="endVideo()"></video>
+                  {% endif %}
+
+                  {% if num == 10 %}
+                      <video id="trainer_video" src="../static/video/squat_10.mp4" muted onended="endVideo()"></video>
+                  {% elif num == 20 %}
+                      <video id="trainer_video" src="../static/video/squat_20.mp4" muted onended="endVideo()"></video>
+                  {% elif num == 30 %}
+                      <video id="trainer_video" src="../static/video/squat_30.mp4" muted onended="endVideo()"></video>
+                  {% endif %}
+              {% elif fitness_mode == "PUSH_UP" %}
+                  {% if num == 10 %}
+                      <video id="trainer_video" src="../static/video/pushup_10.mp4" muted onended="endVideo()"></video>
+                  {% elif num == 20 %}
+                      <video id="trainer_video" src="../static/video/pushup_20.mp4" muted onended="endVideo()"></video>
+                  {% elif num == 30 %}
+                      <video id="trainer_video" src="../static/video/pushup_30.mp4" muted onended="endVideo()"></video>
+                  {% endif %}
+              {% endif %}
+          </div>
+
+          <!-- WebCam -->
+          <div class="Camera">
+              <strong id="count" style="color: white">현재 횟수 : 0</strong> / {{ num }}
+              <video id="input_video" class="input_video" style="display: none"></video>
+              <canvas id="output_canvas" class="output_canvas" width="480px" height="480px"></canvas>
+          </div>
+      </div>
+
+  </section><!-- End Run -->
+
+  <main id="main">
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="../static/main/vendor/aos/aos.js"></script>
+  <script src="../static/main/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../static/main/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="../static/main/vendor/swiper/swiper-bundle.min.js"></script>
+
+  <!-- Template Main JS File -->
+  <script src="../static/main/js/main.js"></script>
+
+  <!-- Main JS Files -->
+  <script src="../static/main/js/loading.js"></script>
+  <script src="../static/main/js/human_pose.js"></script>
+{#  <script src="../static/main/js/fullscreen.js"></script>#}
+
+  </main>
+
+</body>
+</html>
