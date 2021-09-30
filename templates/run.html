@@ -54,18 +54,12 @@
       <nav id="navbar" class="navbar order-last order-lg-0">
         <ul>
           <li><a class="nav-link scrollto" href="/">메인</a></li>
-          <li><a class="nav-link scrollto" href="#services">서비스</a></li>
+          <li><a class="nav-link scrollto" href="/#services">서비스</a></li>
             {% if session['login'] %}
                 <li><a class="nav-link scrollto" href="/result_list">운동 내역</a></li>
                 <li class="dropdown"><a href="#"><span>내 정보</span> <i class="bi bi-chevron-down"></i></a>
                 <ul>
-                    <li><a><strong>{{ session['nickname'] }}님 환영합니다.</strong></a></li>
-{#                  <li class="dropdown"><a href="#"><span>Deep Drop Down</span> <i class="bi bi-chevron-right"></i></a>#}
-{#                    <ul>#}
-{#                      <li><a href="#">Deep Drop Down 1</a></li>#}
-{#                      <li><a href="#">Deep Drop Down 2</a></li>#}
-{#                    </ul>#}
-{#                  </li>#}
+                    <li><a href="#"><strong>{{ session['nickname'] }}님 환영합니다.</strong></a></li>
                   <li><a href="#">닉네임 변경</a></li>
                   <li><a href="#">비밀번호 변경</a></li>
                 </ul>
