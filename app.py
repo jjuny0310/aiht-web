@@ -116,11 +116,11 @@ def result():
         return redirect(url_for('home'))
 
 
-@app.route('/result_log', methods=['GET'])
-def result_log():
+@app.route('/result_list', methods=['GET'])
+def result_list():
     if session['login']:
         results = Result.query.filter_by(user_id=session['username']).all()
-        return render_template('result_log.html', results=results)
+        return render_template('result_list.html', results=results)
     else:
         return redirect(url_for('login'))
 
@@ -131,7 +131,7 @@ def result_delete():
     item = Result.query.filter_by(id=result_id).first()
     db.session.delete(item)
     db.session.commit()
-    return redirect(url_for('result_log'))
+    return redirect(url_for('result_list'))
 
 
 @app.route('/login', methods=['GET', 'POST'])

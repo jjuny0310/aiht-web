@@ -40,22 +40,6 @@
   <!-- Core(동영상 배치) -->
   <link rel="stylesheet" href="../static/main/core/styles.css">
   <script src="../static/main/core/script.js"></script>
-
-  <!-- =======================================================
-  * Template Name: Rapid - v4.5.0
-  * Template URL: https://bootstrapmade.com/rapid-multipurpose-bootstrap-business-template/
-  * Author: BootstrapMade.com
-  * License: https://bootstrapmade.com/license/
-  ======================================================== -->
-    <style>
-        video{
-            position: absolute;
-            left: 0; top: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-    </style>
 </head>
 
 <body>
@@ -72,19 +56,18 @@
           <li><a class="nav-link scrollto" href="/">메인</a></li>
           <li><a class="nav-link scrollto" href="#services">서비스</a></li>
             {% if session['login'] %}
-                <li><a class="nav-link scrollto" href="/result_log">운동 내역</a></li>
+                <li><a class="nav-link scrollto" href="/result_list">운동 내역</a></li>
                 <li class="dropdown"><a href="#"><span>내 정보</span> <i class="bi bi-chevron-down"></i></a>
                 <ul>
-                  <li><a href="#">Drop Down 1</a></li>
-                  <li class="dropdown"><a href="#"><span>Deep Drop Down</span> <i class="bi bi-chevron-right"></i></a>
-                    <ul>
-                      <li><a href="#">Deep Drop Down 1</a></li>
-                      <li><a href="#">Deep Drop Down 2</a></li>
-                    </ul>
-                  </li>
-                  <li><a href="#">Drop Down 2</a></li>
-                  <li><a href="#">Drop Down 3</a></li>
-                  <li><a href="#">Drop Down 4</a></li>
+                    <li><a><strong>{{ session['nickname'] }}님 환영합니다.</strong></a></li>
+{#                  <li class="dropdown"><a href="#"><span>Deep Drop Down</span> <i class="bi bi-chevron-right"></i></a>#}
+{#                    <ul>#}
+{#                      <li><a href="#">Deep Drop Down 1</a></li>#}
+{#                      <li><a href="#">Deep Drop Down 2</a></li>#}
+{#                    </ul>#}
+{#                  </li>#}
+                  <li><a href="#">닉네임 변경</a></li>
+                  <li><a href="#">비밀번호 변경</a></li>
                 </ul>
               </li>
               <li><a class="nav-link scrollto" href="/logout">로그아웃</a></li>
@@ -106,21 +89,21 @@
 
   <!-- ======= Run Section ======= -->
 
-    <!--Loading Section -->
+    <!--Loading -->
     <div id='loadingImg'>
-        <img src='../static/loading/gif/loading.gif' style='position: relative; display: block; margin: 0px auto;'/>
+        <img id="loading" src='../static/loading/gif/loading.gif'/>
     </div><!-- End Loading -->
 
   <section id="run" class="clearfix">
       <div id="Dish">
           <!-- Trainer Video -->
           <div id="trainer" class="Camera">
+              <!-- SQUAT -->
               {% if fitness_mode == "SQUAT" %}
                   <!--테스트용-->
                   {% if num == 1 %}
                       <video id="trainer_video" src="../static/video/squat_10.mp4" muted onended="endVideo()"></video>
                   {% endif %}
-
                   {% if num == 10 %}
                       <video id="trainer_video" src="../static/video/squat_10.mp4" muted onended="endVideo()"></video>
                   {% elif num == 20 %}
@@ -128,6 +111,7 @@
                   {% elif num == 30 %}
                       <video id="trainer_video" src="../static/video/squat_30.mp4" muted onended="endVideo()"></video>
                   {% endif %}
+              <!-- PUSH_UP -->
               {% elif fitness_mode == "PUSH_UP" %}
                   {% if num == 10 %}
                       <video id="trainer_video" src="../static/video/pushup_10.mp4" muted onended="endVideo()"></video>
@@ -141,10 +125,10 @@
 
           <!-- WebCam -->
           <div id="webcam" class="Camera">
-              <video id="input_video" class="input_video" style="display: none"></video>
+              <video id="input_video" class="input_video"></video>
               <canvas id="output_canvas" class="output_canvas" width="480px" height="480px"></canvas>
 
-              <div id="count_text" style="display: none;color: #413e66;background-color: white">
+              <div id="count_text">
                   <h3><strong id="count">현재 횟수 : 0</strong> / <strong>{{ num }}</strong></h3>
               </div>
           </div>

@@ -85,3 +85,7 @@
     color: red;
     padding-top: 20px;
 }
+
+#result #modal{
+    display: flex;
+}
