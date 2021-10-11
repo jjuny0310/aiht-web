@@ -144,7 +144,11 @@ def run(path, FITNESS_MODE):
             # 스쿼트
             else:
                 keypoints_array = np.array([classifier_keypoints])
+
+                squat_start = time.time()
                 predict = model.predict(keypoints_array)
+                squat_end = time.time()
+                print(f"모델 예측 시간 : {squat_end - squat_start}")
 
                 # Nothing 자세 정확도
                 if predict[0][2] > 0.8:
@@ -152,13 +156,13 @@ def run(path, FITNESS_MODE):
                 else:
                     squat_state = np.argmax(predict[0][0:2])
 
-                # 스쿼트 자세
-                if squat_state == 0:    # UP 상태
-                    print("UP")
-                elif squat_state == 1:      # DOWN 상태
-                    print("DOWN")
-                else:       # NOTHING 상태
-                    print("NOTHING")
+                # # 스쿼트 자세
+                # if squat_state == 0:    # UP 상태
+                #     print("UP")
+                # elif squat_state == 1:      # DOWN 상태
+                #     print("DOWN")
+                # else:       # NOTHING 상태
+                #     print("NOTHING")
 
             end = time.time()
             runtime_list.append(end - start)
@@ -170,7 +174,7 @@ def run(path, FITNESS_MODE):
         # 입력 대기
         k = cv2.waitKey(delay)
         if k == 27:  # ESC 클릭 시(종료)
-            print(f"평균 수행시간 : {sum(runtime_list)/len(runtime_list)}")
+            # print(f"평균 수행시간 : {sum(runtime_list)/len(runtime_list)}")
             exit()
         elif k == ord('p') or k == ord('P'):  # P 클릭 시(멈춤)
             if delay == 1:
@@ -187,8 +191,8 @@ if __name__ == '__main__':
     # path = "video/3.mp4"
 
     # 운동 선택
-    # FITNESS_MODE = "SQUAT"
-    FITNESS_MODE = "PUSH_UP"
+    FITNESS_MODE = "SQUAT"
+    # FITNESS_MODE = "PUSH_UP"
 
 
 
