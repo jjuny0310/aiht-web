@@ -156,18 +156,19 @@ def run(path, FITNESS_MODE):
                 else:
                     squat_state = np.argmax(predict[0][0:2])
 
-                # # 스쿼트 자세
-                # if squat_state == 0:    # UP 상태
-                #     print("UP")
-                # elif squat_state == 1:      # DOWN 상태
-                #     print("DOWN")
-                # else:       # NOTHING 상태
-                #     print("NOTHING")
+                # 스쿼트 자세
+                if squat_state == 0:    # UP 상태
+                    print("UP")
+                elif squat_state == 1:      # DOWN 상태
+                    print("DOWN")
+                else:       # NOTHING 상태
+                    print("NOTHING")
 
             end = time.time()
             runtime_list.append(end - start)
             # print(f"{end - start:.5f} sec")
-
+    
+        # 좌우 반전
         frame = cv2.flip(frame, 1)
         cv2.imshow("Smart Fitness", frame)
 
@@ -187,12 +188,13 @@ def run(path, FITNESS_MODE):
 if __name__ == '__main__':
     # 경로 설정
     path = 0  # 캠
-    # path = "video/squat/3.mp4"  # 동영상
-    # path = "video/3.mp4"
+    # path = "video/squat/4.mp4"  # 동영상
+    # path = "video/squat_test/2.mp4"
+    path = "video/push_up_test/5.mp4"
 
     # 운동 선택
-    FITNESS_MODE = "SQUAT"
-    # FITNESS_MODE = "PUSH_UP"
+    # FITNESS_MODE = "SQUAT"
+    FITNESS_MODE = "PUSH_UP"
 
 
 

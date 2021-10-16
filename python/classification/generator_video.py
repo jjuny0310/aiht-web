@@ -3,6 +3,7 @@ import mediapipe as mp
 import csv
 import threading
 import imutils
+import datetime
 
 mp_drawing = mp.solutions.drawing_utils
 mp_pose = mp.solutions.pose
@@ -65,44 +66,49 @@ def csv_generate(path, pose_choice, FITNESS_MODE, reverse):
     # Pose 객체 생성
     pose = mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5)
 
+    # 현재 시간
+    cur_time = str(datetime.datetime.now()).split(" ")
+    cur_time[1] = cur_time[1].split(".")[0]
+    cur_time = " ".join(cur_time).replace(":", "-")
+
     # CSV 파일 생성
-    if FITNESS_MODE == "LEFT_PUSH_UP":  # LEFT 푸쉬업
+    if FITNESS_MODE == "LEFT_PUSH_UP":   # LEFT 푸쉬업
         if pose_choice == "UP":
-            f = open('dataset/up/up_left_pushup_pose.csv', 'w', newline='')
+            f = open(f'dataset/up/up_left_pushup_pose_{cur_time}.csv', 'w', newline='')
             writer = csv.writer(f)
             writer.writerow(keypoints_name)
         elif pose_choice == "DOWN":
-            f = open('dataset/down/down_left_pushup_pose.csv', 'w', newline='')
+            f = open(f'dataset/down/down_left_pushup_pose_{cur_time}.csv', 'w', newline='')
             writer = csv.writer(f)
             writer.writerow(keypoints_name)
         else:
-            f = open('dataset/nothing/nothing_left_pushup_pose.csv', 'w', newline='')
+            f = open(f'dataset/nothing/nothing_left_pushup_pose_{cur_time}.csv', 'w', newline='')
             writer = csv.writer(f)
             writer.writerow(keypoints_name)
-    elif FITNESS_MODE == "RIGHT_PUSH_UP":  # RIGHT 푸쉬업
+    elif FITNESS_MODE == "RIGHT_PUSH_UP":   # RIGHT 푸쉬업
         if pose_choice == "UP":
-            f = open('dataset/up/up_right_pushup_pose.csv', 'w', newline='')
+            f = open(f'dataset/up/up_right_pushup_pose_{cur_time}.csv', 'w', newline='')
             writer = csv.writer(f)
             writer.writerow(keypoints_name)
         elif pose_choice == "DOWN":
-            f = open('dataset/down/down_right_pushup_pose.csv', 'w', newline='')
+            f = open(f'dataset/down/down_right_pushup_pose_{cur_time}.csv', 'w', newline='')
             writer = csv.writer(f)
             writer.writerow(keypoints_name)
         else:
-            f = open('dataset/nothing/nothing_right_pushup_pose.csv', 'w', newline='')
+            f = open(f'dataset/nothing/nothing_right_pushup_pose_{cur_time}.csv', 'w', newline='')
             writer = csv.writer(f)
             writer.writerow(keypoints_name)
-    else:  # 스쿼트
+    else:   # 스쿼트
         if pose_choice == "UP":
-            f = open('dataset/up/up_squat_pose.csv', 'w', newline='')
+            f = open(f'dataset/up/up_squat_pose_{cur_time}.csv', 'w', newline='')
             writer = csv.writer(f)
             writer.writerow(keypoints_name)
         elif pose_choice == "DOWN":
-            f = open('dataset/down/down_squat_pose.csv', 'w', newline='')
+            f = open(f'dataset/down/down_squat_pose_{cur_time}.csv', 'w', newline='')
             writer = csv.writer(f)
             writer.writerow(keypoints_name)
         else:
-            f = open('dataset/nothing/nothing_squat_pose.csv', 'w', newline='')
+            f = open(f'dataset/nothing/nothing_squat_pose_{cur_time}.csv', 'w', newline='')
             writer = csv.writer(f)
             writer.writerow(keypoints_name)
 
@@ -191,12 +197,13 @@ if __name__ == '__main__':
     # path = "video/squat/4.mp4"
 
     # 임시
-    path = "video/3.mp4"
+    # path = "video/3.mp4"
+    path = "video/push_up_test/5.mp4"
 
     # 수집할 운동 선택
     # FITNESS_MODE = "LEFT_PUSH_UP"
-    # FITNESS_MODE = "RIGHT_PUSH_UP"
-    FITNESS_MODE = "SQUAT"
+    FITNESS_MODE = "RIGHT_PUSH_UP"
+    # FITNESS_MODE = "SQUAT"
 
     # 수집할 자세 선택
     # pose_choice = 'UP'
