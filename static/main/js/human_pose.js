@@ -18,10 +18,10 @@ var downSoundFlag = true;
 var exerciseEndFlag = true;
 
 // 1. 스쿼트 자세교정 오디오 변수
-var leftKneeSound = new Audio('../static/sound/squat/left_knee.wav');
-var rightKneeSound = new Audio('../static/sound/squat/right_knee.wav');
-var ankleSound = new Audio('../static/sound/squat/ankle.wav');
-var footSound = new Audio('../static/sound/squat/foot.wav');
+var ankleNarrowSound = new Audio('../static/sound/squat/ankle_narrow.wav');
+var ankleWideSound = new Audio('../static/sound/squat/ankle_wide.wav');
+var footNarrowSound = new Audio('../static/sound/squat/foot_narrow.wav');
+var footWideSound = new Audio('../static/sound/squat/foot_wide.wav');
 var squatNothingSound = new Audio('../static/sound/squat/nothing.wav');
 
 // 2. 푸쉬업 자세교정 오디오 변수
@@ -50,11 +50,10 @@ var exerciseType = ""
 // 트레이너 비디오 종료 시 처리
 function endVideo(){
     trainerEndFlag = false;
-
-    leftKneeSound.pause();
-    rightKneeSound.pause();
-    ankleSound.pause();
-    footSound.pause();
+    ankleNarrowSound.pause();
+    ankleWideSound.pause();
+    footNarrowSound.pause();
+    footWideSound.pause();
     squatNothingSound.pause();
 
     hipSound.pause();
@@ -157,25 +156,25 @@ function poseOnResults(results) {
                         
                         // 자세교정 안내 음성
                         if(poseSoundFlag && trainerEndFlag && data.state==="UP" && data.visibility){
-                            if(!data.correct_dict['correct_left_knee']){
-                                leftKneeSound.play();
+                            if(data.correct_dict['ankle_state'] === "narrow"){
+                                ankleWideSound.play();
                                 poseSoundFlag = false;
                                 setTimeout(function() { poseSoundFlag = true;}, soundDelay);
                             }
-                            else if(!data.correct_dict['correct_right_knee']){
-                                rightKneeSound.play();
+                            else if(data.correct_dict['ankle_state'] === "wide"){
+                                ankleNarrowSound.play();
                                 poseSoundFlag = false;
                                 setTimeout(function() { poseSoundFlag = true;}, soundDelay);
                             }
-                            else if(!data.correct_dict['correct_left_ankle'] || !data.correct_dict['correct_right_ankle']){
-                                ankleSound.play();
+                            else if(data.correct_dict['foot_state'] === "narrow"){
+                                footWideSound.play();
                                 poseSoundFlag = false;
-                                setTimeout(function() { poseSoundFlag = true;}, soundDelay);
+                                setTimeout(function() { poseSoundFlag = true;}, soundDelay+2000);
                             }
-                            else if(!data.correct_dict['correct_left_foot'] || !data.correct_dict['correct_right_foot']){
-                                footSound.play();
+                            else if(data.correct_dict['foot_state'] === "wide"){
+                                footNarrowSound.play();
                                 poseSoundFlag = false;
-                                setTimeout(function() { poseSoundFlag = true;}, soundDelay);
+                                setTimeout(function() { poseSoundFlag = true;}, soundDelay+2000);
                             }
                         }
                         else if(poseSoundFlag && trainerEndFlag && data.state==="NOTHING" && data.visibility){

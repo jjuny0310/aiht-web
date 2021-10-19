@@ -24,6 +24,7 @@ def init_value():
     session['squat_count'] = 0
     session['squat_check'] = False
     session['squat_correct_pose'] = False
+    session['ankle_state'] = "pass"
 
     # 푸쉬업 변수
     session['pushup_count'] = 0

@@ -46,8 +46,28 @@ RIGHT_HEEL = 30
 LEFT_FOOT_INDEX = 31
 RIGHT_FOOT_INDEX = 32
 
+# 두 점 사이의 거리
+def getPoint2D(p1, p2):
+    x1, y1 = p1
+    x2, y2 = p2
+    dist = (x2 - x1) ** 2 + (y2 - y1) ** 2
+    dist = math.sqrt(dist)
+    return dist
 
+
+# 삼각형 세변 길이의 각도(좌표를 받아서 각도 출력)
+def getAngle3P(p1, p2, p3):
+    dist1 = getPoint2D(p1, p2)
+    dist2 = getPoint2D(p2, p3)
+    dist3 = getPoint2D(p3, p1)
+
+    radian = math.acos((dist1 ** 2 + dist2 ** 2 - dist3 ** 2) / (2 * dist1 * dist2))
+    angle = math.degrees(radian)
+    return angle
+
+ankle_state = True
 def run(path, FITNESS_MODE):
+    global ankle_state
     print(f"선택한 운동 : {FITNESS_MODE}")
 
     # 기본 변수
@@ -126,29 +146,51 @@ def run(path, FITNESS_MODE):
                     left_predict = left_pushup_model.predict(left_keypoints_array)
 
                     if np.argmax(left_predict[0]) == 0:  # UP 상태
-                        print("LEFT_UP")
+                       print("LEFT_UP")
                     elif np.argmax(left_predict[0]) == 1:  # DOWN 상태
-                        print("LEFT_DOWN")
+                       print("LEFT_DOWN")
                     else:  # NOTHING 상태
-                        print("LEFT_NOTHING")
+                       print("LEFT_NOTHING")
                 else:
                     right_predict = right_pushup_model.predict(right_keypoints_array)
 
                     if np.argmax(right_predict[0]) == 0:  # UP 상태
-                        print("RIGHT_UP")
+                       print("RIGHT_UP")
                     elif np.argmax(right_predict[0]) == 1:  # DOWN 상태
-                        print("RIGHT_DOWN")
+                       print("RIGHT_DOWN")
                     else:  # NOTHING 상태
-                        print("RIGHT_NOTHING")
+                       print("RIGHT_NOTHING")
 
             # 스쿼트
             else:
                 keypoints_array = np.array([classifier_keypoints])
-
-                squat_start = time.time()
                 predict = model.predict(keypoints_array)
-                squat_end = time.time()
-                print(f"모델 예측 시간 : {squat_end - squat_start}")
+
+
+                # --수정
+                ankle_distance_range = [-0.01, 0.04]
+
+                # 발목 범위
+                right_shoulder_to_ankle = keypoints[RIGHT_SHOULDER][0] - keypoints[RIGHT_ANKLE][0]
+                left_shoulder_to_ankle = keypoints[LEFT_ANKLE][0] - keypoints[LEFT_SHOULDER][0]
+
+                # 발목 자세 교정
+                if right_shoulder_to_ankle >= 0 and left_shoulder_to_ankle >= 0:
+                    if right_shoulder_to_ankle <= ankle_distance_range[1] and left_shoulder_to_ankle <= \
+                            ankle_distance_range[1]:
+                        ankle_state = "pass"
+                    elif right_shoulder_to_ankle > ankle_distance_range[1] and left_shoulder_to_ankle > \
+                            ankle_distance_range[1]:
+                        ankle_state = "wide"
+                elif right_shoulder_to_ankle <= ankle_distance_range[0] and left_shoulder_to_ankle <= \
+                        ankle_distance_range[0]:
+                    ankle_state = "narrow"
+                else:
+                    pass
+
+                print(ankle_state,left_shoulder_to_ankle,right_shoulder_to_ankle )
+                #--수정
+
 
                 # Nothing 자세 정확도
                 if predict[0][2] > 0.8:
@@ -156,13 +198,13 @@ def run(path, FITNESS_MODE):
                 else:
                     squat_state = np.argmax(predict[0][0:2])
 
-                # 스쿼트 자세
-                if squat_state == 0:    # UP 상태
-                    print("UP")
-                elif squat_state == 1:      # DOWN 상태
-                    print("DOWN")
-                else:       # NOTHING 상태
-                    print("NOTHING")
+                # # 스쿼트 자세
+                # if squat_state == 0:    # UP 상태
+                #    print("UP")
+                # elif squat_state == 1:      # DOWN 상태
+                #    print("DOWN")
+                # else:       # NOTHING 상태
+                #    print("NOTHING")
 
             end = time.time()
             runtime_list.append(end - start)
@@ -175,7 +217,7 @@ def run(path, FITNESS_MODE):
         # 입력 대기
         k = cv2.waitKey(delay)
         if k == 27:  # ESC 클릭 시(종료)
-            # print(f"평균 수행시간 : {sum(runtime_list)/len(runtime_list)}")
+            print(f"평균 수행시간 : {sum(runtime_list)/len(runtime_list)}")
             exit()
         elif k == ord('p') or k == ord('P'):  # P 클릭 시(멈춤)
             if delay == 1:
@@ -190,11 +232,11 @@ if __name__ == '__main__':
     path = 0  # 캠
     # path = "video/squat/4.mp4"  # 동영상
     # path = "video/squat_test/2.mp4"
-    path = "video/push_up_test/5.mp4"
+    # path = "video/push_up_test/5.mp4"
 
     # 운동 선택
-    # FITNESS_MODE = "SQUAT"
-    FITNESS_MODE = "PUSH_UP"
+    FITNESS_MODE = "SQUAT"
+    # FITNESS_MODE = "PUSH_UP"
 
 
 
