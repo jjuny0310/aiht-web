@@ -166,29 +166,27 @@ def run(path, FITNESS_MODE):
                 keypoints_array = np.array([classifier_keypoints])
                 predict = model.predict(keypoints_array)
 
-
                 # --수정
-                ankle_distance_range = [-0.01, 0.04]
+                # ankle_distance_range = [-0.01, 0.04]
+                #
+                # # 발목 범위
+                # right_shoulder_to_ankle = keypoints[RIGHT_SHOULDER][0] - keypoints[RIGHT_ANKLE][0]
+                # left_shoulder_to_ankle = keypoints[LEFT_ANKLE][0] - keypoints[LEFT_SHOULDER][0]
+                #
+                # # 발목 자세 교정
+                # if right_shoulder_to_ankle >= ankle_distance_range[0] and left_shoulder_to_ankle >= ankle_distance_range[0]:
+                #     if right_shoulder_to_ankle <= ankle_distance_range[1] and left_shoulder_to_ankle <= \
+                #             ankle_distance_range[1]:
+                #         ankle_state = "pass"
+                #     elif right_shoulder_to_ankle > ankle_distance_range[1] and left_shoulder_to_ankle > \
+                #             ankle_distance_range[1]:
+                #         ankle_state = "wide"
+                # elif right_shoulder_to_ankle <= ankle_distance_range[0] and left_shoulder_to_ankle <= \
+                #         ankle_distance_range[0]:
+                #     ankle_state = "narrow"
+                # else:
 
-                # 발목 범위
-                right_shoulder_to_ankle = keypoints[RIGHT_SHOULDER][0] - keypoints[RIGHT_ANKLE][0]
-                left_shoulder_to_ankle = keypoints[LEFT_ANKLE][0] - keypoints[LEFT_SHOULDER][0]
-
-                # 발목 자세 교정
-                if right_shoulder_to_ankle >= 0 and left_shoulder_to_ankle >= 0:
-                    if right_shoulder_to_ankle <= ankle_distance_range[1] and left_shoulder_to_ankle <= \
-                            ankle_distance_range[1]:
-                        ankle_state = "pass"
-                    elif right_shoulder_to_ankle > ankle_distance_range[1] and left_shoulder_to_ankle > \
-                            ankle_distance_range[1]:
-                        ankle_state = "wide"
-                elif right_shoulder_to_ankle <= ankle_distance_range[0] and left_shoulder_to_ankle <= \
-                        ankle_distance_range[0]:
-                    ankle_state = "narrow"
-                else:
-                    pass
-
-                print(ankle_state,left_shoulder_to_ankle,right_shoulder_to_ankle )
+                # print(ankle_state,left_shoulder_to_ankle,right_shoulder_to_ankle )
                 #--수정
 
 

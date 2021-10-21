@@ -168,7 +168,7 @@ def run(fitness_mode, pose_landmarks):
                     foot_state = "wide"
 
             # 발목 자세 교정
-            if right_shoulder_to_ankle >= 0 and left_shoulder_to_ankle >= 0:
+            if right_shoulder_to_ankle >= ankle_distance_range[0] and left_shoulder_to_ankle >= ankle_distance_range[0]:
                 if right_shoulder_to_ankle <= ankle_distance_range[1] and left_shoulder_to_ankle <= \
                         ankle_distance_range[1]:
                     app.session['ankle_state'] = "pass"
