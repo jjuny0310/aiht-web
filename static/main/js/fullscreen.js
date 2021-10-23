@@ -1,7 +1,7 @@
 var docV = document.documentElement;
 var isFull = false;
 
-$('#expand').click(function (){
+$('#fullscreen_btn').click(function (){
     isFull = !isFull;
     if(isFull){
         openFullScreenMode();

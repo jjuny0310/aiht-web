@@ -48,14 +48,14 @@ squat_parts = [NOSE, LEFT_SHOULDER, RIGHT_SHOULDER, LEFT_ELBOW, RIGHT_ELBOW,
                LEFT_ANKLE, RIGHT_ANKLE]
 
 # # Flask 자체실행 모델 경로
-# pushup_left_model = load_model('python/classification/model/left_pushup_model.h5')
-# pushup_right_model = load_model('python/classification/model/right_pushup_model.h5')
-# squat_model = load_model('python/classification/model/squat_model.h5')
+pushup_left_model = load_model('python/classification/model/left_pushup_model.h5')
+pushup_right_model = load_model('python/classification/model/right_pushup_model.h5')
+squat_model = load_model('python/classification/model/squat_model.h5')
 
 # # Apache로 실행할때 모델 경로
-squat_model = load_model('C:/Users/LeeYongJun/Desktop/AIHT/aiht-web/python/classification/model/squat_model.h5')
-pushup_left_model = load_model('C:/Users/LeeYongJun/Desktop/AIHT/aiht-web/python/classification/model/left_pushup_model.h5')
-pushup_right_model = load_model('C:/Users/LeeYongJun/Desktop/AIHT/aiht-web/python/classification/model/right_pushup_model.h5')
+# squat_model = load_model('C:/Users/LeeYongJun/Desktop/AIHT/aiht-web/python/classification/model/squat_model.h5')
+# pushup_left_model = load_model('C:/Users/LeeYongJun/Desktop/AIHT/aiht-web/python/classification/model/left_pushup_model.h5')
+# pushup_right_model = load_model('C:/Users/LeeYongJun/Desktop/AIHT/aiht-web/python/classification/model/right_pushup_model.h5')
 
 # 스쿼트 자세 교정 수치
 squat_up_angle = 160
@@ -65,7 +65,7 @@ ankle_distance_range = [-0.01, 0.04]
 
 # 푸쉬업 자세 교정 수치
 pushup_up_angle = 150
-pushup_down_angle = 100
+pushup_down_angle = 110
 hip_distance_range = [0, 0.15]
 min_hand_angle = 130
 

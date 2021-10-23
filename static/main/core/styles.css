@@ -9,11 +9,11 @@
         position: absolute;
         left: 0px;
         bottom: 0px;
-        top: 0px;
+        top: 10%;
         right: 0px;
     }
 /* Camera */
-    #Dish div {
+    #trainer {
 
         position: relative;
         vertical-align: middle;
@@ -24,7 +24,18 @@
         box-shadow: 0px 12px 22px rgba(0, 0, 0, 0.4);
         background: #fff;
         animation: show 0.4s ease;
+    }
+    #webcam {
 
+        position: relative;
+        vertical-align: middle;
+        align-self: center;
+        border-radius: 10px;
+        overflow: hidden;
+        display: inline-block;
+        box-shadow: 0px 12px 22px rgba(0, 0, 0, 0.4);
+        background: #fff;
+        animation: show 0.4s ease;
     }
 /* Details (optional) */
     /* Aspect Ratio Number */
@@ -63,3 +74,109 @@
             transform: scale(1) translateY(0);
         }
     }
+/*--------------------------------------------------------------
+# run Section
+--------------------------------------------------------------*/
+#loading{
+  position: relative;
+  display: block;
+  margin: 0 auto;
+}
+
+#run {
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  background: #f5f8fd url("../img/intro-bg.jpg") center top no-repeat;
+  background-size: cover;
+  padding-top: 110px;
+  padding-left: 25px;
+}
+
+#webcam{
+    position: relative!important;
+    z-index: 1;
+}
+
+#trainer_video{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+#input_video{
+  display: none;
+}
+
+#webcam_bar{
+    position: relative!important;
+    z-index: 2;
+    display: none;
+    background-color: rgb(245, 248, 253)!important;
+    border:2px solid skyblue;
+    color: #413e66;
+}
+
+#count_text{
+    position: relative;
+}
+
+#text{
+    text-align: center;
+    margin-top: 20px;
+    margin-left: 10px;
+    display: inline-block;
+}
+
+#btn_group{
+    display: inline-block;
+    position: absolute;
+    right: 0;
+    margin-top: 20px;
+}
+
+#btn_group button{
+    padding: 5px;
+    margin-right: 10px;
+}
+
+#fullscreen_btn{
+    color:white;
+    background-color: skyblue;
+    border: 1px solid skyblue;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+#fullscreen_btn:hover{
+    background-color: deepskyblue;
+    border: 1px solid deepskyblue;
+    color: white;
+}
+
+#fullscreen_btn:focus{
+    border: none;
+    outline:none;
+}
+
+#stop_btn{
+    color:white;
+    border: 1px solid red;
+    background-color: red;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+#stop_btn:hover{
+    background-color: darkred;
+    border: 1px solid darkred;
+    color: white;
+}
+
+#stop_btn:focus{
+    border: none;
+    outline:none;
+}

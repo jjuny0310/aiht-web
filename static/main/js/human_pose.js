@@ -5,6 +5,7 @@ const canvasCtx = canvasElement.getContext('2d');
 LoadingWithMask();
 var count = 0;
 var countText = document.getElementById('count_text');
+var webcamBar = document.getElementById('webcam_bar');
 var correct_pose = true;
 var soundDelay = 4000;
 var readyTime = 10000;
@@ -90,7 +91,7 @@ function poseOnResults(results) {
     drawLandmarks(canvasCtx, results.poseLandmarks,
                 {color: '#BDBDBD', lineWidth: 1});
 
-    // AJAX 통신
+    // AJAX 통신(동기로)
     var dataList = {
         'pose_landmarks' : results.poseLandmarks,
         'ready_flag' : readyFlag,
@@ -108,7 +109,7 @@ function poseOnResults(results) {
                     if(loadingFlag) {
                         closeLoadingWithMask();
                         loadingFlag = false;
-                        countText.style.display = "inline";
+                        webcamBar.style.display = "block";
 
                         // 대기시간
                         readySound.play();

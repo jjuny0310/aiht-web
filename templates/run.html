@@ -122,9 +122,16 @@
               <video id="input_video" class="input_video"></video>
               <canvas id="output_canvas" class="output_canvas" width="480px" height="480px"></canvas>
 
-              <div id="count_text">
-                  <h3><strong id="count">현재 횟수 : 0</strong> / <strong>{{ num }}</strong></h3>
+              <div id="webcam_bar">
+                  <div id="count_text">
+                    <h3 id="text"><strong id="count">현재 횟수 : 0</strong> / <strong>{{ num }}</strong></h3>
+                      <div id="btn_group">
+                          <button id="fullscreen_btn" onclick="openFullScreenMode()">전체화면</button>
+                          <button id="stop_btn">종료</button>
+                      </div>
+                  </div>
               </div>
+
           </div>
       </div>
 
