@@ -59,6 +59,9 @@ function stop(){
     if(readyFlag === false){
         alert("아직 종료할 수 없습니다.");
     }
+    else if(count <= 0){
+        alert("운동 횟수가 1회 이상일 때만 종료가 가능합니다.")
+    }
     else if(exerciseEndFlag)
     {
         answer = confirm("운동을 종료할까요?");
@@ -183,13 +186,6 @@ function poseOnResults(results) {
                 loadingSound.currentTime = 0;
                 loadingFlag = false;
                 webcamBar.style.display = "block";
-                
-                if(data.fitness_mode === "SQUAT"){
-                    exerciseType = "스쿼트"
-                }
-                else if(data.fitness_mode === "PUSH_UP"){
-                    exerciseType = "푸쉬업"
-                }
 
                 // 대기시간
                 readySound.play();
@@ -220,7 +216,9 @@ function poseOnResults(results) {
 
             switch (data.fitness_mode){
                 case "SQUAT":
+                    // python 에서 전달받은 값
                     correct_pose = data.correct_pose;
+                    exerciseType = "스쿼트"
 
                     // 사용자가 지정한 횟수까지 수행
                     if(readyFlag && count < data.num){
@@ -267,7 +265,9 @@ function poseOnResults(results) {
                     }
                     break;
                 case "PUSH_UP":
+                    // python 에서 전달받은 값
                     correct_pose = data.correct_pose;
+                    exerciseType = "푸쉬업"
 
                     // 사용자가 지정한 횟수까지 수행
                     if(readyFlag && count < data.num) {

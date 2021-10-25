@@ -220,10 +220,7 @@ def exercise_analysis():
                            correct_pose=session['pushup_correct_pose'], visibility=visibility_check, angle_check=session['pushup_check'],
                            num=num)
     except:
-        if fitness_mode == "SQUAT":
-            return jsonify(success=False, fitness_mode=fitness_mode, num=num, count=session['squat_count'])
-        elif fitness_mode == "PUSH_UP":
-            return jsonify(success=False, fitness_mode=fitness_mode, num=num, count=session['pushup_count'])
+        return jsonify(success=False, num=num)
 
 if __name__ == '__main__':
     # debug는 소스코드 변경시 자동 재시작
