@@ -176,46 +176,51 @@ function poseOnResults(results) {
         contentType: "application/json",
         async: false,
         success: function (data){
-                    // 로딩 완료 시 초기세팅
-                    if(loadingFlag) {
-                        closeLoadingWithMask();
-                        loadingSound.pause();
-                        loadingSound.currentTime = 0;
-                        loadingFlag = false;
-                        webcamBar.style.display = "block";
-
-                        // 대기시간
-                        readySound.play();
-                        setTimeout(function() {
-                            startSound.play();
-
-                            setTimeout(function() {
-                            startTime = new Date().getTime() / 1000;
-                            $('#trainer_video').get(0).play();
-                            readyFlag = true;}, 1000);
-                            }, readyTime);
-                    }
-                // 종료 시
-                if((data.num === count && exerciseEndFlag) || runStop){
-                    allSoundStop();
-                    exerciseEndFlag = false;
-                    runStop = false;
-
-                    endTime = new Date().getTime() / 1000;
-                    var exerciseTime = parseInt(endTime-startTime);
-                    exerciseTime = parseInt(exerciseTime / 60) + "분 " + (exerciseTime % 60) + "초";
-
-                    setTimeout(function() { exerciseEndSound.play(); }, 500);
-                    setTimeout(function() {
-                        location.href = "/result?date=" + monthDate + "&exercise="+exerciseType + "&result_num=" + (count+"/"+data.num)
-                                        + "&exercise_time=" + exerciseTime; }, 5000);
+            // 로딩 완료 시 초기세팅
+            if(loadingFlag) {
+                closeLoadingWithMask();
+                loadingSound.pause();
+                loadingSound.currentTime = 0;
+                loadingFlag = false;
+                webcamBar.style.display = "block";
+                
+                if(data.fitness_mode === "SQUAT"){
+                    exerciseType = "스쿼트"
                 }
+                else if(data.fitness_mode === "PUSH_UP"){
+                    exerciseType = "푸쉬업"
+                }
+
+                // 대기시간
+                readySound.play();
+                setTimeout(function() {
+                    startSound.play();
+
+                    setTimeout(function() {
+                    startTime = new Date().getTime() / 1000;
+                    $('#trainer_video').get(0).play();
+                    readyFlag = true;}, 1000);
+                    }, readyTime);
+            }
+            // 종료 시
+            if((data.num === count && exerciseEndFlag) || runStop){
+                allSoundStop();
+                exerciseEndFlag = false;
+                runStop = false;
+
+                endTime = new Date().getTime() / 1000;
+                var exerciseTime = parseInt(endTime-startTime);
+                exerciseTime = parseInt(exerciseTime / 60) + "분 " + (exerciseTime % 60) + "초";
+
+                setTimeout(function() { exerciseEndSound.play(); }, 500);
+                setTimeout(function() {
+                    location.href = "/result?date=" + monthDate + "&exercise="+exerciseType + "&result_num=" + (count+" / "+data.num)
+                                    + "&exercise_time=" + exerciseTime; }, 5000);
+            }
 
             switch (data.fitness_mode){
                 case "SQUAT":
-                    // python 에서 전달받은 값
                     correct_pose = data.correct_pose;
-                    exerciseType = "스쿼트"
 
                     // 사용자가 지정한 횟수까지 수행
                     if(readyFlag && count < data.num){
@@ -262,9 +267,7 @@ function poseOnResults(results) {
                     }
                     break;
                 case "PUSH_UP":
-                    // python 에서 전달받은 값
                     correct_pose = data.correct_pose;
-                    exerciseType = "푸쉬업"
 
                     // 사용자가 지정한 횟수까지 수행
                     if(readyFlag && count < data.num) {
