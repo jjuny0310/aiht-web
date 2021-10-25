@@ -20,8 +20,8 @@ function LoadingWithMask() {
             ,'opacity' :'0.3'
     });
 
-    //마스크 표시
-    $('#mask').show();
+    // //마스크 표시
+    // $('#mask').show();
 
     //로딩중 이미지 표시
     $('#loadingImg').show();

@@ -126,7 +126,6 @@
 
 #text{
     text-align: center;
-    margin-top: 20px;
     margin-left: 10px;
     display: inline-block;
 }
@@ -135,25 +134,23 @@
     display: inline-block;
     position: absolute;
     right: 0;
-    margin-top: 20px;
 }
 
 #btn_group button{
     padding: 5px;
-    margin-right: 10px;
 }
 
 #fullscreen_btn{
     color:white;
-    background-color: skyblue;
-    border: 1px solid skyblue;
+    background-color: deepskyblue;
+    border: 1px solid deepskyblue;
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
 }
 
 #fullscreen_btn:hover{
-    background-color: deepskyblue;
-    border: 1px solid deepskyblue;
+    background-color: skyblue;
+    border: 1px solid skyblue;
     color: white;
 }
 
@@ -177,6 +174,6 @@
 }
 
 #stop_btn:focus{
-    border: 1px solid red;
-    outline: 1px solid red;
+    border: 1px solid darkred;
+    outline: none;
 }

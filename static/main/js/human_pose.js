@@ -33,28 +33,38 @@ var handSound = new Audio('../static/sound/push_up/hand.wav');
 var pushupNothingSound = new Audio('../static/sound/push_up/nothing.wav');
 
 // 3. 시작 오디오 변수
-var startSound = new Audio('../static/sound/start/exercise_start.wav')
-var readySound = new Audio('../static/sound/start/ready.wav')
+var startSound = new Audio('../static/sound/start/exercise_start.wav');
+var readySound = new Audio('../static/sound/start/ready.wav');
 
 // 4. 종료 오디오 변수
-var trainerEndSound = new Audio('../static/sound/end/trainer_end.wav')
-var exerciseEndSound = new Audio('../static/sound/end/exercise_end.wav')
+var trainerEndSound = new Audio('../static/sound/end/trainer_end.wav');
+var exerciseEndSound = new Audio('../static/sound/end/exercise_end.wav');
 
 // 5. 카운트 오디오 변수
-var downSound = new Audio('../static/sound/count/down.wav')
+var downSound = new Audio('../static/sound/count/down.wav');
+
+// 6. 로딩 오디오 변수
+var loadingSound = new Audio('../static/loading/sound/loading_sound.wav');
+loadingSound.play();
 
 // 결과 페이지 변수
 var now = new Date();
 var monthDate = (now.getMonth()+1) + "월 " + now.getDate() + "일";
 var startTime = 0;
 var endTime = 0;
-var exerciseType = ""
+var exerciseType = "";
 
 // 종료 버튼 클릭 시 처리
 function stop(){
-    answer = confirm("운동을 중지할까요?");
-    if(answer){
-        runStop = true;
+    if(readyFlag === false){
+        alert("아직 종료할 수 없습니다.");
+    }
+    else if(exerciseEndFlag)
+    {
+        answer = confirm("운동을 종료할까요?");
+        if (answer) {
+            runStop = true;
+        }
     }
 }
 
@@ -77,6 +87,24 @@ function allSoundStop(){
     exerciseEndSound.pause();
 
     downSound.pause();
+
+    ankleNarrowSound.currentTime = 0;
+    ankleWideSound.currentTime = 0;
+    footNarrowSound.currentTime = 0;
+    footWideSound.currentTime = 0;
+    squatNothingSound.currentTime = 0;
+
+    hipSound.currentTime = 0;
+    handSound.currentTime = 0;
+    pushupNothingSound.currentTime = 0;
+
+    startSound.currentTime = 0;
+    readySound.currentTime = 0;
+
+    trainerEndSound.currentTime = 0;
+    exerciseEndSound.currentTime = 0;
+
+    downSound.currentTime = 0;
 }
 
 // 트레이너 비디오 종료 시 처리
@@ -91,6 +119,18 @@ function endVideo(){
     hipSound.pause();
     handSound.pause();
     pushupNothingSound.pause();
+
+    trainerEndSound.play();
+
+    ankleNarrowSound.currentTime = 0;
+    ankleWideSound.currentTime = 0;
+    footNarrowSound.currentTime = 0;
+    footWideSound.currentTime = 0;
+    squatNothingSound.currentTime = 0;
+
+    hipSound.currentTime = 0;
+    handSound.currentTime = 0;
+    pushupNothingSound.currentTime = 0;
 
     trainerEndSound.play();
     setTimeout(function() { trainerEndFlag = true;}, 6000);
@@ -134,14 +174,15 @@ function poseOnResults(results) {
         data: JSON.stringify(dataList),
         dataType : 'JSON',
         contentType: "application/json",
-        async: true,
+        async: false,
         success: function (data){
                     // 로딩 완료 시 초기세팅
                     if(loadingFlag) {
                         closeLoadingWithMask();
+                        loadingSound.pause();
+                        loadingSound.currentTime = 0;
                         loadingFlag = false;
                         webcamBar.style.display = "block";
-                        $.ajax.async = false
 
                         // 대기시간
                         readySound.play();
