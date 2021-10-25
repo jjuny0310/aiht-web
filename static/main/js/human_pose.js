@@ -2,13 +2,14 @@ const videoElement = document.getElementsByClassName('input_video')[0];
 const canvasElement = document.getElementsByClassName('output_canvas')[0];
 const canvasCtx = canvasElement.getContext('2d');
 
-LoadingWithMask();
 var count = 0;
 var countText = document.getElementById('count_text');
 var webcamBar = document.getElementById('webcam_bar');
 var correct_pose = true;
 var soundDelay = 4000;
 var readyTime = 10000;
+
+LoadingWithMask();
 
 // 플래그 변수
 var loadingFlag = true;
@@ -17,6 +18,7 @@ var poseSoundFlag = true;
 var trainerEndFlag = true;
 var downSoundFlag = true;
 var exerciseEndFlag = true;
+var runStop = false;
 
 // 1. 스쿼트 자세교정 오디오 변수
 var ankleNarrowSound = new Audio('../static/sound/squat/ankle_narrow.wav');
@@ -47,6 +49,35 @@ var monthDate = (now.getMonth()+1) + "월 " + now.getDate() + "일";
 var startTime = 0;
 var endTime = 0;
 var exerciseType = ""
+
+// 종료 버튼 클릭 시 처리
+function stop(){
+    answer = confirm("운동을 중지할까요?");
+    if(answer){
+        runStop = true;
+    }
+}
+
+// 모든 사운드 중지
+function allSoundStop(){
+    ankleNarrowSound.pause();
+    ankleWideSound.pause();
+    footNarrowSound.pause();
+    footWideSound.pause();
+    squatNothingSound.pause();
+
+    hipSound.pause();
+    handSound.pause();
+    pushupNothingSound.pause();
+
+    startSound.pause();
+    readySound.pause();
+
+    trainerEndSound.pause();
+    exerciseEndSound.pause();
+
+    downSound.pause();
+}
 
 // 트레이너 비디오 종료 시 처리
 function endVideo(){
@@ -103,13 +134,14 @@ function poseOnResults(results) {
         data: JSON.stringify(dataList),
         dataType : 'JSON',
         contentType: "application/json",
-        async: false,
+        async: true,
         success: function (data){
                     // 로딩 완료 시 초기세팅
                     if(loadingFlag) {
                         closeLoadingWithMask();
                         loadingFlag = false;
                         webcamBar.style.display = "block";
+                        $.ajax.async = false
 
                         // 대기시간
                         readySound.play();
@@ -123,12 +155,15 @@ function poseOnResults(results) {
                             }, readyTime);
                     }
                 // 종료 시
-                if(data.num === count && exerciseEndFlag){
+                if((data.num === count && exerciseEndFlag) || runStop){
+                    allSoundStop();
+                    exerciseEndFlag = false;
+                    runStop = false;
+
                     endTime = new Date().getTime() / 1000;
                     var exerciseTime = parseInt(endTime-startTime);
                     exerciseTime = parseInt(exerciseTime / 60) + "분 " + (exerciseTime % 60) + "초";
 
-                    exerciseEndFlag = false;
                     setTimeout(function() { exerciseEndSound.play(); }, 500);
                     setTimeout(function() {
                         location.href = "/result?date=" + monthDate + "&exercise="+exerciseType + "&result_num=" + (count+"/"+data.num)

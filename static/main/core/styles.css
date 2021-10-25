@@ -158,8 +158,8 @@
 }
 
 #fullscreen_btn:focus{
-    border: none;
-    outline:none;
+    border: 1px solid skyblue;
+    outline: 1px solid skyblue;
 }
 
 #stop_btn{
@@ -177,6 +177,6 @@
 }
 
 #stop_btn:focus{
-    border: none;
-    outline:none;
+    border: 1px solid red;
+    outline: 1px solid red;
 }
