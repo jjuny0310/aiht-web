@@ -1392,6 +1392,11 @@ section {
 /*--------------------------------------------------------------
 # result_list Section
 --------------------------------------------------------------*/
+@media (max-width: 992px){
+  #result_list table{
+    font-size: 8pt;
+  }
+}
 #result_list {
   width: 100%;
   height: 100vh;

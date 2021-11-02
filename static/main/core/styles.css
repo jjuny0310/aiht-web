@@ -9,9 +9,14 @@
         position: absolute;
         left: 0px;
         bottom: 0px;
-        top: 10%;
+        top: 0px;
         right: 0px;
     }
+/*@media (orientation: landscape){*/
+/*    #Dish{*/
+/*        top: 20%;*/
+/*    }*/
+/*}*/
 /* Camera */
     #trainer {
 
@@ -74,6 +79,71 @@
             transform: scale(1) translateY(0);
         }
     }
+
+/*--------------------------------------------------------------
+# Run_Header Section
+--------------------------------------------------------------*/
+@media (max-width: 992px) and (orientation: landscape){
+    #run_header{
+        display: none!important;
+    }
+}
+#run_header {
+  background: #fff;
+  transition: all 0.5s;
+  z-index: 997;
+  height: 90px;
+}
+#run_header.header-transparent {
+  background: transparent;
+}
+#run_header.header-scrolled {
+  background: #fff;
+  height: 70px;
+  box-shadow: 0px 0px 30px rgba(127, 137, 161, 0.3);
+}
+#run_header .logo {
+  font-size: 36px;
+  margin: 0;
+  padding: 0;
+  font-weight: 400;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+#run_header .logo a {
+  color: #413e66;
+}
+#run_header .logo img {
+  max-height: 40px;
+}
+#run_header .social-links {
+  margin: 0 0 0 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+#run_header .social-links a {
+  color: #555186;
+  transition: 0.3s;
+  line-height: 0;
+  margin-left: 15px;
+}
+#run_header .social-links a i {
+  line-height: 0;
+}
+#run_header .social-links a:hover {
+  color: #1bb1dc;
+}
+@media (max-width: 992px) {
+  #run_header .social-links {
+    margin: 0 15px 0 0;
+  }
+}
+@media (max-width: 992px) {
+  #run_header .logo {
+    font-size: 28px;
+  }
+}
 /*--------------------------------------------------------------
 # run Section
 --------------------------------------------------------------*/

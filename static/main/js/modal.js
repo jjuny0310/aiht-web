@@ -28,10 +28,10 @@ function changeExercise(){
     var selectExercise = document.getElementById('select_exercise');
     switch (selectExercise.options[selectExercise.selectedIndex].value){
         case "SQUAT":
-            document.getElementById('caution').innerHTML = "'스쿼트'는 정면을 바라보고 수행 해주세요.";
+            document.getElementById('caution').innerHTML = "'스쿼트'는 카메라를 바라보고 수행 합니다.";
             break;
         case "PUSH_UP":
-            document.getElementById('caution').innerHTML = "'푸쉬업'은 몸의 측면이 보이게 하여 운동을 시작 해주세요.(좌우는 상관 없습니다.)";
+            document.getElementById('caution').innerHTML = "'푸쉬업'은 몸의 측면이 보이게 하여 수행합니다.(좌우는 상관 없습니다.)";
             break;
     }
 }
