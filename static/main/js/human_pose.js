@@ -165,7 +165,7 @@ function poseOnResults(results) {
     drawLandmarks(canvasCtx, results.poseLandmarks,
                 {color: '#BDBDBD', lineWidth: 1});
 
-    // AJAX 통신(동기로)
+    // 해당 url로 json 데이터 전달(ajax 통신)
     var dataList = {
         'pose_landmarks' : results.poseLandmarks,
         'ready_flag' : readyFlag,
@@ -199,7 +199,7 @@ function poseOnResults(results) {
                     }, readyTime);
             }
             // 종료 시
-            if((data.num === count && exerciseEndFlag) || runStop){
+            if((data.goal_number === count && exerciseEndFlag) || runStop){
                 allSoundStop();
                 exerciseEndFlag = false;
                 runStop = false;
@@ -210,18 +210,18 @@ function poseOnResults(results) {
 
                 setTimeout(function() { exerciseEndSound.play(); }, 500);
                 setTimeout(function() {
-                    location.href = "/result?date=" + monthDate + "&exercise="+exerciseType + "&result_num=" + (count+" / "+data.num)
+                    location.href = "/result?date=" + monthDate + "&exercise="+exerciseType + "&result_num=" + (count+" / "+data.goal_number)
                                     + "&exercise_time=" + exerciseTime; }, 5000);
             }
 
-            switch (data.fitness_mode){
+            switch (data.exercise_type){
                 case "SQUAT":
                     // python 에서 전달받은 값
                     correct_pose = data.correct_pose;
                     exerciseType = "스쿼트"
 
                     // 사용자가 지정한 횟수까지 수행
-                    if(readyFlag && count < data.num){
+                    if(readyFlag && count < data.goal_number){
                          // 카운트 및 각도 체크 사운드
                         if(downSoundFlag && data.angle_check){
                             downSound.play();
@@ -270,7 +270,7 @@ function poseOnResults(results) {
                     exerciseType = "푸쉬업"
 
                     // 사용자가 지정한 횟수까지 수행
-                    if(readyFlag && count < data.num) {
+                    if(readyFlag && count < data.goal_number) {
                         // 카운트 및 각도 체크 사운드
                         if (downSoundFlag && data.angle_check) {
                             downSound.play();

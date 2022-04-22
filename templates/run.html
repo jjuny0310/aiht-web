@@ -91,21 +91,21 @@
           <!-- Trainer Video -->
           <div id="trainer" class="Camera">
               <!-- SQUAT -->
-              {% if fitness_mode == "SQUAT" %}
-                  {% if num == 10 %}
+              {% if exercise_type == "SQUAT" %}
+                  {% if goal_number == 10 %}
                       <video id="trainer_video" src="../static/video/squat_10.mp4" muted onended="endVideo()"></video>
-                  {% elif num == 20 %}
+                  {% elif goal_number == 20 %}
                       <video id="trainer_video" src="../static/video/squat_20.mp4" muted onended="endVideo()"></video>
-                  {% elif num == 30 %}
+                  {% elif goal_number == 30 %}
                       <video id="trainer_video" src="../static/video/squat_30.mp4" muted onended="endVideo()"></video>
                   {% endif %}
               <!-- PUSH_UP -->
-              {% elif fitness_mode == "PUSH_UP" %}
-                  {% if num == 10 %}
+              {% elif exercise_type == "PUSH_UP" %}
+                  {% if goal_number == 10 %}
                       <video id="trainer_video" src="../static/video/pushup_10.mp4" muted onended="endVideo()"></video>
-                  {% elif num == 20 %}
+                  {% elif goal_number == 20 %}
                       <video id="trainer_video" src="../static/video/pushup_20.mp4" muted onended="endVideo()"></video>
-                  {% elif num == 30 %}
+                  {% elif goal_number == 30 %}
                       <video id="trainer_video" src="../static/video/pushup_30.mp4" muted onended="endVideo()"></video>
                   {% endif %}
               {% endif %}
@@ -118,7 +118,7 @@
 
               <div id="webcam_bar">
                   <div id="count_text">
-                    <b id="text" style="font-size: 1.5em"><strong id="count">현재 횟수 : 0</strong> / <strong>{{ num }}</strong></b>
+                    <b id="text" style="font-size: 1.5em"><strong id="count">현재 횟수 : 0</strong> / <strong>{{ goal_number }}</strong></b>
                       <div id="btn_group">
                           <!--<button id="fullscreen_btn">전체화면</button>-->
                           <button id="stop_btn" onclick="stop()">종료</button>

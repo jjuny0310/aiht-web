@@ -52,7 +52,7 @@ squat_parts = [NOSE, LEFT_SHOULDER, RIGHT_SHOULDER, LEFT_ELBOW, RIGHT_ELBOW,
 # pushup_right_model = load_model('python/classification/model/right_pushup_model.h5')
 # squat_model = load_model('python/classification/model/squat_model.h5')
 
-# # Apache로 실행할때 모델 경로
+# # Apache로 실행할 때 모델 경로
 squat_model = load_model('C:/Users/leeyongjun/Desktop/AIHT/aiht-web/python/classification/model/squat_model.h5')
 pushup_left_model = load_model('C:/Users/leeyongjun/Desktop/AIHT/aiht-web/python/classification/model/left_pushup_model.h5')
 pushup_right_model = load_model('C:/Users/leeyongjun/Desktop/AIHT/aiht-web/python/classification/model/right_pushup_model.h5')
@@ -72,6 +72,8 @@ min_hand_angle = 130
 # 안내 음성 최소 신뢰도 값
 squat_visibility_rate = 0.3
 pushup_visibility_rate = 0.6
+
+
 def run(fitness_mode, pose_landmarks):
     # 관절 좌표 저장(분리해서)
     keypoints_x = []

@@ -1,4 +1,4 @@
-# 검증
+# 자세 교정 테스트
 from tensorflow.keras.models import load_model
 import mediapipe as mp
 import cv2

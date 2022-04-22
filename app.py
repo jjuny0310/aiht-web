@@ -7,19 +7,18 @@ from python import main
 
 app = Flask(__name__)
 
-# db연동
+# 데이터 베이스 연동
 app.config['SECRET_KEY'] = 'qwlem12kkasdniovni2r23nkzx12'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///aiht.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-# 운동 선택
-fitness_mode = ""
-num = 0
+exercise_type = ""
+goal_number = 0
 
 
-# 초기변수 초기화
-def init_value():
+# 세션 변수 초기화
+def reset_session_value():
     # 스쿼트 변수
     session['squat_count'] = 0
     session['squat_check'] = False
@@ -32,7 +31,7 @@ def init_value():
     session['pushup_correct_pose'] = False
 
 
-# 데이터베이스 테이블
+# 사용자 테이블
 class User(db.Model):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
@@ -53,10 +52,12 @@ class User(db.Model):
     def set_password(self, password):
         self.password = generate_password_hash(password)
 
-    # 암호화된 비밀번호 체크
+    # 암호화 된 비밀번호 체크
     def check_password(self, password):
         return check_password_hash(self.password, password)
 
+
+# 운동 결과 테이블
 class Result(db.Model):
     __tablename__ = 'result'
     id = db.Column(db.Integer, primary_key=True)
@@ -79,36 +80,45 @@ class Result(db.Model):
         return f"<Result('{self.id}', '{self.date}', '{self.exercise}', '{self.result_num}', '{self.exercise_time}', '{self.user_id}')>"
 
 
-
+# 메인 화면 요청
 @app.route('/', methods=['GET', 'POST'])
 def home():
-    init_value()
-    global fitness_mode, num
+    reset_session_value()
+    global exercise_type, goal_number
 
     if request.method == 'GET':
         return render_template('index.html')
-    else:
-        fitness_mode = request.form['select_exercise']
-        num = int(request.form['select_num'])
+
+    # 메인 화면에서 운동 선택 시
+    if request.method == 'POST':
+        exercise_type = request.form['select_exercise']
+        goal_number = int(request.form['select_num'])
         return redirect(url_for('run'))
 
 
+# 운동 수행
 @app.route('/run')
 def run():
-    init_value()
+    reset_session_value()
     try:
         if session['login']:
-            return render_template('run.html', fitness_mode=fitness_mode, num=num)
-        else:
+            return render_template('run.html', exercise_type=exercise_type, goal_number=goal_number)
+
+        if not session['login']:
             return redirect(url_for('login'))
+
     except:
         return redirect(url_for('login'))
 
+
+# 운동 종료 후 결과
 @app.route('/result', methods=['GET', 'POST'])
 def result():
-    if request.method == "GET":
+    if request.method == 'GET':
         return render_template('result.html')
-    else:
+
+    # 운동 결과 저장 시 처리
+    if request.method == 'POST':
         new_result = Result(date=request.form['result_date'], exercise=request.form['result_exercise'],
                             result_num=request.form['result_num'], exercise_time=request.form['result_exercise_time'],
                             user_id=session['username'])
@@ -117,17 +127,22 @@ def result():
         return redirect(url_for('home'))
 
 
+# 운동 결과 조회(목록)
 @app.route('/result_list', methods=['GET'])
 def result_list():
+    # 사용자의 모든 운동 결과 목록 불러오기
     if session['login']:
         results = Result.query.filter_by(user_id=session['username']).all()
         return render_template('result_list.html', results=results)
-    else:
+
+    if not session['login']:
         return redirect(url_for('login'))
 
 
+# 운동 결과 삭제
 @app.route('/result_delete')
 def result_delete():
+    # database.js에서 받은 result_id 조회 후 삭제
     result_id = request.args['result_id']
     item = Result.query.filter_by(id=result_id).first()
     db.session.delete(item)
@@ -135,50 +150,58 @@ def result_delete():
     return redirect(url_for('result_list'))
 
 
+# 로그인
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'GET':
         return render_template('login.html')
-    else:
+
+    if request.method == 'POST':
         name = request.form['username']
         passwd = request.form['password']
         try:
             old_user = User.query.filter_by(username=name).first()
 
+            # 사용자 계정 검증(id, passwd)
             if old_user is not None and check_password_hash(old_user.password, passwd):
+                # 로그인 성공
                 session['login'] = True
                 session['username'] = old_user.username
                 session['nickname'] = old_user.nickname
                 return redirect(url_for('home'))
             else:
+                # 로그인 실패
                 return render_template('login.html', login_fail=True)
         except:
             return render_template('login.html', login_fail=True)
 
 
+# 회원 가입
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
+    if request.method == 'GET':
+        return render_template('signup.html')
+
     if request.method == 'POST':
         try:
-            # 아이디 규칙(영문과 숫자만)
+            # 사용자 아이디 규칙(영문과 숫자만 가능)
             username_rule = False
             for i in request.form['username']:
-                if i.encode().isalpha() or i.isnumeric():
-                    username_rule = True
-                else:
+                if not i.encode().isalpha() and not i.isnumeric():
                     username_rule = False
                     break
 
-            # 아이디 길이 제한
+            # 사용자 아이디 길이 확인
             if len(request.form['username']) < 4:
                 return render_template('signup.html', username_len_fail=True)
-            # 아이디 규칙
+            # 사용자 아이디 규칙 확인
             elif not username_rule:
                 return render_template('signup.html', username_rule_fail=True)
-            # 비밀번호 길이 제한
+            # 비밀번호 길이 확인
             elif len(request.form['password']) < 6:
                 return render_template('signup.html', password_len_fail=True)
             else:
+                # 사용자 계정 생성
                 new_user = User(username=request.form['username'], password=request.form['password'],
                                 nickname=request.form['nickname'])
                 db.session.add(new_user)
@@ -186,41 +209,42 @@ def signup():
                 return redirect(url_for('login'))
         except:
             return render_template('signup.html', signup_fail=True)
-    else:
-        return render_template('signup.html')
 
+
+# 로그아웃
 @app.route('/logout')
 def logout():
-    # session['login'] = False
     session.clear()
     return redirect(url_for('home'))
 
 
+# 운동 자세 분석(딥러닝 처리)
 @app.route('/exercise_analysis', methods=['POST'])
 def exercise_analysis():
     try:
-        # 관절좌표 저장
+        # human_pose.js에서 ajax 통신으로 전달된 데이터
         data = request.get_json()
         pose_landmarks = data['pose_landmarks']
         ready_flag = data['ready_flag']
 
-        # 메인 알고리즘
         if not ready_flag:
             return jsonify(success=False)
 
-        if fitness_mode == "SQUAT":
-            state, squat_correct_dict, visibility_check = main.run(fitness_mode, pose_landmarks)
-            return jsonify(fitness_mode=fitness_mode, state=state, count=session['squat_count'], correct_dict=squat_correct_dict,
+        # 스쿼트 처리
+        if exercise_type == "SQUAT":
+            state, squat_correct_dict, visibility_check = main.run(exercise_type, pose_landmarks)
+            return jsonify(exercise_type=exercise_type, state=state, count=session['squat_count'], correct_dict=squat_correct_dict,
                            correct_pose=session['squat_correct_pose'], visibility=visibility_check, angle_check=session['squat_check'],
-                           num=num)
+                           goal_number=goal_number)
 
-        elif fitness_mode == "PUSH_UP":
-            state, pushup_correct_dict, visibility_check = main.run(fitness_mode, pose_landmarks)
-            return jsonify(fitness_mode=fitness_mode, state=state, count=session['pushup_count'], correct_dict=pushup_correct_dict,
+        # 푸쉬업 처리
+        if exercise_type == "PUSH_UP":
+            state, pushup_correct_dict, visibility_check = main.run(exercise_type, pose_landmarks)
+            return jsonify(exercise_type=exercise_type, state=state, count=session['pushup_count'], correct_dict=pushup_correct_dict,
                            correct_pose=session['pushup_correct_pose'], visibility=visibility_check, angle_check=session['pushup_check'],
-                           num=num)
+                           goal_number=goal_number)
     except:
-        return jsonify(success=False, num=num)
+        return jsonify(success=False, goal_number=goal_number)
 
 if __name__ == '__main__':
     # debug는 소스코드 변경시 자동 재시작
