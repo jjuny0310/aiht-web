@@ -1,4 +1,4 @@
-import app
+from aiht_app import session
 from tensorflow.keras.models import load_model
 import numpy as np
 import math
@@ -53,9 +53,9 @@ squat_parts = [NOSE, LEFT_SHOULDER, RIGHT_SHOULDER, LEFT_ELBOW, RIGHT_ELBOW,
 # squat_model = load_model('python/classification/model/squat_model.h5')
 
 # # Apache로 실행할 때 모델 경로
-squat_model = load_model('C:/Users/leeyongjun/Desktop/AIHT/aiht-web/python/classification/model/squat_model.h5')
-pushup_left_model = load_model('C:/Users/leeyongjun/Desktop/AIHT/aiht-web/python/classification/model/left_pushup_model.h5')
-pushup_right_model = load_model('C:/Users/leeyongjun/Desktop/AIHT/aiht-web/python/classification/model/right_pushup_model.h5')
+squat_model = load_model('C:/Users/leeyongjun/Desktop/aiht/aiht-web/python/classification/model/squat_model.h5')
+pushup_left_model = load_model('C:/Users/leeyongjun/Desktop/aiht/aiht-web/python/classification/model/left_pushup_model.h5')
+pushup_right_model = load_model('C:/Users/leeyongjun/Desktop/aiht/aiht-web/python/classification/model/right_pushup_model.h5')
 
 # 스쿼트 자세 교정 수치
 squat_up_angle = 160
@@ -173,40 +173,40 @@ def run(fitness_mode, pose_landmarks):
             if right_shoulder_to_ankle >= ankle_distance_range[0] and left_shoulder_to_ankle >= ankle_distance_range[0]:
                 if right_shoulder_to_ankle <= ankle_distance_range[1] and left_shoulder_to_ankle <= \
                         ankle_distance_range[1]:
-                    app.session['ankle_state'] = "pass"
+                    session['ankle_state'] = "pass"
                 elif right_shoulder_to_ankle > ankle_distance_range[1] and left_shoulder_to_ankle > \
                         ankle_distance_range[1]:
-                    app.session['ankle_state'] = "wide"
+                    session['ankle_state'] = "wide"
             elif right_shoulder_to_ankle <= ankle_distance_range[0] and left_shoulder_to_ankle <= \
                     ankle_distance_range[0]:
-                app.session['ankle_state'] = "narrow"
+                session['ankle_state'] = "narrow"
             else:
                 pass
 
             # 스쿼트 자세 상태 저장
-            squat_correct_dict = {"ankle_state": app.session['ankle_state'], 'foot_state': foot_state}
+            squat_correct_dict = {"ankle_state": session['ankle_state'], 'foot_state': foot_state}
 
             # 스쿼트 자세 판별
-            if foot_state == "pass" and app.session['ankle_state'] == "pass":
-                app.session['squat_correct_pose'] = True
+            if foot_state == "pass" and session['ankle_state'] == "pass":
+                session['squat_correct_pose'] = True
             else:
-                app.session['squat_correct_pose'] = False
-                app.session['squat_check'] = False
+                session['squat_correct_pose'] = False
+                session['squat_check'] = False
             # ------------------자세 교정------------------
 
-            if app.session['squat_correct_pose'] and app.session['squat_check'] and left_leg_angle > squat_up_angle and right_leg_angle > squat_up_angle:
-                app.session['squat_count'] += 1
-                app.session['squat_check'] = False
+            if session['squat_correct_pose'] and session['squat_check'] and left_leg_angle > squat_up_angle and right_leg_angle > squat_up_angle:
+                session['squat_count'] += 1
+                session['squat_check'] = False
 
         elif squat_state == 1:
             state = "DOWN"
-            if app.session['squat_correct_pose'] and right_leg_angle < squat_down_angle and left_leg_angle < squat_down_angle:
-                app.session['squat_check'] = True
+            if session['squat_correct_pose'] and right_leg_angle < squat_down_angle and left_leg_angle < squat_down_angle:
+                session['squat_check'] = True
 
         else:
             state = "NOTHING"
-            app.session['squat_correct_pose'] = False
-            app.session['squat_check'] = False
+            session['squat_correct_pose'] = False
+            session['squat_check'] = False
 
         return state, squat_correct_dict, visibility_check
 
@@ -261,24 +261,24 @@ def run(fitness_mode, pose_landmarks):
 
                 # 푸쉬업 자세 판별
                 if correct_hand and correct_hip:
-                    app.session['pushup_correct_pose'] = True
+                    session['pushup_correct_pose'] = True
                 else:
-                    app.session['pushup_correct_pose'] = False
-                    app.session['pushup_check'] = False
+                    session['pushup_correct_pose'] = False
+                    session['pushup_check'] = False
 
-                if app.session['pushup_correct_pose'] and app.session['pushup_check'] and left_arm_angle > pushup_up_angle:
-                    app.session['pushup_count'] += 1
-                    app.session['pushup_check'] = False
+                if session['pushup_correct_pose'] and session['pushup_check'] and left_arm_angle > pushup_up_angle:
+                    session['pushup_count'] += 1
+                    session['pushup_check'] = False
 
             elif np.argmax(left_predict[0]) == 1:
                 state = "DOWN"
-                if app.session['pushup_correct_pose'] and left_arm_angle < pushup_down_angle:
-                    app.session['pushup_check'] = True
+                if session['pushup_correct_pose'] and left_arm_angle < pushup_down_angle:
+                    session['pushup_check'] = True
 
             else:
                 state = "NOTHING"
-                app.session['pushup_correct_pose'] = False
-                app.session['pushup_check'] = False
+                session['pushup_correct_pose'] = False
+                session['pushup_check'] = False
         
         # RIGHT 푸쉬업
         else:
@@ -326,25 +326,25 @@ def run(fitness_mode, pose_landmarks):
 
                 # 푸쉬업 자세 판별
                 if correct_hand and correct_hip:
-                    app.session['pushup_correct_pose'] = True
+                    session['pushup_correct_pose'] = True
                 else:
-                    app.session['pushup_correct_pose'] = False
-                    app.session['pushup_check'] = False
+                    session['pushup_correct_pose'] = False
+                    session['pushup_check'] = False
 
-                if app.session['pushup_correct_pose'] and app.session['pushup_check'] and right_arm_angle > pushup_up_angle:
-                    app.session['pushup_count'] += 1
-                    app.session['pushup_check'] = False
+                if session['pushup_correct_pose'] and session['pushup_check'] and right_arm_angle > pushup_up_angle:
+                    session['pushup_count'] += 1
+                    session['pushup_check'] = False
 
 
             elif np.argmax(right_predict[0]) == 1:
                 state = "DOWN"
-                if app.session['pushup_correct_pose'] and right_arm_angle < pushup_down_angle:
-                    app.session['pushup_check'] = True
+                if session['pushup_correct_pose'] and right_arm_angle < pushup_down_angle:
+                    session['pushup_check'] = True
 
             else:
                 state = "NOTHING"
-                app.session['pushup_correct_pose'] = False
-                app.session['pushup_check'] = False
+                session['pushup_correct_pose'] = False
+                session['pushup_check'] = False
 
         return state, pushup_correct_dict, visibility_check
 
