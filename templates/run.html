@@ -341,7 +341,7 @@
         }
 
         // 관절 좌표 전달
-        socket.emit('run', {'data':dataList});
+        socket.emit('run', {dataList:dataList});
 
         socket.on('run', function (result){
             // 머신러닝 처리 결과 받아서 작업수행

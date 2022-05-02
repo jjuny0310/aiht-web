@@ -263,6 +263,7 @@ def joined(message):
 @socketio.on('run', namespace='/run')
 def exercise_analysis(data):
     room = session.get('room')
+    result = data['pose_landmarks']
 
     # pose_landmarks = data['pose_landmarks']
     # ready_flag = data['ready_flag']
@@ -288,7 +289,7 @@ def exercise_analysis(data):
     #                    goal_number=goal_number)
 
 
-    emit('run', {'data' : type(data)}, room=room)
+    emit('run', {'data' : result}, room=room)
 
 
 if __name__ == '__main__':
