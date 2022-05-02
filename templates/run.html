@@ -167,9 +167,9 @@
     var readyTime = 10000;
 
     LoadingWithMask();
-    // 웹소켓
-    var webSocketFlag = true;
+
     var socket;
+    var socketFlag = true;
 
     // 플래그 변수
     var loadingFlag = true;
@@ -329,164 +329,146 @@
             'pose_landmarks' : results.poseLandmarks,
             'ready_flag' : readyFlag,
         }
-        // 웹소켓
-        if(webSocketFlag){
-            webSocketFlag = false
-            socket = io.connect('https://' + document.domain + ':' + location.port + '/run')
+
+        // 관절 좌표 전달(소켓통신)
+        if(socketFlag){
+            // 웹소켓
+            socket = io.connect('http://' + document.domain + ':' + location.port + '/run')
 
             socket.on('connect', function (){
                 console.log("웹소켓 연결 성공!")
                 socket.emit('joined', {});
             });
+            socketFlag = false
         }
 
-        // 관절 좌표 전달
         socket.emit('run', {dataList:dataList});
+        socket.on('run', function (data){
+            // 로딩 완료 시 초기세팅
+            if(loadingFlag) {
+                closeLoadingWithMask();
+                loadingSound.pause();
+                loadingSound.currentTime = 0;
+                loadingFlag = false;
+                webcamBar.style.display = "block";
 
-        socket.on('run', function (result){
-            // 머신러닝 처리 결과 받아서 작업수행
-            console.log(result.data);
-        });
+                // 대기시간
+                readySound.play();
+                setTimeout(function() {
+                    startSound.play();
 
-        //##################################################AJAX시작######################################
-        // 해당 url로 json 데이터 전달(ajax 통신)
-        $.ajax({
-            type: 'POST',
-            url: '/exercise_analysis',
-            data: JSON.stringify(dataList),
-            dataType : 'JSON',
-            contentType: "application/json",
-            async: false,
-            success: function (data){
-                // 로딩 완료 시 초기세팅
-                if(loadingFlag) {
-                    closeLoadingWithMask();
-                    loadingSound.pause();
-                    loadingSound.currentTime = 0;
-                    loadingFlag = false;
-                    webcamBar.style.display = "block";
-
-                    // 대기시간
-                    readySound.play();
                     setTimeout(function() {
-                        startSound.play();
+                    startTime = new Date().getTime() / 1000;
+                    $('#trainer_video').get(0).play();
+                    readyFlag = true;}, 1000);
+                    }, readyTime);
+            }
+            // 종료 시
+            if((data.goal_number === count && exerciseEndFlag) || runStop){
+                allSoundStop();
+                exerciseEndFlag = false;
+                runStop = false;
 
-                        setTimeout(function() {
-                        startTime = new Date().getTime() / 1000;
-                        $('#trainer_video').get(0).play();
-                        readyFlag = true;}, 1000);
-                        }, readyTime);
-                }
-                // 종료 시
-                if((data.goal_number === count && exerciseEndFlag) || runStop){
-                    allSoundStop();
-                    exerciseEndFlag = false;
-                    runStop = false;
+                endTime = new Date().getTime() / 1000;
+                var exerciseTime = parseInt(endTime-startTime);
+                exerciseTime = parseInt(exerciseTime / 60) + "분 " + (exerciseTime % 60) + "초";
 
-                    endTime = new Date().getTime() / 1000;
-                    var exerciseTime = parseInt(endTime-startTime);
-                    exerciseTime = parseInt(exerciseTime / 60) + "분 " + (exerciseTime % 60) + "초";
+                setTimeout(function() { exerciseEndSound.play(); }, 500);
+                setTimeout(function() {
+                    location.href = "/result?date=" + monthDate + "&exercise="+exerciseType + "&result_num=" + (count+" / "+data.goal_number)
+                                    + "&exercise_time=" + exerciseTime; }, 5000);
+            }
 
-                    setTimeout(function() { exerciseEndSound.play(); }, 500);
-                    setTimeout(function() {
-                        location.href = "/result?date=" + monthDate + "&exercise="+exerciseType + "&result_num=" + (count+" / "+data.goal_number)
-                                        + "&exercise_time=" + exerciseTime; }, 5000);
-                }
+            switch (data.exercise_type){
+                case "SQUAT":
+                    // python 에서 전달받은 값
+                    correct_pose = data.correct_pose;
+                    exerciseType = "스쿼트"
 
-                switch (data.exercise_type){
-                    case "SQUAT":
-                        // python 에서 전달받은 값
-                        correct_pose = data.correct_pose;
-                        exerciseType = "스쿼트"
+                    // 사용자가 지정한 횟수까지 수행
+                    if(readyFlag && count < data.goal_number){
+                         // 카운트 및 각도 체크 사운드
+                        if(downSoundFlag && data.angle_check){
+                            downSound.play();
+                            downSoundFlag = false;
+                        }
+                        if(count !== data.count){
+                            count = data.count
+                            new Audio('../static/sound/count/' + count + '.wav').play();
+                            document.getElementById('count').innerHTML = "현재 횟수 : " + count;
+                            downSoundFlag = true;
+                        }
 
-                        // 사용자가 지정한 횟수까지 수행
-                        if(readyFlag && count < data.goal_number){
-                             // 카운트 및 각도 체크 사운드
-                            if(downSoundFlag && data.angle_check){
-                                downSound.play();
-                                downSoundFlag = false;
+                        // 자세교정 안내 음성
+                        if(poseSoundFlag && trainerEndFlag && data.state==="UP" && data.visibility){
+                            if(data.correct_dict['ankle_state'] === "narrow"){
+                                ankleWideSound.play();
+                                poseSoundFlag = false;
+                                setTimeout(function() { poseSoundFlag = true;}, soundDelay);
                             }
-                            if(count !== data.count){
-                                count = data.count
-                                new Audio('../static/sound/count/' + count + '.wav').play();
-                                document.getElementById('count').innerHTML = "현재 횟수 : " + count;
-                                downSoundFlag = true;
+                            else if(data.correct_dict['ankle_state'] === "wide"){
+                                ankleNarrowSound.play();
+                                poseSoundFlag = false;
+                                setTimeout(function() { poseSoundFlag = true;}, soundDelay);
                             }
-
-                            // 자세교정 안내 음성
-                            if(poseSoundFlag && trainerEndFlag && data.state==="UP" && data.visibility){
-                                if(data.correct_dict['ankle_state'] === "narrow"){
-                                    ankleWideSound.play();
-                                    poseSoundFlag = false;
-                                    setTimeout(function() { poseSoundFlag = true;}, soundDelay);
-                                }
-                                else if(data.correct_dict['ankle_state'] === "wide"){
-                                    ankleNarrowSound.play();
-                                    poseSoundFlag = false;
-                                    setTimeout(function() { poseSoundFlag = true;}, soundDelay);
-                                }
-                                else if(data.correct_dict['foot_state'] === "narrow"){
-                                    footWideSound.play();
-                                    poseSoundFlag = false;
-                                    setTimeout(function() { poseSoundFlag = true;}, soundDelay+2000);
-                                }
-                                else if(data.correct_dict['foot_state'] === "wide"){
-                                    footNarrowSound.play();
-                                    poseSoundFlag = false;
-                                    setTimeout(function() { poseSoundFlag = true;}, soundDelay+2000);
-                                }
+                            else if(data.correct_dict['foot_state'] === "narrow"){
+                                footWideSound.play();
+                                poseSoundFlag = false;
+                                setTimeout(function() { poseSoundFlag = true;}, soundDelay+2000);
                             }
-                            else if(poseSoundFlag && trainerEndFlag && data.state==="NOTHING" && data.visibility){
-                                    squatNothingSound.play();
-                                    poseSoundFlag = false;
-                                    setTimeout(function() { poseSoundFlag = true;}, soundDelay);
+                            else if(data.correct_dict['foot_state'] === "wide"){
+                                footNarrowSound.play();
+                                poseSoundFlag = false;
+                                setTimeout(function() { poseSoundFlag = true;}, soundDelay+2000);
                             }
                         }
-                        break;
-                    case "PUSH_UP":
-                        // python 에서 전달받은 값
-                        correct_pose = data.correct_pose;
-                        exerciseType = "푸쉬업"
+                        else if(poseSoundFlag && trainerEndFlag && data.state==="NOTHING" && data.visibility){
+                                squatNothingSound.play();
+                                poseSoundFlag = false;
+                                setTimeout(function() { poseSoundFlag = true;}, soundDelay);
+                        }
+                    }
+                    break;
+                case "PUSH_UP":
+                    // python 에서 전달받은 값
+                    correct_pose = data.correct_pose;
+                    exerciseType = "푸쉬업"
 
-                        // 사용자가 지정한 횟수까지 수행
-                        if(readyFlag && count < data.goal_number) {
-                            // 카운트 및 각도 체크 사운드
-                            if (downSoundFlag && data.angle_check) {
-                                downSound.play();
-                                downSoundFlag = false;
+                    // 사용자가 지정한 횟수까지 수행
+                    if(readyFlag && count < data.goal_number) {
+                        // 카운트 및 각도 체크 사운드
+                        if (downSoundFlag && data.angle_check) {
+                            downSound.play();
+                            downSoundFlag = false;
+                        }
+                        if (count !== data.count) {
+                            count = data.count
+                            new Audio('../static/sound/count/' + count + '.wav').play();
+                            document.getElementById('count').innerHTML = "현재 횟수 : " + count;
+                            downSoundFlag = true;
+                        }
+                        // 자세교정 안내 음성
+                        if(poseSoundFlag && trainerEndFlag && data.state==="UP" && data.visibility){
+                            if(!data.correct_dict['correct_hand']){
+                                handSound.play();
+                                poseSoundFlag = false;
+                                setTimeout(function() { poseSoundFlag = true;}, soundDelay);
                             }
-                            if (count !== data.count) {
-                                count = data.count
-                                new Audio('../static/sound/count/' + count + '.wav').play();
-                                document.getElementById('count').innerHTML = "현재 횟수 : " + count;
-                                downSoundFlag = true;
-                            }
-                            // 자세교정 안내 음성
-                            if(poseSoundFlag && trainerEndFlag && data.state==="UP" && data.visibility){
-                                if(!data.correct_dict['correct_hand']){
-                                    handSound.play();
-                                    poseSoundFlag = false;
-                                    setTimeout(function() { poseSoundFlag = true;}, soundDelay);
-                                }
-                                else if(!data.correct_dict['correct_hip']){
-                                    hipSound.play();
-                                    poseSoundFlag = false;
-                                    setTimeout(function() { poseSoundFlag = true;}, soundDelay);
-                                }
-                            }
-                            else if(poseSoundFlag && trainerEndFlag && data.state==="NOTHING" && data.visibility){
-                                pushupNothingSound.play();
+                            else if(!data.correct_dict['correct_hip']){
+                                hipSound.play();
                                 poseSoundFlag = false;
                                 setTimeout(function() { poseSoundFlag = true;}, soundDelay);
                             }
                         }
-                        break;
-                }
-            },
-            error: function (request, status, error){
+                        else if(poseSoundFlag && trainerEndFlag && data.state==="NOTHING" && data.visibility){
+                            pushupNothingSound.play();
+                            poseSoundFlag = false;
+                            setTimeout(function() { poseSoundFlag = true;}, soundDelay);
+                        }
+                    }
+                    break;
             }
-        })
-        //##################################################AJAX 끝######################################
+        });
       canvasCtx.restore();
     }
 

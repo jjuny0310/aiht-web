@@ -7,9 +7,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from python import main
 
 app = Flask(__name__)
-
-# SocketIO 연동
 app.debug = True
+# SocketIO 연동
 app.config['SECRET_KEY'] = 'qwlem12kkasdniovni2r23nkzx12'
 socketio = SocketIO()
 socketio.init_app(app)
@@ -258,42 +257,36 @@ def exercise_analysis():
 def joined(message):
     room = session.get('room')
     join_room(room)
-
+    emit('run', {'msg':'error'})
 
 @socketio.on('run', namespace='/run')
 def exercise_analysis(data):
-    room = session.get('room')
+    try:
+        room = session.get('room')
+        dataList = data['dataList']
 
-    dataList = data['dataList']
-
-    pose_landmarks = dataList['pose_landmarks']
-    ready_flag = dataList['dataList']
-
-    # pose_landmarks = data['pose_landmarks']
-    # ready_flag = data['ready_flag']
-
-    result = ""
-
-    # 스쿼트 처리
-    if exercise_type == "SQUAT":
-        state, squat_correct_dict, visibility_check = main.run(exercise_type, pose_landmarks)
-        result = jsonify(exercise_type=exercise_type, state=state, count=session['squat_count'],
-                       correct_dict=squat_correct_dict,
-                       correct_pose=session['squat_correct_pose'], visibility=visibility_check,
-                       angle_check=session['squat_check'],
-                       goal_number=goal_number)
-    #
-    # # 푸쉬업 처리
-    # if exercise_type == "PUSH_UP":
-    #     state, pushup_correct_dict, visibility_check = main.run(exercise_type, pose_landmarks)
-    #     result = jsonify(exercise_type=exercise_type, state=state, count=session['pushup_count'],
-    #                    correct_dict=pushup_correct_dict,
-    #                    correct_pose=session['pushup_correct_pose'], visibility=visibility_check,
-    #                    angle_check=session['pushup_check'],
-    #                    goal_number=goal_number)
+        pose_landmarks = dataList['pose_landmarks']
+        ready_flag = dataList['ready_flag']
 
 
-    emit('run', {'data' : squat_correct_dict}, room=room)
+        # 스쿼트 처리
+        if exercise_type == "SQUAT":
+            state, squat_correct_dict, visibility_check = main.run(exercise_type, pose_landmarks)
+            emit('run', {'exercise_type': exercise_type, 'state': state, 'count': session['squat_count'],
+                         'correct_dict': squat_correct_dict, 'correct_pose': session['squat_correct_pose'],
+                         'visibility': visibility_check, 'angle_check': session['squat_check'],
+                         'goal_number': goal_number}, room=room)
+
+        # 푸쉬업 처리
+        if exercise_type == "PUSH_UP":
+            state, pushup_correct_dict, visibility_check = main.run(exercise_type, pose_landmarks)
+            emit('run', {'exercise_type': exercise_type, 'state': state, 'count': session['squat_count'],
+                         'correct_dict': pushup_correct_dict, 'correct_pose': session['squat_correct_pose'],
+                         'visibility': visibility_check, 'angle_check': session['squat_check'],
+                         'goal_number': goal_number}, room=room)
+
+    except:
+        emit('run', {'msg':'error'})
 
 
 if __name__ == '__main__':
