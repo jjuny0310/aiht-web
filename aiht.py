@@ -263,7 +263,7 @@ def joined(message):
 @socketio.on('run', namespace='/run')
 def exercise_analysis(data):
     room = session.get('room')
-    result = data['dataList']
+    result = data['dataList']['pose_landmarks']
 
     # pose_landmarks = data['pose_landmarks']
     # ready_flag = data['ready_flag']
