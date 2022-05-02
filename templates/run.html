@@ -152,6 +152,9 @@
 
 <!-- Human Pose(WebSocket) -->
 <script type="text/javascript">
+    var socket;
+    socket = io.connect('https://' + document.domain + ':' + location.port + '/run')
+
     const videoElement = document.getElementsByClassName('input_video')[0];
     const canvasElement = document.getElementsByClassName('output_canvas')[0];
     const canvasCtx = canvasElement.getContext('2d');
@@ -320,12 +323,11 @@
                     {color: '#BDBDBD', lineWidth: 1});
 
         // 웹소켓
-        var socket;
-        socket = io.connect('https://' + document.domain + ':' + location.port + '/run')
         socket.on('connect', function (){
             socket.emit('joined', {});
         });
         socket.on('run', function (data){
+            console.log("자바스크립트에서 전달된 메시지");
            socket.emit('run', {msg:"자바스크립트에서 전달된 메시지"});
         });
 
