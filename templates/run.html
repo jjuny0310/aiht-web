@@ -333,7 +333,7 @@
         // 관절 좌표 전달(소켓통신)
         if(socketFlag){
             // 웹소켓
-            socket = io.connect('http://' + document.domain + ':' + location.port + '/run')
+            socket = io.connect('https://' + document.domain + ':' + location.port + '/run')
 
             socket.on('connect', function (){
                 console.log("웹소켓 연결 성공!")
