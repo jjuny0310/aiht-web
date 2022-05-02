@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for
-from flask_socketio import SocketIO, join_room, emit, leave_room
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship, backref
@@ -7,13 +6,9 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from python import main
 
 app = Flask(__name__)
-app.debug = True
-# SocketIO 연동
-app.config['SECRET_KEY'] = 'qwlem12kkasdniovni2r23nkzx12'
-socketio = SocketIO()
-socketio.init_app(app)
 
 # 데이터 베이스 연동
+app.config['SECRET_KEY'] = 'qwlem12kkasdniovni2r23nkzx12'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///aiht.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
@@ -173,7 +168,6 @@ def login():
                 session['login'] = True
                 session['username'] = old_user.username
                 session['nickname'] = old_user.nickname
-                session['room'] = session.get('username')
                 return redirect(url_for('home'))
             else:
                 # 로그인 실패
@@ -252,47 +246,9 @@ def exercise_analysis():
     except:
         return jsonify(success=False, goal_number=goal_number)
 
-
-@socketio.on('joined', namespace='/run')
-def joined(message):
-    room = session.get('room')
-    join_room(room)
-    emit('run', {'msg':'error'})
-
-@socketio.on('run', namespace='/run')
-def exercise_analysis(data):
-    try:
-        room = session.get('room')
-        dataList = data['dataList']
-
-        pose_landmarks = dataList['pose_landmarks']
-        ready_flag = dataList['ready_flag']
-
-
-        # 스쿼트 처리
-        if exercise_type == "SQUAT":
-            state, squat_correct_dict, visibility_check = main.run(exercise_type, pose_landmarks)
-            emit('run', {'exercise_type': exercise_type, 'state': state, 'count': session['squat_count'],
-                         'correct_dict': squat_correct_dict, 'correct_pose': session['squat_correct_pose'],
-                         'visibility': visibility_check, 'angle_check': session['squat_check'],
-                         'goal_number': goal_number}, room=room)
-
-        # 푸쉬업 처리
-        if exercise_type == "PUSH_UP":
-            state, pushup_correct_dict, visibility_check = main.run(exercise_type, pose_landmarks)
-            emit('run', {'exercise_type': exercise_type, 'state': state, 'count': session['squat_count'],
-                         'correct_dict': pushup_correct_dict, 'correct_pose': session['squat_correct_pose'],
-                         'visibility': visibility_check, 'angle_check': session['squat_check'],
-                         'goal_number': goal_number}, room=room)
-
-    except:
-        emit('run', {'msg':'error'})
-
-
 if __name__ == '__main__':
     # debug는 소스코드 변경시 자동 재시작
     # aiht_app.run(debug=True)
 
     # 배포 시 debug 해제 해야함
-    # app.run()
-    socketio.run(app)
+    app.run()
