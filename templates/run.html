@@ -37,6 +37,9 @@
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js" crossorigin="anonymous"></script>
 
+  <!-- WebSocket JS Files -->
+  <script type="text/javascript" src="//cdn.socket.io/4.4.1/socket.io.min.js"></script>
+
   <!-- Core(동영상 배치) -->
   <link rel="stylesheet" href="../static/main/core/styles.css">
   <script src="../static/main/core/script.js"></script>
@@ -153,8 +156,8 @@
 <!-- Human Pose(WebSocket) -->
 <script type="text/javascript">
     var socket;
-    //socket = io.connect('http://' + document.domain + ':' + location.port + '/run')
-    socket = io.connect('https://aiht.kro.kr/run')
+    socket = io.connect('https://' + document.domain + ':' + location.port + '/run')
+    //socket = io.connect('https://aiht.kro.kr/run')
 
     const videoElement = document.getElementsByClassName('input_video')[0];
     const canvasElement = document.getElementsByClassName('output_canvas')[0];
