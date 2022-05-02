@@ -263,21 +263,25 @@ def joined(message):
 @socketio.on('run', namespace='/run')
 def exercise_analysis(data):
     room = session.get('room')
-    result = data['dataList']['pose_landmarks']
+
+    dataList = data['dataList']
+
+    pose_landmarks = dataList['pose_landmarks']
+    ready_flag = dataList['dataList']
 
     # pose_landmarks = data['pose_landmarks']
     # ready_flag = data['ready_flag']
 
-    # result = ""
+    result = ""
 
-    # # 스쿼트 처리
-    # if exercise_type == "SQUAT":
-    #     state, squat_correct_dict, visibility_check = main.run(exercise_type, data['pose_landmarks'])
-    #     result = jsonify(exercise_type=exercise_type, state=state, count=session['squat_count'],
-    #                    correct_dict=squat_correct_dict,
-    #                    correct_pose=session['squat_correct_pose'], visibility=visibility_check,
-    #                    angle_check=session['squat_check'],
-    #                    goal_number=goal_number)
+    # 스쿼트 처리
+    if exercise_type == "SQUAT":
+        state, squat_correct_dict, visibility_check = main.run(exercise_type, pose_landmarks)
+        result = jsonify(exercise_type=exercise_type, state=state, count=session['squat_count'],
+                       correct_dict=squat_correct_dict,
+                       correct_pose=session['squat_correct_pose'], visibility=visibility_check,
+                       angle_check=session['squat_check'],
+                       goal_number=goal_number)
     #
     # # 푸쉬업 처리
     # if exercise_type == "PUSH_UP":
