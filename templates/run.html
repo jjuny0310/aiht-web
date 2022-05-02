@@ -319,6 +319,18 @@
         drawLandmarks(canvasCtx, results.poseLandmarks,
                     {color: '#BDBDBD', lineWidth: 1});
 
+        // 웹소켓
+        var socket;
+        socket = io.connect('https://' + document.domain + ':' + location.port + '/run')
+        socket.on('connect', function (){
+            socket.emit('joined', {});
+        });
+        socket.on('run', function (data){
+           socket.emit('run', {msg:"자바스크립트에서 전달된 메시지"});
+        });
+
+
+        //##################################################AJAX시작######################################
         // 해당 url로 json 데이터 전달(ajax 통신)
         var dataList = {
             'pose_landmarks' : results.poseLandmarks,
@@ -461,6 +473,7 @@
             error: function (request, status, error){
             }
         })
+        //##################################################AJAX 끝######################################
       canvasCtx.restore();
     }
 

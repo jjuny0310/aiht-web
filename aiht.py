@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for
+from flask_socketio import SocketIO, join_room, emit, leave_room
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship, backref
@@ -7,8 +8,13 @@ from python import main
 
 app = Flask(__name__)
 
-# 데이터 베이스 연동
+# SocketIO 연동
+app.debug = True
 app.config['SECRET_KEY'] = 'qwlem12kkasdniovni2r23nkzx12'
+socketio = SocketIO()
+socketio.init_app(app)
+
+# 데이터 베이스 연동
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///aiht.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
@@ -168,6 +174,7 @@ def login():
                 session['login'] = True
                 session['username'] = old_user.username
                 session['nickname'] = old_user.nickname
+                session['room'] = session.get('username')
                 return redirect(url_for('home'))
             else:
                 # 로그인 실패
@@ -246,9 +253,46 @@ def exercise_analysis():
     except:
         return jsonify(success=False, goal_number=goal_number)
 
+
+@socketio.on('joined', namespace='/run')
+def joined(message):
+    room = session.get('room')
+
+    # data = request.get_json()
+    # pose_landmarks = data['pose_landmarks']
+    # ready_flag = data['ready_flag']
+    #
+    # # 스쿼트 처리
+    # if exercise_type == "SQUAT":
+    #     state, squat_correct_dict, visibility_check = main.run(exercise_type, pose_landmarks)
+    #     return jsonify(exercise_type=exercise_type, state=state, count=session['squat_count'],
+    #                    correct_dict=squat_correct_dict,
+    #                    correct_pose=session['squat_correct_pose'], visibility=visibility_check,
+    #                    angle_check=session['squat_check'],
+    #                    goal_number=goal_number)
+    #
+    # # 푸쉬업 처리
+    # if exercise_type == "PUSH_UP":
+    #     state, pushup_correct_dict, visibility_check = main.run(exercise_type, pose_landmarks)
+    #     return jsonify(exercise_type=exercise_type, state=state, count=session['pushup_count'],
+    #                    correct_dict=pushup_correct_dict,
+    #                    correct_pose=session['pushup_correct_pose'], visibility=visibility_check,
+    #                    angle_check=session['pushup_check'],
+    #                    goal_number=goal_number)
+
+    join_room(room)
+    emit('run', {'data' : "파이썬 joined에서 전달된 메시지"}, room=room)
+
+
+@socketio.on('run', namespace='/run')
+def exercise_analysis(message):
+    room = session.get('room')
+    emit('run', {'data' : '파이썬 exercise 분석에서 전달된 메시지'}, room=room)
+
 if __name__ == '__main__':
     # debug는 소스코드 변경시 자동 재시작
     # aiht_app.run(debug=True)
 
     # 배포 시 debug 해제 해야함
-    app.run()
+    # app.run()
+    socketio.run(app)
