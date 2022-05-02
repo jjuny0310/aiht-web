@@ -268,7 +268,7 @@ def exercise_analysis(data):
     # ready_flag = data['ready_flag']
 
     # result = ""
-    state = ""
+    state = "ddddddddddd"
 
     # 스쿼트 처리
     if exercise_type == "SQUAT":
