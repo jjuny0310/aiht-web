@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>AIHT - Result</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="../static/main/img/favicon.png" rel="icon">
+  <link href="../static/main/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Montserrat:300,400,500,600,700" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="../static/main/vendor/aos/aos.css" rel="stylesheet">
+  <link href="../static/main/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="../static/main/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="../static/main/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="../static/main/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="../static/main/css/style.css" rel="stylesheet">
+
+  <!-- Modal CSS File -->
+  <link href="../static/main/css/modal.css" rel="stylesheet">
+</head>
+
+<body>
+  <!-- ======= Header ======= -->
+  <header id="header" class="fixed-top d-flex align-items-center header-transparent">
+    <div class="container d-flex align-items-center">
+
+      <h1 class="logo me-auto"><a href="/">AIHT</a></h1>
+      <!-- Uncomment below if you prefer to use an image logo -->
+      <!-- <a href="index.html" class="logo me-auto"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
+
+      <nav id="navbar" class="navbar order-last order-lg-0">
+        <ul>
+          <li><a class="nav-link scrollto" href="/">메인</a></li>
+          <li><a class="nav-link scrollto" href="/#services">서비스</a></li>
+            {% if session['login'] %}
+                <li><a class="nav-link scrollto" href="/result_list">운동 내역</a></li>
+                <li class="dropdown"><a href="#"><span>내 정보</span> <i class="bi bi-chevron-down"></i></a>
+                <ul>
+                    <li><a href="#"><strong>{{ session['nickname'] }}님 환영합니다.</strong></a></li>
+                </ul>
+              </li>
+              <li><a class="nav-link scrollto" href="/logout">로그아웃</a></li>
+            {% else %}
+            <li><a class="nav-link scrollto" href="/login">로그인</a></li>
+            {% endif %}
+        </ul>
+        <i class="bi bi-list mobile-nav-toggle"></i>
+      </nav><!-- .navbar -->
+
+      <div class="social-links">
+        <a href="https://github.com/jjuny0310" class="github"><i class="bi bi-github"></i></a>
+        <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
+        <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
+      </div>
+
+    </div>
+  </header><!-- End Header -->
+
+  <!-- ======= result Section ======= -->
+  <section id="result" class="clearfix">
+    <div id="modal" class="modal-overlay" style="top: 0px">
+        <div class="modal-window">
+            <div class="title">
+                <h2>운동 종합결과</h2>
+            </div>
+            <hr>
+            <div class="content">
+                <form id="exercise_result" method="post">
+                    <table>
+                        <tr>
+                            <td>날짜</td>
+                            <td>
+                                <input type="text" name="result_date" value="{{ request.args.get('date')}}" readonly>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>운동 종류</td>
+                            <td>
+                                <input type="text" name="result_exercise" value="{{ request.args.get('exercise')}}" readonly>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>달성/목표 횟수</td>
+                            <td>
+                                <input type="text" name="result_num" value="{{ request.args.get('result_num')}}" readonly>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>운동 시간</td>
+                            <td>
+                                <input type="text" name="result_exercise_time" value="{{ request.args.get('exercise_time')}}" readonly>
+                            </td>
+                        </tr>
+                    </table>
+                    <div align="right" style="margin-top: 10px">
+                        <button type="submit" class="btn btn-primary"><strong>저장</strong></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+  </section><!-- End result -->
+
+  <main id="main">
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="../static/main/vendor/aos/aos.js"></script>
+  <script src="../static/main/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../static/main/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="../static/main/vendor/swiper/swiper-bundle.min.js"></script>
+
+  <!-- Template Main JS File -->
+  <script src="../static/main/js/main.js"></script>
+
+  </main>
+
+</body>
+</html>

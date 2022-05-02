@@ -1,0 +1,249 @@
+/* Container */
+    #Dish {
+        display: flex;
+        align-content: center;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        vertical-align: middle;
+        position: absolute;
+        left: 0px;
+        bottom: 0px;
+        top: 0px;
+        right: 0px;
+    }
+/*@media (orientation: landscape){*/
+/*    #Dish{*/
+/*        top: 20%;*/
+/*    }*/
+/*}*/
+/* Camera */
+    #trainer {
+
+        position: relative;
+        vertical-align: middle;
+        align-self: center;
+        border-radius: 10px;
+        overflow: hidden;
+        display: inline-block;
+        box-shadow: 0px 12px 22px rgba(0, 0, 0, 0.4);
+        background: #fff;
+        animation: show 0.4s ease;
+    }
+    #webcam {
+
+        position: relative;
+        vertical-align: middle;
+        align-self: center;
+        border-radius: 10px;
+        overflow: hidden;
+        display: inline-block;
+        box-shadow: 0px 12px 22px rgba(0, 0, 0, 0.4);
+        background: #fff;
+        animation: show 0.4s ease;
+    }
+/* Details (optional) */
+    /* Aspect Ratio Number */
+        #Dish div:after {
+            color: #aaa;
+            font-size: 13px;
+            font-family: Arial, Helvetica, sans-serif;
+            position: absolute;
+            bottom: 20px;
+            right: 23px;
+            font-weight: 100;
+            /*content: "안녕하세요";*/
+            display: block;
+        }
+    /* Gray Diagonal */
+        #Dish div:before {
+            position: absolute;
+            height: 1px;
+            background: #ddd;
+            width: 100%;
+            transform: rotate(-37deg);
+            top: 50%;
+            font-weight: 100;
+            /*content: "4:3";*/
+            display: block;
+            ;
+        }
+/* Animation */
+    @keyframes show {
+        0% {
+            opacity: 0;
+            transform: scale(0.4) translateY(20px);
+        }
+        100% {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+    }
+
+/*--------------------------------------------------------------
+# Run_Header Section
+--------------------------------------------------------------*/
+@media (max-width: 992px) and (orientation: landscape){
+    #run_header{
+        display: none!important;
+    }
+}
+#run_header {
+  background: #fff;
+  transition: all 0.5s;
+  z-index: 997;
+  height: 90px;
+}
+#run_header.header-transparent {
+  background: transparent;
+}
+#run_header.header-scrolled {
+  background: #fff;
+  height: 70px;
+  box-shadow: 0px 0px 30px rgba(127, 137, 161, 0.3);
+}
+#run_header .logo {
+  font-size: 36px;
+  margin: 0;
+  padding: 0;
+  font-weight: 400;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+#run_header .logo a {
+  color: #413e66;
+}
+#run_header .logo img {
+  max-height: 40px;
+}
+#run_header .social-links {
+  margin: 0 0 0 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+#run_header .social-links a {
+  color: #555186;
+  transition: 0.3s;
+  line-height: 0;
+  margin-left: 15px;
+}
+#run_header .social-links a i {
+  line-height: 0;
+}
+#run_header .social-links a:hover {
+  color: #1bb1dc;
+}
+@media (max-width: 992px) {
+  #run_header .social-links {
+    margin: 0 15px 0 0;
+  }
+}
+@media (max-width: 992px) {
+  #run_header .logo {
+    font-size: 28px;
+  }
+}
+/*--------------------------------------------------------------
+# run Section
+--------------------------------------------------------------*/
+#loading{
+  position: relative;
+  display: block;
+  margin: 0 auto;
+}
+
+#run {
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  background: #f5f8fd url("../img/intro-bg.jpg") center top no-repeat;
+  background-size: cover;
+  padding-top: 110px;
+  padding-left: 25px;
+}
+
+#webcam{
+    position: relative!important;
+    z-index: 1;
+}
+
+#trainer_video{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+#input_video{
+  display: none;
+}
+
+#webcam_bar{
+    position: relative!important;
+    z-index: 2;
+    display: none;
+    background-color: rgb(245, 248, 253)!important;
+    border:2px solid skyblue;
+    color: #413e66;
+}
+
+#count_text{
+    position: relative;
+}
+
+#text{
+    text-align: center;
+    margin-left: 10px;
+    display: inline-block;
+}
+
+#btn_group{
+    display: inline-block;
+    position: absolute;
+    right: 0;
+}
+
+#btn_group button{
+    padding: 5px;
+}
+
+#fullscreen_btn{
+    color:white;
+    background-color: deepskyblue;
+    border: 1px solid deepskyblue;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+#fullscreen_btn:hover{
+    background-color: skyblue;
+    border: 1px solid skyblue;
+    color: white;
+}
+
+#fullscreen_btn:focus{
+    border: 1px solid skyblue;
+    outline: 1px solid skyblue;
+}
+
+#stop_btn{
+    color:white;
+    border: 1px solid red;
+    background-color: red;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+#stop_btn:hover{
+    background-color: darkred;
+    border: 1px solid darkred;
+    color: white;
+}
+
+#stop_btn:focus{
+    border: 1px solid darkred;
+    outline: none;
+}
