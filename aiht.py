@@ -293,7 +293,7 @@ def exercise_analysis(data):
     #                    goal_number=goal_number)
 
 
-    emit('run', {'data' : result}, room=room)
+    emit('run', {'data' : squat_correct_dict}, room=room)
 
 
 if __name__ == '__main__':
