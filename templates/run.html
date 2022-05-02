@@ -157,7 +157,6 @@
 <script type="text/javascript">
     var socket;
     socket = io.connect('https://' + document.domain + ':' + location.port + '/run')
-    //socket = io.connect('https://aiht.kro.kr/run')
 
     const videoElement = document.getElementsByClassName('input_video')[0];
     const canvasElement = document.getElementsByClassName('output_canvas')[0];
@@ -326,6 +325,7 @@
         drawLandmarks(canvasCtx, results.poseLandmarks,
                     {color: '#BDBDBD', lineWidth: 1});
 
+        console.log("웹소켓 밖에서 전달된 메시지");
         // 웹소켓
         socket.on('connect', function (){
             socket.emit('joined', {});
@@ -334,7 +334,6 @@
             console.log("자바스크립트에서 전달된 메시지");
            socket.emit('run', {msg:"자바스크립트에서 전달된 메시지"});
         });
-
 
         //##################################################AJAX시작######################################
         // 해당 url로 json 데이터 전달(ajax 통신)
