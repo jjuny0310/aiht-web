@@ -155,9 +155,6 @@
 
 <!-- Human Pose(WebSocket) -->
 <script type="text/javascript">
-    var socket;
-    socket = io.connect('https://' + document.domain + ':' + location.port + '/run')
-
     const videoElement = document.getElementsByClassName('input_video')[0];
     const canvasElement = document.getElementsByClassName('output_canvas')[0];
     const canvasCtx = canvasElement.getContext('2d');
@@ -327,6 +324,9 @@
 
         console.log("웹소켓 밖에서 전달된 메시지");
         // 웹소켓
+        var socket;
+        socket = io.connect('https://' + document.domain + ':' + location.port + '/run')
+
         socket.on('connect', function (){
             socket.emit('joined', {});
         });
