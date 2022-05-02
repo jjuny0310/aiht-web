@@ -268,7 +268,6 @@ def exercise_analysis(data):
     # ready_flag = data['ready_flag']
 
     # result = ""
-    state = "ddddddddddd"
 
     # # 스쿼트 처리
     # if exercise_type == "SQUAT":
@@ -289,7 +288,7 @@ def exercise_analysis(data):
     #                    goal_number=goal_number)
 
 
-    emit('run', {'data' : state}, room=room)
+    emit('run', {'data' : type(data)}, room=room)
 
 
 if __name__ == '__main__':
