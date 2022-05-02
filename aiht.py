@@ -5,13 +5,13 @@ from sqlalchemy.orm import relationship, backref
 from werkzeug.security import generate_password_hash, check_password_hash
 from python import main
 
-aiht_app = Flask(__name__)
+app = Flask(__name__)
 
 # 데이터 베이스 연동
-aiht_app.config['SECRET_KEY'] = 'qwlem12kkasdniovni2r23nkzx12'
-aiht_app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///aiht.db'
-aiht_app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(aiht_app)
+app.config['SECRET_KEY'] = 'qwlem12kkasdniovni2r23nkzx12'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///aiht.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
 
 exercise_type = ""
 goal_number = 0
@@ -81,7 +81,7 @@ class Result(db.Model):
 
 
 # 메인 화면 요청
-@aiht_app.route('/', methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])
 def home():
     reset_session_value()
     global exercise_type, goal_number
@@ -97,7 +97,7 @@ def home():
 
 
 # 운동 수행
-@aiht_app.route('/run')
+@app.route('/run')
 def run():
     reset_session_value()
     try:
@@ -112,7 +112,7 @@ def run():
 
 
 # 운동 종료 후 결과
-@aiht_app.route('/result', methods=['GET', 'POST'])
+@app.route('/result', methods=['GET', 'POST'])
 def result():
     if request.method == 'GET':
         return render_template('result.html')
@@ -128,7 +128,7 @@ def result():
 
 
 # 운동 결과 조회(목록)
-@aiht_app.route('/result_list', methods=['GET'])
+@app.route('/result_list', methods=['GET'])
 def result_list():
     # 사용자의 모든 운동 결과 목록 불러오기
     if session['login']:
@@ -140,7 +140,7 @@ def result_list():
 
 
 # 운동 결과 삭제
-@aiht_app.route('/result_delete')
+@app.route('/result_delete')
 def result_delete():
     # database.js에서 받은 result_id 조회 후 삭제
     result_id = request.args['result_id']
@@ -151,7 +151,7 @@ def result_delete():
 
 
 # 로그인
-@aiht_app.route('/login', methods=['GET', 'POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'GET':
         return render_template('login.html')
@@ -177,7 +177,7 @@ def login():
 
 
 # 회원 가입
-@aiht_app.route('/signup', methods=['GET', 'POST'])
+@app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'GET':
         return render_template('signup.html')
@@ -212,14 +212,14 @@ def signup():
 
 
 # 로그아웃
-@aiht_app.route('/logout')
+@app.route('/logout')
 def logout():
     session.clear()
     return redirect(url_for('home'))
 
 
 # 운동 자세 분석(딥러닝 처리)
-@aiht_app.route('/exercise_analysis', methods=['POST'])
+@app.route('/exercise_analysis', methods=['POST'])
 def exercise_analysis():
     try:
         # human_pose.js에서 ajax 통신으로 전달된 데이터
@@ -251,4 +251,4 @@ if __name__ == '__main__':
     # aiht_app.run(debug=True)
 
     # 배포 시 debug 해제 해야함
-    aiht_app.run(port=8080)
+    app.run()
