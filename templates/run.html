@@ -325,6 +325,10 @@
         drawLandmarks(canvasCtx, results.poseLandmarks,
                     {color: '#BDBDBD', lineWidth: 1});
 
+        var dataList = {
+            'pose_landmarks' : results.poseLandmarks,
+            'ready_flag' : readyFlag,
+        }
         console.log("웹소켓 밖에서 전달된 메시지");
         // 웹소켓
         if(webSocketFlag){
@@ -332,25 +336,21 @@
             socket = io.connect('https://' + document.domain + ':' + location.port + '/run')
 
             socket.on('connect', function (){
+                console.log("웹소켓 연결 성공!")
                 socket.emit('joined', {});
             });
         }
 
         // 관절 좌표 전달
-        socket.emit('run', {'pose_landmarks':results.poseLandmarks});
+        socket.emit('run', {'data':JSON.stringify(dataList)});
 
-        socket.on('run', function (data){
+        socket.on('run', function (result){
             // 머신러닝 처리 결과 받아서 작업수행
-            console.log(data.msg);
+            console.log(result.data);
         });
 
         //##################################################AJAX시작######################################
         // 해당 url로 json 데이터 전달(ajax 통신)
-        var dataList = {
-            'pose_landmarks' : results.poseLandmarks,
-            'ready_flag' : readyFlag,
-        }
-
         $.ajax({
             type: 'POST',
             url: '/exercise_analysis',
