@@ -223,6 +223,7 @@ def signup():
         return render_template('signup.html')
 
     if request.method == 'POST':
+        print(len(generate_password_hash(request.form['password'])))
         # 사용자 아이디 규칙(영문과 숫자만 가능)
         username_rule = True
         for i in request.form['username']:
