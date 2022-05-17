@@ -193,27 +193,24 @@ def login():
     if request.method == 'POST':
         name = request.form['username']
         passwd = request.form['password']
-        try:
-            # mysql 사용
-            sql = f'''SELECT * FROM users WHERE username="{name};"'''
-            cursor.execute(sql)
-            old_user = cursor.fetchone()
+        # mysql 사용
+        sql = f'''SELECT * FROM users WHERE username="{name};"'''
+        cursor.execute(sql)
+        old_user = cursor.fetchone()
 
-            # sqlite3 사용
-            # old_user = User.query.filter_by(username=name).first()
-            print(old_user[1])
-            print(passwd)
-            # 사용자 계정 검증(id, passwd)
-            if old_user is not None and check_password_hash(old_user[1], passwd):
-                # 로그인 성공
-                session['login'] = True
-                session['username'] = old_user.username
-                session['nickname'] = old_user.nickname
-                return redirect(url_for('home'))
-            else:
-                # 로그인 실패
-                return render_template('login.html', login_fail=True)
-        except:
+        # sqlite3 사용
+        # old_user = User.query.filter_by(username=name).first()
+        print(old_user[1])
+        print(passwd)
+        # 사용자 계정 검증(id, passwd)
+        if old_user is not None and check_password_hash(old_user[1], passwd):
+            # 로그인 성공
+            session['login'] = True
+            session['username'] = old_user.username
+            session['nickname'] = old_user.nickname
+            return redirect(url_for('home'))
+        else:
+            # 로그인 실패
             return render_template('login.html', login_fail=True)
 
 
