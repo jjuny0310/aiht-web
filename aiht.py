@@ -154,13 +154,13 @@ def result_list():
     # 사용자의 모든 운동 결과 목록 불러오기
     if session['login']:
         # mysql 사용
-        sql = f'''SELECT * FROM results WHERE fk_username="{session['username']};"'''
+        sql = f'''SELECT * FROM results WHERE fk_username="{session['username']}";'''
         cursor.execute(sql)
-        rows = cursor.fetchall()
+        results = cursor.fetchall()
 
         # sqlite3 사용
         # results = Result.query.filter_by(user_id=session['username']).all()
-        return render_template('result_list.html', results=rows)
+        return render_template('result_list.html', results=results)
 
     if not session['login']:
         return redirect(url_for('login'))

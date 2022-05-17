@@ -77,11 +77,11 @@
             </tr>
             {% for result in results %}
             <tr>
-                <td>{{ result.date }}</td>
-                <td>{{ result.exercise}}</td>
-                <td>{{ result.result_num }}</td>
-                <td>{{ result.exercise_time }}</td>
-                <td><a href="javascript:resultDelete({{ result.id }})">X</a></td>
+                <td>{{ result[1] }}</td>
+                <td>{{ result[2] }}</td>
+                <td>{{ result[3] }}</td>
+                <td>{{ result[4] }}</td>
+                <td><a href="javascript:resultDelete({{ result[0] }})">X</a></td>
             </tr>
             {% endfor %}
         </table>
