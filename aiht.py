@@ -132,7 +132,7 @@ def result():
     # 운동 결과 저장 시 처리
     if request.method == 'POST':
         # mysql 사용
-        sql = f'''INSERT INTO results(data, exercise, result_num, exercise_time, fk_username)
+        sql = f'''INSERT INTO results(date, exercise, result_num, exercise_time, fk_username)
         values("{request.form['result_date']}", "{request.form['result_exercise']}", "{request.form['result_num']}"
         , "{request.form['result_exercise_time']}", "{session['username']}");'''
 
