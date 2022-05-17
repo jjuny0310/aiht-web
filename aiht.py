@@ -194,9 +194,9 @@ def login():
         name = request.form['username']
         passwd = request.form['password']
         # mysql 사용
-        sql = f'''SELECT * FROM users WHERE username="{name};"'''
+        sql = f'''SELECT * FROM users WHERE username="{name}";'''
         cursor.execute(sql)
-        old_user = cursor.fetchall()
+        old_user = cursor.fetchone()
 
         # sqlite3 사용
         # old_user = User.query.filter_by(username=name).first()
