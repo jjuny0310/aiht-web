@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for
+import pymysql
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship, backref
@@ -8,10 +9,21 @@ from python import main
 app = Flask(__name__)
 
 # 데이터 베이스 연동
-app.config['SECRET_KEY'] = 'qwlem12kkasdniovni2r23nkzx12'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///aiht.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
+# mysql db 연동
+db = pymysql.connect(
+    user='aiht',
+    passwd='0310',
+    host='localhost',
+    db='testdb',
+    charset='utf8'
+)
+cursor = db.cursor()
+
+# sqlite3 db연동
+# app.config['SECRET_KEY'] = 'qwlem12kkasdniovni2r23nkzx12'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///aiht.db'
+# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# db = SQLAlchemy(app)
 
 exercise_type = ""
 goal_number = 0
@@ -31,53 +43,53 @@ def reset_session_value():
     session['pushup_correct_pose'] = False
 
 
-# 사용자 테이블
-class User(db.Model):
-    __tablename__ = 'user'
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True, nullable=False)
-    password = db.Column(db.String(80), nullable=False)
-    nickname = db.Column(db.String(80), nullable=False)
+# 사용자 테이블(sqlite3)
+# class User(db.Model):
+#     __tablename__ = 'user'
+#     id = db.Column(db.Integer, primary_key=True)
+#     username = db.Column(db.String(80), unique=True, nullable=False)
+#     password = db.Column(db.String(80), nullable=False)
+#     nickname = db.Column(db.String(80), nullable=False)
+#
+#     def __init__(self, username, nickname, password, **kwargs):
+#         self.username = username
+#         self.set_password(password)
+#         self.nickname = nickname
+#
+#     # 문자열 형태로 반환
+#     def __repr__(self):
+#         return f"<User('{self.id}', '{self.username}', '{self.nickname}')>"
+#
+#     # 암호화
+#     def set_password(self, password):
+#         self.password = generate_password_hash(password)
+#
+#     # 암호화 된 비밀번호 체크
+#     def check_password(self, password):
+#         return check_password_hash(self.password, password)
 
-    def __init__(self, username, nickname, password, **kwargs):
-        self.username = username
-        self.set_password(password)
-        self.nickname = nickname
 
-    # 문자열 형태로 반환
-    def __repr__(self):
-        return f"<User('{self.id}', '{self.username}', '{self.nickname}')>"
-    
-    # 암호화
-    def set_password(self, password):
-        self.password = generate_password_hash(password)
-
-    # 암호화 된 비밀번호 체크
-    def check_password(self, password):
-        return check_password_hash(self.password, password)
-
-
-# 운동 결과 테이블
-class Result(db.Model):
-    __tablename__ = 'result'
-    id = db.Column(db.Integer, primary_key=True)
-    date = db.Column(db.String(80), nullable=False)
-    exercise = db.Column(db.String(80), nullable=False)
-    result_num = db.Column(db.String(80), nullable=False)
-    exercise_time = db.Column(db.String(80), nullable=False)
-    user_id = db.Column(db.Integer, ForeignKey('user.username'))
-
-    user = relationship("User", backref=backref('results', order_by=id))
-
-    def __init__(self, date, exercise, result_num, exercise_time, user_id):
-        self.date = date
-        self.exercise = exercise
-        self.result_num = result_num
-        self.exercise_time = exercise_time
-        self.user_id = user_id
-
-    def __repr__(self):
-        return f"<Result('{self.id}', '{self.date}', '{self.exercise}', '{self.result_num}', '{self.exercise_time}', '{self.user_id}')>"
+# 운동 결과 테이블(sqlite3)
+# class Result(db.Model):
+#     __tablename__ = 'result'
+#     id = db.Column(db.Integer, primary_key=True)
+#     date = db.Column(db.String(80), nullable=False)
+#     exercise = db.Column(db.String(80), nullable=False)
+#     result_num = db.Column(db.String(80), nullable=False)
+#     exercise_time = db.Column(db.String(80), nullable=False)
+#     user_id = db.Column(db.Integer, ForeignKey('user.username'))
+#
+#     user = relationship("User", backref=backref('results', order_by=id))
+#
+#     def __init__(self, date, exercise, result_num, exercise_time, user_id):
+#         self.date = date
+#         self.exercise = exercise
+#         self.result_num = result_num
+#         self.exercise_time = exercise_time
+#         self.user_id = user_id
+#
+#     def __repr__(self):
+#         return f"<Result('{self.id}', '{self.date}', '{self.exercise}', '{self.result_num}', '{self.exercise_time}', '{self.user_id}')>"
 
 
 # 메인 화면 요청
@@ -119,11 +131,20 @@ def result():
 
     # 운동 결과 저장 시 처리
     if request.method == 'POST':
-        new_result = Result(date=request.form['result_date'], exercise=request.form['result_exercise'],
-                            result_num=request.form['result_num'], exercise_time=request.form['result_exercise_time'],
-                            user_id=session['username'])
-        db.session.add(new_result)
-        db.session.commit()
+        # mysql 사용
+        sql = f'''INSERT INTO results(data, exercise, result_num, exercise_time, fk_username)
+        values("{request.form['result_date']}", "{request.form['result_exercise']}", "{request.form['result_num']}"
+        , "{request.form['result_exercise_time']}", "{session['username']}");'''
+
+        cursor.execute(sql)
+        db.commit()
+
+        # sqlite3 사용
+        # new_result = Result(date=request.form['result_date'], exercise=request.form['result_exercise'],
+        #                     result_num=request.form['result_num'], exercise_time=request.form['result_exercise_time'],
+        #                     user_id=session['username'])
+        # db.session.add(new_result)
+        # db.session.commit()
         return redirect(url_for('home'))
 
 
@@ -132,8 +153,14 @@ def result():
 def result_list():
     # 사용자의 모든 운동 결과 목록 불러오기
     if session['login']:
-        results = Result.query.filter_by(user_id=session['username']).all()
-        return render_template('result_list.html', results=results)
+        # mysql 사용
+        sql = f'''SELECT * FROM results WHERE fk_username="{session['username']};"'''
+        cursor.execute(sql)
+        rows = cursor.fetchall()
+
+        # sqlite3 사용
+        # results = Result.query.filter_by(user_id=session['username']).all()
+        return render_template('result_list.html', results=rows)
 
     if not session['login']:
         return redirect(url_for('login'))
@@ -143,10 +170,17 @@ def result_list():
 @app.route('/result_delete')
 def result_delete():
     # database.js에서 받은 result_id 조회 후 삭제
+    # mysql 사용
     result_id = request.args['result_id']
-    item = Result.query.filter_by(id=result_id).first()
-    db.session.delete(item)
-    db.session.commit()
+    sql = f'''DELETE FROM results WHERE id={result_id};'''
+    cursor.execute(sql)
+    db.commit()
+
+    # sqlite3 사용
+    # result_id = request.args['result_id']
+    # item = Result.query.filter_by(id=result_id).first()
+    # db.session.delete(item)
+    # db.session.commit()
     return redirect(url_for('result_list'))
 
 
@@ -160,7 +194,13 @@ def login():
         name = request.form['username']
         passwd = request.form['password']
         try:
-            old_user = User.query.filter_by(username=name).first()
+            # mysql 사용
+            sql = f'''SELECT * FROM users WHERE username="{name};"'''
+            cursor.execute(sql)
+            old_user = cursor.fetchone()
+
+            # sqlite3 사용
+            # old_user = User.query.filter_by(username=name).first()
 
             # 사용자 계정 검증(id, passwd)
             if old_user is not None and check_password_hash(old_user.password, passwd):
@@ -185,7 +225,7 @@ def signup():
     if request.method == 'POST':
         try:
             # 사용자 아이디 규칙(영문과 숫자만 가능)
-            username_rule = False
+            username_rule = True
             for i in request.form['username']:
                 if not i.encode().isalpha() and not i.isnumeric():
                     username_rule = False
@@ -202,10 +242,18 @@ def signup():
                 return render_template('signup.html', password_len_fail=True)
             else:
                 # 사용자 계정 생성
-                new_user = User(username=request.form['username'], password=request.form['password'],
-                                nickname=request.form['nickname'])
-                db.session.add(new_user)
-                db.session.commit()
+                # mysql 사용
+                sql = f'''INSERT INTO users(username, password, nickname)
+                values("{request.form['username']}", "{generate_password_hash(request.form['password'])}", 
+                "{request.form['nickname']}");'''
+                cursor.execute(sql)
+                db.commit()
+
+                # sqlite3 사용
+                # new_user = User(username=request.form['username'], password=request.form['password'],
+                #                 nickname=request.form['nickname'])
+                # db.session.add(new_user)
+                # db.session.commit()
                 return redirect(url_for('login'))
         except:
             return render_template('signup.html', signup_fail=True)
