@@ -223,40 +223,37 @@ def signup():
         return render_template('signup.html')
 
     if request.method == 'POST':
-        try:
-            # 사용자 아이디 규칙(영문과 숫자만 가능)
-            username_rule = True
-            for i in request.form['username']:
-                if not i.encode().isalpha() and not i.isnumeric():
-                    username_rule = False
-                    break
+        # 사용자 아이디 규칙(영문과 숫자만 가능)
+        username_rule = True
+        for i in request.form['username']:
+            if not i.encode().isalpha() and not i.isnumeric():
+                username_rule = False
+                break
 
-            # 사용자 아이디 길이 확인
-            if len(request.form['username']) < 4:
-                return render_template('signup.html', username_len_fail=True)
-            # 사용자 아이디 규칙 확인
-            elif not username_rule:
-                return render_template('signup.html', username_rule_fail=True)
-            # 비밀번호 길이 확인
-            elif len(request.form['password']) < 6:
-                return render_template('signup.html', password_len_fail=True)
-            else:
-                # 사용자 계정 생성
-                # mysql 사용
-                sql = f'''INSERT INTO users(username, password, nickname)
-                values("{request.form['username']}", "{generate_password_hash(request.form['password'])}", 
-                "{request.form['nickname']}");'''
-                cursor.execute(sql)
-                db.commit()
+        # 사용자 아이디 길이 확인
+        if len(request.form['username']) < 4:
+            return render_template('signup.html', username_len_fail=True)
+        # 사용자 아이디 규칙 확인
+        elif not username_rule:
+            return render_template('signup.html', username_rule_fail=True)
+        # 비밀번호 길이 확인
+        elif len(request.form['password']) < 6:
+            return render_template('signup.html', password_len_fail=True)
+        else:
+            # 사용자 계정 생성
+            # mysql 사용
+            sql = f'''INSERT INTO users(username, password, nickname)
+            values("{request.form['username']}", "{generate_password_hash(request.form['password'])}", 
+            "{request.form['nickname']}");'''
+            cursor.execute(sql)
+            db.commit()
 
-                # sqlite3 사용
-                # new_user = User(username=request.form['username'], password=request.form['password'],
-                #                 nickname=request.form['nickname'])
-                # db.session.add(new_user)
-                # db.session.commit()
-                return redirect(url_for('login'))
-        except:
-            return render_template('signup.html', signup_fail=True)
+            # sqlite3 사용
+            # new_user = User(username=request.form['username'], password=request.form['password'],
+            #                 nickname=request.form['nickname'])
+            # db.session.add(new_user)
+            # db.session.commit()
+            return redirect(url_for('login'))
 
 
 # 로그아웃
