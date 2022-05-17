@@ -12,4 +12,4 @@ AIHT는 AI Home Training의 약자로, AI 기술을 적용하여 홈 트레이�
 - Docker
 
 ## 미리보기
-![image](https://user-images.githubusercontent.com/59381113/168850420-6a80310e-a940-4c40-a83a-6ff6d343ffda.png)
+![image](https://user-images.githubusercontent.com/59381113/168850511-28f4354a-12df-4460-82e9-79f36a81616f.png)
