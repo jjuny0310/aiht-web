@@ -15,8 +15,8 @@ AIHT는 AI Home Training의 약자로, AI 기술을 적용하여 홈 트레이�
 ##### - 메인 화면 1
 ![image](https://user-images.githubusercontent.com/59381113/168851013-dfc1b799-71cc-4a2b-b907-fd239a41a7f4.png)
 
-##### - 메인 화면 
-2![image](https://user-images.githubusercontent.com/59381113/168852718-0304e13e-ec4c-48d4-8134-975d00cf3d07.png)
+##### - 메인 화면 2
+![image](https://user-images.githubusercontent.com/59381113/168852718-0304e13e-ec4c-48d4-8134-975d00cf3d07.png)
 
 ##### - 회원가입 화면
 ![image](https://user-images.githubusercontent.com/59381113/168852878-6de7c87a-05be-44ee-9e37-d8ae94bd167e.png)
