@@ -13,37 +13,37 @@ AIHT는 AI Home Training의 약자로, AI 기술을 적용하여 홈 트레이�
 
 ## 미리보기
 ##### <메인 화면 1>
-![image](https://user-images.githubusercontent.com/59381113/168851013-dfc1b799-71cc-4a2b-b907-fd239a41a7f4.png)<br><br>
+![image](https://user-images.githubusercontent.com/59381113/168851013-dfc1b799-71cc-4a2b-b907-fd239a41a7f4.png)<br>
 
 ##### <메인 화면 2>
-![image](https://user-images.githubusercontent.com/59381113/168852718-0304e13e-ec4c-48d4-8134-975d00cf3d07.png)
+![image](https://user-images.githubusercontent.com/59381113/168852718-0304e13e-ec4c-48d4-8134-975d00cf3d07.png)<br>
 
 ##### <회원가입 화면>
-![image](https://user-images.githubusercontent.com/59381113/168852878-6de7c87a-05be-44ee-9e37-d8ae94bd167e.png)
+![image](https://user-images.githubusercontent.com/59381113/168852878-6de7c87a-05be-44ee-9e37-d8ae94bd167e.png)<br>
 
 ##### <로그인 화면>
-![image](https://user-images.githubusercontent.com/59381113/168852787-15149abe-527d-4a4a-b776-69cf393a1329.png)
+![image](https://user-images.githubusercontent.com/59381113/168852787-15149abe-527d-4a4a-b776-69cf393a1329.png)<br>
 
 ##### <로딩 화면>
-![image](https://user-images.githubusercontent.com/59381113/168852920-7d8bd18b-c39e-45c3-bda5-18fb708061f2.png)
+![image](https://user-images.githubusercontent.com/59381113/168852920-7d8bd18b-c39e-45c3-bda5-18fb708061f2.png)<br>
 
 ##### <스쿼트(올바른 포즈) 예시>
-![image](https://user-images.githubusercontent.com/59381113/168853040-ed9fba3f-0dff-4c10-9c0c-961850f22ac1.png)
+![image](https://user-images.githubusercontent.com/59381113/168853040-ed9fba3f-0dff-4c10-9c0c-961850f22ac1.png)<br>
 
 ##### <스쿼트(잘못된 포즈) 예시>
-![image](https://user-images.githubusercontent.com/59381113/168853116-7204d55e-17b3-4675-ade3-a98c5c5338bb.png)
+![image](https://user-images.githubusercontent.com/59381113/168853116-7204d55e-17b3-4675-ade3-a98c5c5338bb.png)<br>
 
 ##### <푸쉬업(R, 올바른 포즈) 예시>
-![image](https://user-images.githubusercontent.com/59381113/168853174-a77bd4db-0e31-422b-82e5-01f6a9c3a898.png)
+![image](https://user-images.githubusercontent.com/59381113/168853174-a77bd4db-0e31-422b-82e5-01f6a9c3a898.png)<br>
 
 ##### <푸쉬업(L, 올바른 포즈) 예시>
-![image](https://user-images.githubusercontent.com/59381113/168853239-7d275c84-0779-4313-89c0-49e1c4523630.png)
+![image](https://user-images.githubusercontent.com/59381113/168853239-7d275c84-0779-4313-89c0-49e1c4523630.png)<br>
 
 ##### <푸쉬업(잘못된 포즈) 예시>
-![image](https://user-images.githubusercontent.com/59381113/168853317-806f7ccf-0022-470c-8d40-455756cf9ae1.png)
+![image](https://user-images.githubusercontent.com/59381113/168853317-806f7ccf-0022-470c-8d40-455756cf9ae1.png)<br>
 
 ##### <운동 결과 예시>
-![image](https://user-images.githubusercontent.com/59381113/168853368-59453eb4-3daf-4661-b3d3-0335f1032c20.png)
+![image](https://user-images.githubusercontent.com/59381113/168853368-59453eb4-3daf-4661-b3d3-0335f1032c20.png)<br>
 
 ##### <과거 운동 내역 예시>
-![image](https://user-images.githubusercontent.com/59381113/168853437-6484a4d7-ee6a-4d1d-96b5-64f9805b6db2.png)
+![image](https://user-images.githubusercontent.com/59381113/168853437-6484a4d7-ee6a-4d1d-96b5-64f9805b6db2.png)<br>
