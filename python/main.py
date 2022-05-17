@@ -47,15 +47,11 @@ squat_parts = [NOSE, LEFT_SHOULDER, RIGHT_SHOULDER, LEFT_ELBOW, RIGHT_ELBOW,
                LEFT_WRIST, RIGHT_WRIST, LEFT_HIP, RIGHT_HIP, LEFT_KNEE, RIGHT_KNEE,
                LEFT_ANKLE, RIGHT_ANKLE]
 
-# # nginx 배포 시 모델 경로
+# 모델 경로
 pushup_left_model = load_model('python/classification/model/left_pushup_model.h5')
 pushup_right_model = load_model('python/classification/model/right_pushup_model.h5')
 squat_model = load_model('python/classification/model/squat_model.h5')
 
-# # Apache(windows)로 실행할 때 모델 경로
-# squat_model = load_model('C:/Users/leeyongjun/Desktop/aiht/aiht-web/python/classification/model/squat_model.h5')
-# pushup_left_model = load_model('C:/Users/leeyongjun/Desktop/aiht/aiht-web/python/classification/model/left_pushup_model.h5')
-# pushup_right_model = load_model('C:/Users/leeyongjun/Desktop/aiht/aiht-web/python/classification/model/right_pushup_model.h5')
 
 # 스쿼트 자세 교정 수치
 squat_up_angle = 160

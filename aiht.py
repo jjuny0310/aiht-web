@@ -87,7 +87,6 @@ def result():
 def result_list():
     # 사용자의 모든 운동 결과 목록 불러오기
     if session['login']:
-        # mysql 사용
         sql = f'''SELECT * FROM results WHERE fk_username="{session['username']}";'''
         cursor.execute(sql)
         results = cursor.fetchall()
@@ -119,14 +118,11 @@ def login():
         name = request.form['username']
         passwd = request.form['password']
         try:
-            # mysql 사용
             sql = f'''SELECT * FROM users WHERE username="{name}";'''
             cursor.execute(sql)
             old_user = cursor.fetchone()
 
-            # sqlite3 사용
-            # old_user = User.query.filter_by(username=name).first()
-            # 사용자 계정 검증(id, passwd)
+            # 사용자 계정 검증(id, passwd(복호화))
             if old_user is not None and check_password_hash(old_user[2], passwd):
                 # 로그인 성공
                 session['login'] = True
@@ -165,7 +161,7 @@ def signup():
             elif len(request.form['password']) < 6:
                 return render_template('signup.html', password_len_fail=True)
             else:
-                # 사용자 계정 생성
+                # 사용자 계정 생성(비밀번호 암호화)
                 sql = f'''INSERT INTO users(username, password, nickname)
                 values("{request.form['username']}", "{generate_password_hash(request.form['password'])}", 
                 "{request.form['nickname']}");'''
