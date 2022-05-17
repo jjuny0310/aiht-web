@@ -7,6 +7,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from python import main
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'qwlem12kkasdniovni2r23nkzx12'
 
 # 데이터 베이스 연동
 # mysql db 연동
@@ -20,7 +21,6 @@ db = pymysql.connect(
 cursor = db.cursor()
 
 # sqlite3 db연동
-# app.config['SECRET_KEY'] = 'qwlem12kkasdniovni2r23nkzx12'
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///aiht.db'
 # app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # db = SQLAlchemy(app)
