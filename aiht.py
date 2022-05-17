@@ -201,7 +201,8 @@ def login():
 
             # sqlite3 사용
             # old_user = User.query.filter_by(username=name).first()
-
+            print(old_user[1])
+            print(passwd)
             # 사용자 계정 검증(id, passwd)
             if old_user is not None and check_password_hash(old_user[1], passwd):
                 # 로그인 성공
