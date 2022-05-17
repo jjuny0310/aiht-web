@@ -200,10 +200,10 @@ def login():
 
         # sqlite3 사용
         # old_user = User.query.filter_by(username=name).first()
-        print(old_user[1])
+        print(old_user)
         print(passwd)
         # 사용자 계정 검증(id, passwd)
-        if old_user is not None and check_password_hash(old_user[1], passwd):
+        if old_user is not None and check_password_hash(old_user, passwd):
             # 로그인 성공
             session['login'] = True
             session['username'] = old_user.username
