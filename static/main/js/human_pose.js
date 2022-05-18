@@ -214,6 +214,7 @@ function poseOnResults(results) {
                     location.href = "/result?date=" + monthDate + "&exercise="+exerciseType + "&result_num=" + (count+" / "+data.goal_number)
                                     + "&exercise_time=" + exerciseTime; }, 5000);
             }
+            console.log(data.goal_number)
             console.log(data.exercise_type)
             switch (data.exercise_type){
                 case "SQUAT":
