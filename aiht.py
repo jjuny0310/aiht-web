@@ -190,22 +190,20 @@ def exercise_analysis():
         if not ready_flag:
             return jsonify(success=False)
 
+        # print(session['pushup_count'])
+        a = session['pushup_count']
+        print(a)
         # 스쿼트 처리
         if exercise_type == "SQUAT":
-            state, squat_result, visibility_check, squat_count = main.run(exercise_type, pose_landmarks)
-            session['squat_count'] = squat_count
-            return jsonify(exercise_type=exercise_type, state=state, count=squat_count, result=squat_result,
+            state, squat_result, visibility_check = main.run(exercise_type, pose_landmarks)
+            return jsonify(exercise_type=exercise_type, state=state, count=session['squat_count'], result=squat_result,
                            correct_pose=session['squat_pose'], visibility=visibility_check, count_check=session['squat_count_check'],
                            goal_number=goal_number)
 
         # 푸쉬업 처리
         elif exercise_type == "PUSH_UP":
-            state, pushup_result, visibility_check, pushup_count = main.run(exercise_type, pose_landmarks)
-            print(session['pushup_count'])
-            session['pushup_count'] = pushup_count
-            print(pushup_count)
-
-            return jsonify(exercise_type=exercise_type, state=state, count=pushup_count, result=pushup_result,
+            state, pushup_result, visibility_check = main.run(exercise_type, pose_landmarks)
+            return jsonify(exercise_type=exercise_type, state=state, count=session['pushup_count'], result=pushup_result,
                            correct_pose=session['pushup_pose'], visibility=visibility_check, count_check=session['pushup_count_check'],
                            goal_number=goal_number)
 
