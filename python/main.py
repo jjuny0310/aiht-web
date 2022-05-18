@@ -70,6 +70,9 @@ pushup_visibility_rate = 0.6
 
 
 def run(exercise_type, pose_landmarks):
+    pushup_count = session['pushup_count']
+    print(pushup_count)
+
     # 관절 좌표 저장 변수(x, y)
     keypoints_x = []
     keypoints_y = []
