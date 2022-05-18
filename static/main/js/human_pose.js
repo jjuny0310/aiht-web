@@ -176,6 +176,7 @@ function poseOnResults(results) {
         type: 'POST',
         url: '/exercise_analysis',
         data: JSON.stringify(dataList),
+        cache : false,
         dataType : 'JSON',
         contentType: "application/json",
         async: false,
