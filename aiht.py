@@ -189,7 +189,8 @@ def exercise_analysis():
 
         if not ready_flag:
             return jsonify(success=False)
-
+        
+        print(session.get('pushup_count'))
         # 스쿼트 처리
         if exercise_type == "SQUAT":
             state, squat_result, visibility_check = main.run(exercise_type, pose_landmarks)
