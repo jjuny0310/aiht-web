@@ -228,7 +228,7 @@ def run(exercise_type, pose_landmarks):
             visibility_count = 0
             visibility_check = False
 
-            # 신뢰도 값 체크(모든 관절이 정확히 나오면 자세교정 사운드 출력 가능)
+            # 신뢰도 값 체크(모든 관절이 정확히 나오면 자세 교정 사운드 출력 가능)
             for v in visibilitys_pushup_left:
                 if v > pushup_visibility_rate:
                     visibility_count += 1
