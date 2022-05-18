@@ -180,6 +180,7 @@ function poseOnResults(results) {
         contentType: "application/json",
         async: false,
         success: function (data){
+            console.log("오류체크")
             // 로딩 완료 시 초기세팅
             if(loadingFlag) {
                 closeLoadingWithMask();
@@ -308,7 +309,6 @@ function poseOnResults(results) {
             }
         },
         error: function (request, status, error){
-            console.log("에러!!")
         }
     })
   canvasCtx.restore();
