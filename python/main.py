@@ -366,7 +366,7 @@ def run(exercise_type, pose_landmarks):
                 session['pushup_pose'] = False
                 session['pushup_count_check'] = False
 
-        return state, pushup_result, visibility_check
+        return state, pushup_result, visibility_check, pushup_count
 
 
 # 두 점 사이의 거리
