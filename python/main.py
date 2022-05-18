@@ -70,6 +70,9 @@ pushup_visibility_rate = 0.6
 
 
 def run(exercise_type, pose_landmarks):
+    squat_count = session['pushup_count']
+    pushup_count = session['pushup_pose']
+
     # 관절 좌표 저장 변수(x, y)
     keypoints_x = []
     keypoints_y = []
@@ -200,7 +203,7 @@ def run(exercise_type, pose_landmarks):
                 session['squat_count_check'] = False
 
             if session['squat_pose'] and session['squat_count_check'] and left_leg_angle > squat_up_angle and right_leg_angle > squat_up_angle:
-                session['squat_count'] += 1
+                squat_count += 1
                 session['squat_count_check'] = False
 
         # DOWN
@@ -215,7 +218,7 @@ def run(exercise_type, pose_landmarks):
             session['squat_pose'] = False
             session['squat_count_check'] = False
 
-        return state, squat_result, visibility_check
+        return state, squat_result, visibility_check, squat_count
 
     # 푸쉬업
     if exercise_type == "PUSH_UP":
@@ -278,7 +281,7 @@ def run(exercise_type, pose_landmarks):
                     session['pushup_count_check'] = False
 
                 if session['pushup_pose'] and session['pushup_count_check'] and left_arm_angle > pushup_up_angle:
-                    session['pushup_count'] += 1
+                    pushup_count += 1
                     session['pushup_count_check'] = False
 
             # DOWN
@@ -363,7 +366,7 @@ def run(exercise_type, pose_landmarks):
                 session['pushup_pose'] = False
                 session['pushup_count_check'] = False
 
-        return state, pushup_result, visibility_check
+        return state, pushup_result, visibility_check, pushup_count
 
 
 # 두 점 사이의 거리
