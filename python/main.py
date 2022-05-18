@@ -39,24 +39,23 @@ LEFT_FOOT_INDEX = 31
 RIGHT_FOOT_INDEX = 32
 
 # 모델 로드
-pushup_right_parts = [NOSE, LEFT_SHOULDER, RIGHT_SHOULDER, RIGHT_ELBOW,
-                     RIGHT_WRIST, LEFT_HIP, RIGHT_HIP, RIGHT_KNEE, RIGHT_ANKLE]
-pushup_left_parts = [NOSE, LEFT_SHOULDER, RIGHT_SHOULDER, LEFT_ELBOW,
-                      LEFT_WRIST, LEFT_HIP, RIGHT_HIP, LEFT_KNEE, LEFT_ANKLE]
 squat_parts = [NOSE, LEFT_SHOULDER, RIGHT_SHOULDER, LEFT_ELBOW, RIGHT_ELBOW,
                LEFT_WRIST, RIGHT_WRIST, LEFT_HIP, RIGHT_HIP, LEFT_KNEE, RIGHT_KNEE,
                LEFT_ANKLE, RIGHT_ANKLE]
+pushup_left_parts = [NOSE, LEFT_SHOULDER, RIGHT_SHOULDER, LEFT_ELBOW,
+                      LEFT_WRIST, LEFT_HIP, RIGHT_HIP, LEFT_KNEE, LEFT_ANKLE]
+pushup_right_parts = [NOSE, LEFT_SHOULDER, RIGHT_SHOULDER, RIGHT_ELBOW,
+                     RIGHT_WRIST, LEFT_HIP, RIGHT_HIP, RIGHT_KNEE, RIGHT_ANKLE]
 
 # 모델 경로
+squat_model = load_model('python/classification/model/squat_model.h5')
 pushup_left_model = load_model('python/classification/model/left_pushup_model.h5')
 pushup_right_model = load_model('python/classification/model/right_pushup_model.h5')
-squat_model = load_model('python/classification/model/squat_model.h5')
-
 
 # 스쿼트 자세 교정 수치
 squat_up_angle = 160
 squat_down_angle = 110
-good_foot_angle = [20, 70]
+foot_angle_range = [20, 70]
 ankle_distance_range = [-0.01, 0.04]
 
 # 푸쉬업 자세 교정 수치
@@ -71,58 +70,67 @@ pushup_visibility_rate = 0.6
 
 
 def run(fitness_mode, pose_landmarks):
-    # 관절 좌표 저장(분리해서)
+    # 관절 좌표 저장 변수(x, y)
     keypoints_x = []
     keypoints_y = []
-    keypoints_squat = []
-    keypoints_pushup_left = []
-    keypoints_pushup_right = []
 
+    # 포즈 분류 모델 input 변수
+    squat_input = []
+    pushup_left_input = []
+    pushup_right_input = []
+    
+    # 신뢰도 값 저장 변수(visibility)
     visibilitys_squat = []
     visibilitys_pushup_left = []
     visibilitys_pushup_right = []
-    
-    # 관절 좌표 저장
+
     for idx, landmark in enumerate(pose_landmarks):
+        # 관절 좌표 저장
         keypoints_x.append(landmark['x'])
         keypoints_y.append(landmark['y'])
 
         if fitness_mode == "SQUAT":
+            # 스쿼트 포즈 분류 모델 input 저장
             if idx in squat_parts:
-                keypoints_squat.append(landmark['x'])
-                keypoints_squat.append(landmark['y'])
+                squat_input.append(landmark['x'])
+                squat_input.append(landmark['y'])
+
+            # 스쿼트 신뢰도 값 저장
             if idx in squat_parts[7:]:
                 visibilitys_squat.append(landmark['visibility'])
 
-        elif fitness_mode == "PUSH_UP":
+        if fitness_mode == "PUSH_UP":
+            # 푸쉬업(L, R) 포즈 분류 모델 input 저장
             if idx in pushup_left_parts:
-                keypoints_pushup_left.append(landmark['x'])
-                keypoints_pushup_left.append(landmark['y'])
+                pushup_left_input.append(landmark['x'])
+                pushup_left_input.append(landmark['y'])
+            if idx in pushup_right_parts:
+                pushup_right_input.append(landmark['x'])
+                pushup_right_input.append(landmark['y'])
+
+            # 푸쉬업(L, R) 신뢰도 값 저장
             if idx in list(set(pushup_left_parts) - {RIGHT_SHOULDER, RIGHT_HIP}):
                 visibilitys_pushup_left.append(landmark['visibility'])
-
-            if idx in pushup_right_parts:
-                keypoints_pushup_right.append(landmark['x'])
-                keypoints_pushup_right.append(landmark['y'])
             if idx in list(set(pushup_right_parts) - {LEFT_SHOULDER, LEFT_HIP}):
                 visibilitys_pushup_right.append(landmark['visibility'])
 
-
+    # 관절 좌표 최종 저장
     keypoints = list(zip(keypoints_x, keypoints_y))
-    
-    # 스쿼트
+
+    # 스쿼트 처리
     if fitness_mode == "SQUAT":
-        # visibility 체크(관절이 정확히 나오면 자세교정 사운드 출력)
         visibility_count = 0
         visibility_check = False
-        for visibility in visibilitys_squat:
-            if visibility > squat_visibility_rate:
+
+        # 신뢰도 값 체크(모든 관절이 정확히 나오면 자세교정 사운드 출력 가능)
+        for v in visibilitys_squat:
+            if v > squat_visibility_rate:
                 visibility_count += 1
             if visibility_count == len(squat_parts[7:]):
                 visibility_check = True
 
-        keypoints_array = np.array([keypoints_squat])
-        predict = squat_model.predict(keypoints_array)
+        # 포즈 분류 모델 추론(스쿼트)
+        predict = squat_model.predict(np.array([squat_input]))
 
         # 다리 각도
         right_leg_angle = getAngle3P(keypoints[RIGHT_HIP], keypoints[RIGHT_KNEE],
@@ -136,11 +144,11 @@ def run(fitness_mode, pose_landmarks):
         left_foot_angle = getAngle3P(keypoints[LEFT_FOOT_INDEX], keypoints[LEFT_HEEL],
                                       [keypoints[LEFT_HEEL][0], keypoints[LEFT_FOOT_INDEX][1]])
 
-        # 발목 범위
+        # 어깨 ~ 발목 거리(x 좌표)
         right_shoulder_to_ankle = keypoints[RIGHT_SHOULDER][0] - keypoints[RIGHT_ANKLE][0]
         left_shoulder_to_ankle = keypoints[LEFT_ANKLE][0] - keypoints[LEFT_SHOULDER][0]
 
-        squat_correct_dict = {}
+        squat_result = {}
 
 
         # Nothing 자세 기준 정확도
@@ -150,80 +158,85 @@ def run(fitness_mode, pose_landmarks):
             squat_state = np.argmax(predict[0][0:2])
 
         # 스쿼트 자세 분류
+        # UP
+        state = ""
         if squat_state == 0:
             state = "UP"
 
-            # ------------------자세 교정------------------
-            # 발 각도
-            if good_foot_angle[0] <= left_foot_angle <= good_foot_angle[1] and keypoints[LEFT_FOOT_INDEX][0] > keypoints[LEFT_HEEL][0] \
-                    and good_foot_angle[0] <= right_foot_angle <= good_foot_angle[1] and keypoints[RIGHT_FOOT_INDEX][0] < keypoints[RIGHT_HEEL][0]:
+            # 발 각도 체크
+            if foot_angle_range[0] <= left_foot_angle <= foot_angle_range[1] and keypoints[LEFT_FOOT_INDEX][0] > keypoints[LEFT_HEEL][0] \
+                    and foot_angle_range[0] <= right_foot_angle <= foot_angle_range[1] and keypoints[RIGHT_FOOT_INDEX][0] < keypoints[RIGHT_HEEL][0]:
                 foot_state = "pass"
+
             else:
-                if good_foot_angle[0] > left_foot_angle or good_foot_angle[0] > right_foot_angle or keypoints[LEFT_FOOT_INDEX][0] <= keypoints[LEFT_HEEL][0] or \
+                if foot_angle_range[0] > left_foot_angle or foot_angle_range[0] > right_foot_angle or keypoints[LEFT_FOOT_INDEX][0] <= keypoints[LEFT_HEEL][0] or \
                         keypoints[RIGHT_FOOT_INDEX][0] >= keypoints[RIGHT_HEEL][0]:
                     foot_state = "narrow"
                 else:
                     foot_state = "wide"
 
-            # 발목 자세 교정
+            # 어깨 ~ 발목 거리 체크
+            ankle_state = "pass"
             if right_shoulder_to_ankle >= ankle_distance_range[0] and left_shoulder_to_ankle >= ankle_distance_range[0]:
                 if right_shoulder_to_ankle <= ankle_distance_range[1] and left_shoulder_to_ankle <= \
                         ankle_distance_range[1]:
-                    session['ankle_state'] = "pass"
+                    ankle_state = "pass"
                 elif right_shoulder_to_ankle > ankle_distance_range[1] and left_shoulder_to_ankle > \
                         ankle_distance_range[1]:
-                    session['ankle_state'] = "wide"
+                    ankle_state = "wide"
             elif right_shoulder_to_ankle <= ankle_distance_range[0] and left_shoulder_to_ankle <= \
                     ankle_distance_range[0]:
-                session['ankle_state'] = "narrow"
+                ankle_state = "narrow"
             else:
                 pass
 
-            # 스쿼트 자세 상태 저장
-            squat_correct_dict = {"ankle_state": session['ankle_state'], 'foot_state': foot_state}
+            # 스쿼트 자세 결과 저장
+            squat_result = {"ankle_state": ankle_state, 'foot_state': foot_state}
 
-            # 스쿼트 자세 판별
-            if foot_state == "pass" and session['ankle_state'] == "pass":
-                session['squat_correct_pose'] = True
+            # 스쿼트 자세 올바른지 판별 및 카운터
+            if foot_state == "pass" and ankle_state == "pass":
+                session['squat_pose'] = True
             else:
-                session['squat_correct_pose'] = False
-                session['squat_check'] = False
-            # ------------------자세 교정------------------
+                session['squat_pose'] = False
+                session['squat_count_check'] = False
 
-            if session['squat_correct_pose'] and session['squat_check'] and left_leg_angle > squat_up_angle and right_leg_angle > squat_up_angle:
+            if session['squat_pose'] and session['squat_count_check'] and left_leg_angle > squat_up_angle and right_leg_angle > squat_up_angle:
                 session['squat_count'] += 1
-                session['squat_check'] = False
+                session['squat_count_check'] = False
 
-        elif squat_state == 1:
+        # DOWN
+        if squat_state == 1:
             state = "DOWN"
-            if session['squat_correct_pose'] and right_leg_angle < squat_down_angle and left_leg_angle < squat_down_angle:
-                session['squat_check'] = True
+            if session['squat_pose'] and right_leg_angle < squat_down_angle and left_leg_angle < squat_down_angle:
+                session['squat_count_check'] = True
 
-        else:
+        # NOTHING
+        if squat_state == 2:
             state = "NOTHING"
-            session['squat_correct_pose'] = False
-            session['squat_check'] = False
+            session['squat_pose'] = False
+            session['squat_count_check'] = False
 
-        return state, squat_correct_dict, visibility_check
+        return state, squat_result, visibility_check
 
     # 푸쉬업
-    elif fitness_mode == "PUSH_UP":
-        pushup_correct_dict = {}
+    if fitness_mode == "PUSH_UP":
+        pushup_result = {}
 
-        # LEFT 푸쉬업
+        # 푸쉬업(L)
         if keypoints[LEFT_SHOULDER][0] > keypoints[NOSE][0] or keypoints[RIGHT_SHOULDER][0] > \
                 keypoints[NOSE][0]:
-            # visibility 체크(관절이 정확히 나오면 자세교정 사운드 출력)
             visibility_count = 0
             visibility_check = False
-            for visibility in visibilitys_pushup_left:
-                if visibility > pushup_visibility_rate:
+
+            # 신뢰도 값 체크(모든 관절이 정확히 나오면 자세교정 사운드 출력 가능)
+            for v in visibilitys_pushup_left:
+                if v > pushup_visibility_rate:
                     visibility_count += 1
                 if visibility_count == len(list(set(pushup_left_parts) - {RIGHT_SHOULDER, RIGHT_HIP})):
                     visibility_check = True
 
-            left_keypoints_array = np.array([keypoints_pushup_left])
-            left_predict = pushup_left_model.predict(left_keypoints_array)
+            # 포즈 분류 모델 추론(푸쉬업 L)
+            predict = pushup_left_model.predict(np.array([pushup_left_input]))
 
             # 팔의 각도
             left_arm_angle = getAngle3P(keypoints[LEFT_SHOULDER], keypoints[LEFT_ELBOW],
@@ -232,63 +245,69 @@ def run(fitness_mode, pose_landmarks):
             # 손의 각도
             left_hand_angle = getAngle3P(keypoints[LEFT_ELBOW], keypoints[LEFT_WRIST], keypoints[LEFT_INDEX])
 
-            # 엉덩이 범위
+            # 엉덩이 ~ 어깨 거리(y 좌표)
             shoulder_to_hip = abs(keypoints[LEFT_SHOULDER][1] - keypoints[LEFT_HIP][1])
 
-            if np.argmax(left_predict[0]) == 0:
+            state = ""
+            # UP
+            if np.argmax(predict[0]) == 0:
                 state = "UP"
                 
-                # 푸쉬업 자세교정
-                # 손 방향 자세교정
+                # 푸쉬업(L) 자세교정
+                # 손 방향 체크
                 if keypoints[LEFT_PINKY][0] < keypoints[LEFT_WRIST][0] and \
                    keypoints[LEFT_INDEX][0] < keypoints[LEFT_WRIST][0] and \
                    keypoints[LEFT_THUMB][0] < keypoints[LEFT_WRIST][0] and left_hand_angle < min_hand_angle:
-                    correct_hand = True
+                    hand_state = True
                 else:
-                    correct_hand = False
+                    hand_state = False
                 
-                # 엉덩이 자세교정
+                # 엉덩이 ~ 어깨 거리 체크
                 if hip_distance_range[0] <= shoulder_to_hip <= hip_distance_range[1] and keypoints[LEFT_SHOULDER][1] <= keypoints[LEFT_HIP][1]:
-                    correct_hip = True
+                    hip_state = True
                 else:
-                    correct_hip = False
+                    hip_state = False
+                
+                # 푸쉬업(L) 자세 결과 저장
+                pushup_result = {'hand_state': hand_state, 'hip_state': hip_state}
 
-                pushup_correct_dict = {'correct_hand': correct_hand, 'correct_hip': correct_hip}
-
-                # 푸쉬업 자세 판별
-                if correct_hand and correct_hip:
-                    session['pushup_correct_pose'] = True
+                # 푸쉬업(L) 자세 올바른지 판별 및 카운터
+                if hand_state and hip_state:
+                    session['pushup_pose'] = True
                 else:
-                    session['pushup_correct_pose'] = False
-                    session['pushup_check'] = False
+                    session['pushup_pose'] = False
+                    session['pushup_count_check'] = False
 
-                if session['pushup_correct_pose'] and session['pushup_check'] and left_arm_angle > pushup_up_angle:
+                if session['pushup_pose'] and session['pushup_count_check'] and left_arm_angle > pushup_up_angle:
                     session['pushup_count'] += 1
-                    session['pushup_check'] = False
+                    session['pushup_count_check'] = False
 
-            elif np.argmax(left_predict[0]) == 1:
+            # DOWN
+            if np.argmax(predict[0]) == 1:
                 state = "DOWN"
-                if session['pushup_correct_pose'] and left_arm_angle < pushup_down_angle:
-                    session['pushup_check'] = True
+                if session['pushup_pose'] and left_arm_angle < pushup_down_angle:
+                    session['pushup_count_check'] = True
 
-            else:
+            # NOTHING
+            if np.argmax(predict[0]) == 2:
                 state = "NOTHING"
-                session['pushup_correct_pose'] = False
-                session['pushup_check'] = False
+                session['pushup_pose'] = False
+                session['pushup_count_check'] = False
         
-        # RIGHT 푸쉬업
+        # 푸쉬업(R)
         else:
-            # visibility 체크(관절이 정확히 나오면 자세교정 사운드 출력)
             visibility_count = 0
             visibility_check = False
-            for visibility in visibilitys_pushup_right:
-                if visibility > pushup_visibility_rate:
+
+            # 신뢰도 값 체크(모든 관절이 정확히 나오면 자세교정 사운드 출력 가능)
+            for v in visibilitys_pushup_right:
+                if v > pushup_visibility_rate:
                     visibility_count += 1
                 if visibility_count == len(list(set(pushup_right_parts) - {LEFT_SHOULDER, LEFT_HIP})):
                     visibility_check = True
 
-            right_keypoints_array = np.array([keypoints_pushup_right])
-            right_predict = pushup_right_model.predict(right_keypoints_array)
+            # 포즈 분류 모델 추론(푸쉬업 R)
+            predict = pushup_right_model.predict(np.array([pushup_right_input]))
 
             # 팔의 각도
             right_arm_angle = getAngle3P(keypoints[RIGHT_SHOULDER], keypoints[RIGHT_ELBOW],
@@ -300,49 +319,53 @@ def run(fitness_mode, pose_landmarks):
             # 엉덩이 범위
             shoulder_to_hip = abs(keypoints[RIGHT_SHOULDER][1] - keypoints[RIGHT_HIP][1])
 
-            if np.argmax(right_predict[0]) == 0:
+            state = ""
+            # UP
+            if np.argmax(predict[0]) == 0:
                 state = "UP"
 
-                # 푸쉬업 자세교정
-                # 손 방향 자세교정
+                # 푸쉬업(R) 자세교정
+                # 손 방향 체크
                 if keypoints[RIGHT_PINKY][0] > keypoints[RIGHT_WRIST][0] and\
                    keypoints[RIGHT_INDEX][0] > keypoints[RIGHT_WRIST][0] and \
                    keypoints[RIGHT_THUMB][0] > keypoints[RIGHT_WRIST][0] and right_hand_angle < min_hand_angle:
-                    correct_hand = True
+                    hand_state = True
                 else:
-                    correct_hand = False
+                    hand_state = False
 
-                # 엉덩이 자세교정
+                # 엉덩이 ~ 어깨 거리 체크
                 if hip_distance_range[0] <= shoulder_to_hip <= hip_distance_range[1] and keypoints[RIGHT_SHOULDER][1] <= keypoints[RIGHT_HIP][1]:
-                    correct_hip = True
+                    hip_state = True
                 else:
-                    correct_hip = False
+                    hip_state = False
+                
+                # 푸쉬업(R) 자세 결과 저장
+                pushup_result = {'hand_state': hand_state, 'hip_state': hip_state}
 
-                pushup_correct_dict = {'correct_hand': correct_hand, 'correct_hip': correct_hip}
-
-                # 푸쉬업 자세 판별
-                if correct_hand and correct_hip:
-                    session['pushup_correct_pose'] = True
+                # 푸쉬업(R) 자세 판별
+                if hand_state and hip_state:
+                    session['pushup_pose'] = True
                 else:
-                    session['pushup_correct_pose'] = False
-                    session['pushup_check'] = False
+                    session['pushup_pose'] = False
+                    session['pushup_count_check'] = False
 
-                if session['pushup_correct_pose'] and session['pushup_check'] and right_arm_angle > pushup_up_angle:
+                if session['pushup_pose'] and session['pushup_count_check'] and right_arm_angle > pushup_up_angle:
                     session['pushup_count'] += 1
-                    session['pushup_check'] = False
+                    session['pushup_count_check'] = False
 
-
-            elif np.argmax(right_predict[0]) == 1:
+            # DOWN
+            if np.argmax(predict[0]) == 1:
                 state = "DOWN"
-                if session['pushup_correct_pose'] and right_arm_angle < pushup_down_angle:
-                    session['pushup_check'] = True
+                if session['pushup_pose'] and right_arm_angle < pushup_down_angle:
+                    session['pushup_count_check'] = True
 
-            else:
+            # NOTHING
+            if np.argmax(predict[0]) == 2:
                 state = "NOTHING"
-                session['pushup_correct_pose'] = False
-                session['pushup_check'] = False
+                session['pushup_pose'] = False
+                session['pushup_count_check'] = False
 
-        return state, pushup_correct_dict, visibility_check
+        return state, pushup_result, visibility_check
 
 
 # 두 점 사이의 거리

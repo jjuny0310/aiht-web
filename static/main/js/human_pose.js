@@ -165,12 +165,13 @@ function poseOnResults(results) {
     drawLandmarks(canvasCtx, results.poseLandmarks,
                 {color: '#BDBDBD', lineWidth: 1});
 
-    // 해당 url로 json 데이터 전달(ajax 통신)
+    // 전달할 Json 데이터
     var dataList = {
         'pose_landmarks' : results.poseLandmarks,
         'ready_flag' : readyFlag,
     }
 
+    // Ajax 통신(Python <-> Javascript)
     $.ajax({
         type: 'POST',
         url: '/exercise_analysis',
@@ -187,7 +188,7 @@ function poseOnResults(results) {
                 loadingFlag = false;
                 webcamBar.style.display = "block";
 
-                // 대기시간
+                // 준비시간(10초)
                 readySound.play();
                 setTimeout(function() {
                     startSound.play();
@@ -216,14 +217,14 @@ function poseOnResults(results) {
 
             switch (data.exercise_type){
                 case "SQUAT":
-                    // python 에서 전달받은 값
+                    // python 에서 전달받은 데이터
                     correct_pose = data.correct_pose;
                     exerciseType = "스쿼트"
 
                     // 사용자가 지정한 횟수까지 수행
                     if(readyFlag && count < data.goal_number){
                          // 카운트 및 각도 체크 사운드
-                        if(downSoundFlag && data.angle_check){
+                        if(downSoundFlag && data.count_check){
                             downSound.play();
                             downSoundFlag = false;
                         }
@@ -236,22 +237,22 @@ function poseOnResults(results) {
                         
                         // 자세교정 안내 음성
                         if(poseSoundFlag && trainerEndFlag && data.state==="UP" && data.visibility){
-                            if(data.correct_dict['ankle_state'] === "narrow"){
+                            if(data.result['ankle_state'] === "narrow"){
                                 ankleWideSound.play();
                                 poseSoundFlag = false;
                                 setTimeout(function() { poseSoundFlag = true;}, soundDelay);
                             }
-                            else if(data.correct_dict['ankle_state'] === "wide"){
+                            else if(data.result['ankle_state'] === "wide"){
                                 ankleNarrowSound.play();
                                 poseSoundFlag = false;
                                 setTimeout(function() { poseSoundFlag = true;}, soundDelay);
                             }
-                            else if(data.correct_dict['foot_state'] === "narrow"){
+                            else if(data.result['foot_state'] === "narrow"){
                                 footWideSound.play();
                                 poseSoundFlag = false;
                                 setTimeout(function() { poseSoundFlag = true;}, soundDelay+2000);
                             }
-                            else if(data.correct_dict['foot_state'] === "wide"){
+                            else if(data.result['foot_state'] === "wide"){
                                 footNarrowSound.play();
                                 poseSoundFlag = false;
                                 setTimeout(function() { poseSoundFlag = true;}, soundDelay+2000);
@@ -272,7 +273,7 @@ function poseOnResults(results) {
                     // 사용자가 지정한 횟수까지 수행
                     if(readyFlag && count < data.goal_number) {
                         // 카운트 및 각도 체크 사운드
-                        if (downSoundFlag && data.angle_check) {
+                        if (downSoundFlag && data.count_check) {
                             downSound.play();
                             downSoundFlag = false;
                         }
@@ -284,12 +285,12 @@ function poseOnResults(results) {
                         }
                         // 자세교정 안내 음성
                         if(poseSoundFlag && trainerEndFlag && data.state==="UP" && data.visibility){
-                            if(!data.correct_dict['correct_hand']){
+                            if(!data.result['hand_state']){
                                 handSound.play();
                                 poseSoundFlag = false;
                                 setTimeout(function() { poseSoundFlag = true;}, soundDelay);
                             }
-                            else if(!data.correct_dict['correct_hip']){
+                            else if(!data.result['hip_state']){
                                 hipSound.play();
                                 poseSoundFlag = false;
                                 setTimeout(function() { poseSoundFlag = true;}, soundDelay);

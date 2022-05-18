@@ -21,23 +21,22 @@ goal_number = 0
 
 
 # 세션 변수 초기화
-def reset_session_value():
+def init_session_value():
     # 스쿼트 변수
     session['squat_count'] = 0
-    session['squat_check'] = False
-    session['squat_correct_pose'] = False
-    session['ankle_state'] = "pass"
+    session['squat_count_check'] = False
+    session['squat_pose'] = False
 
     # 푸쉬업 변수
     session['pushup_count'] = 0
-    session['pushup_check'] = False
-    session['pushup_correct_pose'] = False
+    session['pushup_count_check'] = False
+    session['pushup_pose'] = False
 
 
 # 메인 화면 요청
 @app.route('/', methods=['GET', 'POST'])
 def home():
-    reset_session_value()
+    init_session_value()
     global exercise_type, goal_number
 
     if request.method == 'GET':
@@ -53,7 +52,7 @@ def home():
 # 운동 수행
 @app.route('/run')
 def run():
-    reset_session_value()
+    init_session_value()
     try:
         if session['login']:
             return render_template('run.html', exercise_type=exercise_type, goal_number=goal_number)
@@ -193,16 +192,16 @@ def exercise_analysis():
 
         # 스쿼트 처리
         if exercise_type == "SQUAT":
-            state, squat_correct_dict, visibility_check = main.run(exercise_type, pose_landmarks)
-            return jsonify(exercise_type=exercise_type, state=state, count=session['squat_count'], correct_dict=squat_correct_dict,
-                           correct_pose=session['squat_correct_pose'], visibility=visibility_check, angle_check=session['squat_check'],
+            state, squat_result, visibility_check = main.run(exercise_type, pose_landmarks)
+            return jsonify(exercise_type=exercise_type, state=state, count=session['squat_count'], result=squat_result,
+                           correct_pose=session['squat_pose'], visibility=visibility_check, count_check=session['squat_count_check'],
                            goal_number=goal_number)
 
         # 푸쉬업 처리
         if exercise_type == "PUSH_UP":
-            state, pushup_correct_dict, visibility_check = main.run(exercise_type, pose_landmarks)
-            return jsonify(exercise_type=exercise_type, state=state, count=session['pushup_count'], correct_dict=pushup_correct_dict,
-                           correct_pose=session['pushup_correct_pose'], visibility=visibility_check, angle_check=session['pushup_check'],
+            state, pushup_result, visibility_check = main.run(exercise_type, pose_landmarks)
+            return jsonify(exercise_type=exercise_type, state=state, count=session['pushup_count'], result=pushup_result,
+                           correct_pose=session['pushup_pose'], visibility=visibility_check, count_check=session['pushup_count_check'],
                            goal_number=goal_number)
     except:
         return jsonify(success=False, goal_number=goal_number)
