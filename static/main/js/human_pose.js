@@ -152,8 +152,7 @@ function poseOnResults(results) {
     canvasCtx.save();
     canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
     canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height);
-
-    console.log(correct_pose)
+    
     if(correct_pose){
          drawConnectors(canvasCtx, results.poseLandmarks, POSE_CONNECTIONS,
                  {color: '#ffffff', lineWidth: 2});
@@ -220,6 +219,7 @@ function poseOnResults(results) {
                 case "SQUAT":
                     // python 에서 전달받은 데이터
                     correct_pose = data.correct_pose;
+                    console.log(correct_pose)
                     exerciseType = "스쿼트"
 
                     // 사용자가 지정한 횟수까지 수행
@@ -269,6 +269,7 @@ function poseOnResults(results) {
                 case "PUSH_UP":
                     // python 에서 전달받은 값
                     correct_pose = data.correct_pose;
+                    console.log(correct_pose)
                     exerciseType = "푸쉬업"
 
                     // 사용자가 지정한 횟수까지 수행
