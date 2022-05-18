@@ -229,7 +229,7 @@ def exercise_analysis():
 
         if not ready_flag:
             return jsonify(success=False)
-
+        print(session['pushup_count'])
         # 스쿼트 처리
         if exercise_type == "SQUAT":
             state, squat_correct_dict, visibility_check = main.run(exercise_type, pose_landmarks)
@@ -251,4 +251,4 @@ if __name__ == '__main__':
     # aiht_app.run(debug=True)
 
     # 배포 시 debug 해제 해야함
-    app.run()
+    app.run(host='0.0.0.0', port=5000)
