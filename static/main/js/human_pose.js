@@ -176,7 +176,6 @@ function poseOnResults(results) {
         type: 'POST',
         url: '/exercise_analysis',
         data: JSON.stringify(dataList),
-        cache : false,
         dataType : 'JSON',
         contentType: "application/json",
         async: false,
@@ -215,13 +214,11 @@ function poseOnResults(results) {
                     location.href = "/result?date=" + monthDate + "&exercise="+exerciseType + "&result_num=" + (count+" / "+data.goal_number)
                                     + "&exercise_time=" + exerciseTime; }, 5000);
             }
-            console.log(data.goal_number)
-            console.log(data.exercise_type)
+            // 자세 교정 및 카운터 피드백
             switch (data.exercise_type){
                 case "SQUAT":
                     // python 에서 전달받은 데이터
                     correct_pose = data.correct_pose;
-                    console.log("동작중")
                     exerciseType = "스쿼트"
 
                     // 사용자가 지정한 횟수까지 수행
@@ -271,7 +268,6 @@ function poseOnResults(results) {
                 case "PUSH_UP":
                     // python 에서 전달받은 값
                     correct_pose = data.correct_pose;
-                    console.log("동작중")
                     exerciseType = "푸쉬업"
 
                     // 사용자가 지정한 횟수까지 수행

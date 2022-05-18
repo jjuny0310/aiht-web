@@ -69,7 +69,7 @@ squat_visibility_rate = 0.3
 pushup_visibility_rate = 0.6
 
 
-def run(fitness_mode, pose_landmarks):
+def run(exercise_type, pose_landmarks):
     # 관절 좌표 저장 변수(x, y)
     keypoints_x = []
     keypoints_y = []
@@ -89,7 +89,7 @@ def run(fitness_mode, pose_landmarks):
         keypoints_x.append(landmark['x'])
         keypoints_y.append(landmark['y'])
 
-        if fitness_mode == "SQUAT":
+        if exercise_type == "SQUAT":
             # 스쿼트 포즈 분류 모델 input 저장
             if idx in squat_parts:
                 squat_input.append(landmark['x'])
@@ -99,7 +99,7 @@ def run(fitness_mode, pose_landmarks):
             if idx in squat_parts[7:]:
                 visibilitys_squat.append(landmark['visibility'])
 
-        if fitness_mode == "PUSH_UP":
+        if exercise_type == "PUSH_UP":
             # 푸쉬업(L, R) 포즈 분류 모델 input 저장
             if idx in pushup_left_parts:
                 pushup_left_input.append(landmark['x'])
@@ -118,7 +118,7 @@ def run(fitness_mode, pose_landmarks):
     keypoints = list(zip(keypoints_x, keypoints_y))
 
     # 스쿼트 처리
-    if fitness_mode == "SQUAT":
+    if exercise_type == "SQUAT":
         visibility_count = 0
         visibility_check = False
 
@@ -147,9 +147,9 @@ def run(fitness_mode, pose_landmarks):
         # 어깨 ~ 발목 거리(x 좌표)
         right_shoulder_to_ankle = keypoints[RIGHT_SHOULDER][0] - keypoints[RIGHT_ANKLE][0]
         left_shoulder_to_ankle = keypoints[LEFT_ANKLE][0] - keypoints[LEFT_SHOULDER][0]
-
+        
+        # 스쿼트 자세 결과 저장 변수
         squat_result = {}
-
 
         # Nothing 자세 기준 정확도
         if predict[0][2] > 0.8:
@@ -159,7 +159,6 @@ def run(fitness_mode, pose_landmarks):
 
         # 스쿼트 자세 분류
         # UP
-        state = ""
         if squat_state == 0:
             state = "UP"
 
@@ -205,13 +204,13 @@ def run(fitness_mode, pose_landmarks):
                 session['squat_count_check'] = False
 
         # DOWN
-        if squat_state == 1:
+        elif squat_state == 1:
             state = "DOWN"
             if session['squat_pose'] and right_leg_angle < squat_down_angle and left_leg_angle < squat_down_angle:
                 session['squat_count_check'] = True
 
         # NOTHING
-        if squat_state == 2:
+        else:
             state = "NOTHING"
             session['squat_pose'] = False
             session['squat_count_check'] = False
@@ -219,7 +218,8 @@ def run(fitness_mode, pose_landmarks):
         return state, squat_result, visibility_check
 
     # 푸쉬업
-    if fitness_mode == "PUSH_UP":
+    if exercise_type == "PUSH_UP":
+        # 푸쉬업 자세 결과 저장 변수
         pushup_result = {}
 
         # 푸쉬업(L)
@@ -248,7 +248,6 @@ def run(fitness_mode, pose_landmarks):
             # 엉덩이 ~ 어깨 거리(y 좌표)
             shoulder_to_hip = abs(keypoints[LEFT_SHOULDER][1] - keypoints[LEFT_HIP][1])
 
-            state = ""
             # UP
             if np.argmax(predict[0]) == 0:
                 state = "UP"
@@ -283,13 +282,13 @@ def run(fitness_mode, pose_landmarks):
                     session['pushup_count_check'] = False
 
             # DOWN
-            if np.argmax(predict[0]) == 1:
+            elif np.argmax(predict[0]) == 1:
                 state = "DOWN"
                 if session['pushup_pose'] and left_arm_angle < pushup_down_angle:
                     session['pushup_count_check'] = True
 
             # NOTHING
-            if np.argmax(predict[0]) == 2:
+            else:
                 state = "NOTHING"
                 session['pushup_pose'] = False
                 session['pushup_count_check'] = False
@@ -319,7 +318,6 @@ def run(fitness_mode, pose_landmarks):
             # 엉덩이 범위
             shoulder_to_hip = abs(keypoints[RIGHT_SHOULDER][1] - keypoints[RIGHT_HIP][1])
 
-            state = ""
             # UP
             if np.argmax(predict[0]) == 0:
                 state = "UP"
@@ -354,13 +352,13 @@ def run(fitness_mode, pose_landmarks):
                     session['pushup_count_check'] = False
 
             # DOWN
-            if np.argmax(predict[0]) == 1:
+            elif np.argmax(predict[0]) == 1:
                 state = "DOWN"
                 if session['pushup_pose'] and right_arm_angle < pushup_down_angle:
                     session['pushup_count_check'] = True
 
             # NOTHING
-            if np.argmax(predict[0]) == 2:
+            else:
                 state = "NOTHING"
                 session['pushup_pose'] = False
                 session['pushup_count_check'] = False

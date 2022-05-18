@@ -4,7 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from python import main
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'qwlem12kkasdniovni2r23nkzx12'
+app.config['SECRET_KEY'] = 'keyasdqwmmvfknmttit12314230'
 
 # 데이터 베이스 연동(MySQL)
 db = pymysql.connect(
@@ -181,29 +181,32 @@ def logout():
 # 운동 자세 분석(딥러닝 처리)
 @app.route('/exercise_analysis', methods=['POST'])
 def exercise_analysis():
-    # human_pose.js에서 ajax 통신으로 전달된 데이터
-    data = request.get_json()
-    pose_landmarks = data['pose_landmarks']
-    ready_flag = data['ready_flag']
+    try:
+        # human_pose.js에서 ajax 통신으로 전달된 데이터
+        data = request.get_json()
+        pose_landmarks = data['pose_landmarks']
+        ready_flag = data['ready_flag']
 
-    if not ready_flag:
-        return jsonify(success=False)
+        if not ready_flag:
+            return jsonify(success=False)
 
-    print(session.get('squat_count'))
-    # 스쿼트 처리
-    if exercise_type == "SQUAT":
-        state, squat_result, visibility_check = main.run(exercise_type, pose_landmarks)
-        return jsonify(exercise_type=exercise_type, state=state, count=session['squat_count'], result=squat_result,
-                       correct_pose=session['squat_pose'], visibility=visibility_check, count_check=session['squat_count_check'],
-                       goal_number=goal_number)
+        print(session.get('squat_count'))
+        # 스쿼트 처리
+        if exercise_type == "SQUAT":
+            state, squat_result, visibility_check = main.run(exercise_type, pose_landmarks)
+            return jsonify(exercise_type=exercise_type, state=state, count=session['squat_count'], result=squat_result,
+                           correct_pose=session['squat_pose'], visibility=visibility_check, count_check=session['squat_count_check'],
+                           goal_number=goal_number)
 
-    # 푸쉬업 처리
-    if exercise_type == "PUSH_UP":
-        state, pushup_result, visibility_check = main.run(exercise_type, pose_landmarks)
-        return jsonify(exercise_type=exercise_type, state=state, count=session['pushup_count'], result=pushup_result,
-                       correct_pose=session['pushup_pose'], visibility=visibility_check, count_check=session['pushup_count_check'],
-                       goal_number=goal_number)
+        # 푸쉬업 처리
+        if exercise_type == "PUSH_UP":
+            state, pushup_result, visibility_check = main.run(exercise_type, pose_landmarks)
+            return jsonify(exercise_type=exercise_type, state=state, count=session['pushup_count'], result=pushup_result,
+                           correct_pose=session['pushup_pose'], visibility=visibility_check, count_check=session['pushup_count_check'],
+                           goal_number=goal_number)
 
+    except:
+        return jsonify(success=False, goal_number=goal_number)
 
 
 if __name__ == '__main__':
