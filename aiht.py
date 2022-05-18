@@ -189,6 +189,7 @@ def exercise_analysis():
     if not ready_flag:
         return jsonify(success=False)
 
+    print(session.get('squat_count'))
     # 스쿼트 처리
     if exercise_type == "SQUAT":
         state, squat_result, visibility_check = main.run(exercise_type, pose_landmarks)
@@ -199,7 +200,7 @@ def exercise_analysis():
     # 푸쉬업 처리
     if exercise_type == "PUSH_UP":
         state, pushup_result, visibility_check = main.run(exercise_type, pose_landmarks)
-        return jsonify(exercise_type=exercise_type, state=state, count=session.get('pushup_count'), result=pushup_result,
+        return jsonify(exercise_type=exercise_type, state=state, count=session['pushup_count'], result=pushup_result,
                        correct_pose=session['pushup_pose'], visibility=visibility_check, count_check=session['pushup_count_check'],
                        goal_number=goal_number)
 
