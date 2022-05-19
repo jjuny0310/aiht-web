@@ -119,6 +119,12 @@ def run(exercise_type, pose_landmarks):
 
     # 스쿼트 처리
     if exercise_type == "SQUAT":
+        # 스쿼트 카운트 변수
+        squat_count = session['squat_count']
+
+        # 스쿼트 자세 결과 저장 변수
+        squat_result = {}
+
         visibility_count = 0
         visibility_check = False
 
@@ -147,9 +153,6 @@ def run(exercise_type, pose_landmarks):
         # 어깨 ~ 발목 거리(x 좌표)
         right_shoulder_to_ankle = keypoints[RIGHT_SHOULDER][0] - keypoints[RIGHT_ANKLE][0]
         left_shoulder_to_ankle = keypoints[LEFT_ANKLE][0] - keypoints[LEFT_SHOULDER][0]
-        
-        # 스쿼트 자세 결과 저장 변수
-        squat_result = {}
 
         # Nothing 자세 기준 정확도
         if predict[0][2] > 0.8:
@@ -200,7 +203,7 @@ def run(exercise_type, pose_landmarks):
                 session['squat_count_check'] = False
 
             if session['squat_pose'] and session['squat_count_check'] and left_leg_angle > squat_up_angle and right_leg_angle > squat_up_angle:
-                session['squat_count'] += 1
+                squat_count += 1
                 session['squat_count_check'] = False
 
         # DOWN
@@ -215,10 +218,13 @@ def run(exercise_type, pose_landmarks):
             session['squat_pose'] = False
             session['squat_count_check'] = False
 
-        return state, squat_result, visibility_check
+        return state, squat_result, visibility_check, squat_count
 
     # 푸쉬업
     if exercise_type == "PUSH_UP":
+        # 푸쉬업 카운트 변수
+        pushup_count = session['pushup_count']
+
         # 푸쉬업 자세 결과 저장 변수
         pushup_result = {}
 
@@ -278,7 +284,7 @@ def run(exercise_type, pose_landmarks):
                     session['pushup_count_check'] = False
 
                 if session['pushup_pose'] and session['pushup_count_check'] and left_arm_angle > pushup_up_angle:
-                    session['pushup_count'] += 1
+                    pushup_count += 1
                     session['pushup_count_check'] = False
 
             # DOWN
@@ -348,7 +354,7 @@ def run(exercise_type, pose_landmarks):
                     session['pushup_count_check'] = False
 
                 if session['pushup_pose'] and session['pushup_count_check'] and right_arm_angle > pushup_up_angle:
-                    session['pushup_count'] += 1
+                    pushup_count += 1
                     session['pushup_count_check'] = False
 
             # DOWN
@@ -363,7 +369,7 @@ def run(exercise_type, pose_landmarks):
                 session['pushup_pose'] = False
                 session['pushup_count_check'] = False
 
-        return state, pushup_result, visibility_check
+        return state, pushup_result, visibility_check, pushup_count
 
 
 # 두 점 사이의 거리
