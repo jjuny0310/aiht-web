@@ -21,7 +21,7 @@ function poseOnResults(results) {
     canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
     canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height);
 
-    if(correct_pose){
+    if(correctPose){
          drawConnectors(canvasCtx, results.poseLandmarks, POSE_CONNECTIONS,
                  {color: '#ffffff', lineWidth: 2});
     }
