@@ -1,8 +1,17 @@
+// 웹캠 바
+const webcamBar = document.getElementById('webcam_bar');
+
+// 카운트 변수
 var count = 0;
-var webcamBar = document.getElementById('webcam_bar');
-var correct_pose = true;
-var soundDelay = 4000;
-var readyTime = 10000;
+
+// 관절 선 색상 결정(바른자세 : 흰색, 틀린자세 : 빨간색)
+var correctPose = true;
+
+// 로딩 후 준비 시간
+const readyTime = 10000;
+
+// 사운드 딜레이
+const soundDelay = 4000;
 
 // 플래그 변수
 var loadingFlag = true;
@@ -10,28 +19,35 @@ var readyFlag = false;
 var poseSoundFlag = true;
 var trainerEndFlag = true;
 var downSoundFlag = true;
+var countIncreaseCheck = false;
 var exerciseEndFlag = true;
 var runStop = false;
 
-LoadingWithMask();
 
 // 스쿼트 피드백
 function squatRun(data){
-    correct_pose = data.correct_pose;
+    correctPose = data.correct_pose;
     exerciseType = "스쿼트"
 
     // 사용자가 지정한 횟수까지 수행
     if(readyFlag && count < data.goal_number){
-         // 카운트 및 각도 체크 사운드
+        // DOWN에서 자세 틀렸을 때 downSoundFlag 초기화
+        if(!countIncreaseCheck && !downSoundFlag){
+            downSoundFlag = true
+        }
+         // DOWN 체크 사운드
         if(downSoundFlag && data.count_check){
             downSound.play();
             downSoundFlag = false;
         }
+        // 카운트 사운드(UP 체크)
         if(count !== data.count){
             count = data.count
             new Audio('../static/sound/count/' + count + '.wav').play();
             document.getElementById('count').innerHTML = "현재 횟수 : " + count;
+            countIncreaseCheck = true;
             downSoundFlag = true;
+
         }
 
         // 자세교정 안내 음성
@@ -65,18 +81,24 @@ function squatRun(data){
     }
 }
 
+
 // 푸쉬업 피드백
 function pushupRun(data){
-    correct_pose = data.correct_pose;
+    correctPose = data.correct_pose;
     exerciseType = "푸쉬업"
 
     // 사용자가 지정한 횟수까지 수행
     if(readyFlag && count < data.goal_number) {
-        // 카운트 및 각도 체크 사운드
+        // DOWN에서 자세 틀렸을 때 downSoundFlag 초기화
+        if(!countIncreaseCheck && !downSoundFlag){
+            downSoundFlag = true
+        }
+         // DOWN 체크 사운드
         if (downSoundFlag && data.count_check) {
             downSound.play();
             downSoundFlag = false;
         }
+        // 카운트 사운드(UP 체크)
         if (count !== data.count) {
             count = data.count
             new Audio('../static/sound/count/' + count + '.wav').play();
@@ -104,6 +126,7 @@ function pushupRun(data){
     }
 }
 
+
 // 로딩 완료 시 초기 설정
 function initSetting(){
     closeLoadingWithMask();
@@ -112,7 +135,7 @@ function initSetting(){
     loadingFlag = false;
     webcamBar.style.display = "block";
 
-    // 준비시간(10초)
+    // 준비시간
     readySound.play();
     setTimeout(function() {
         startSound.play();
@@ -123,6 +146,7 @@ function initSetting(){
         readyFlag = true;}, 1000);
         }, readyTime);
 }
+
 
 // 종료 시
 function runEnd(data){
@@ -139,6 +163,7 @@ function runEnd(data){
         location.href = "/result?date=" + monthDate + "&exercise="+exerciseType + "&result_num=" + (count+" / "+data.goal_number)
                         + "&exercise_time=" + exerciseTime; }, 5000);
 }
+
 
 // 종료(중지) 버튼 클릭 시 처리
 function stopButtonClick(){

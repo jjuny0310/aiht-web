@@ -1,6 +1,7 @@
 var docV = document.documentElement;
 var isFull = false;
 
+
 $('#fullscreen_btn').click(function (){
     isFull = !isFull;
     if(isFull){
@@ -10,6 +11,7 @@ $('#fullscreen_btn').click(function (){
         closeFullScreenMode();
     }
 });
+
 
 // 전체화면 설정
 function openFullScreenMode() {
@@ -22,6 +24,7 @@ function openFullScreenMode() {
     else if (docV.msRequestFullscreen) // IE or Edge
         docV.msRequestFullscreen();
 }
+
 
 // 전체화면 해제
 function closeFullScreenMode() {

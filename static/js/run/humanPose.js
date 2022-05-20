@@ -2,6 +2,10 @@ const videoElement = document.getElementsByClassName('input_video')[0];
 const canvasElement = document.getElementsByClassName('output_canvas')[0];
 const canvasCtx = canvasElement.getContext('2d');
 
+// 로딩 실행
+LoadingWithMask();
+
+
 function poseOnResults(results) {
     // 웹캠 설정
     canvasElement.style.position = "absolute";
@@ -68,9 +72,11 @@ function poseOnResults(results) {
   canvasCtx.restore();
 }
 
+
 const pose = new Pose({locateFile: (file) => {
   return `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`;
 }});
+
 
 // MediaPipe Pose 옵션 설정
 pose.setOptions({
@@ -81,6 +87,7 @@ pose.setOptions({
   minTrackingConfidence: 0.5
 });
 pose.onResults(poseOnResults);
+
 
 const camera = new Camera(videoElement, {
   onFrame: async () => {

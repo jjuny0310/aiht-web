@@ -6,8 +6,6 @@ function LoadingWithMask() {
 
     //화면에 출력할 마스크를 설정
     var mask       ="<div id='mask' style='position:absolute; z-index:9000; background-color:#000000; display:none; left:0; top:0;'></div>";
-    var loadingImg ='';
-
 
     //화면에 레이어 추가
     $('body')
@@ -27,7 +25,8 @@ function LoadingWithMask() {
     $('#loadingImg').show();
 }
 
-// 로딩 중 취소
+
+// 로딩 종료
 function closeLoadingWithMask() {
     $('#mask, #loadingImg').hide();
     $('#mask, #loadingImg').remove();

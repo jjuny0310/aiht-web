@@ -1,28 +1,28 @@
 // 1. 스쿼트 자세교정 오디오 변수
-var ankleNarrowSound = new Audio('../static/sound/squat/ankle_narrow.wav');
-var ankleWideSound = new Audio('../static/sound/squat/ankle_wide.wav');
-var footNarrowSound = new Audio('../static/sound/squat/foot_narrow.wav');
-var footWideSound = new Audio('../static/sound/squat/foot_wide.wav');
-var squatNothingSound = new Audio('../static/sound/squat/nothing.wav');
+const ankleNarrowSound = new Audio('../static/sound/squat/ankle_narrow.wav');
+const ankleWideSound = new Audio('../static/sound/squat/ankle_wide.wav');
+const footNarrowSound = new Audio('../static/sound/squat/foot_narrow.wav');
+const footWideSound = new Audio('../static/sound/squat/foot_wide.wav');
+const squatNothingSound = new Audio('../static/sound/squat/nothing.wav');
 
 // 2. 푸쉬업 자세교정 오디오 변수
-var hipSound = new Audio('../static/sound/push_up/hip.wav');
-var handSound = new Audio('../static/sound/push_up/hand.wav');
-var pushupNothingSound = new Audio('../static/sound/push_up/nothing.wav');
+const hipSound = new Audio('../static/sound/push_up/hip.wav');
+const handSound = new Audio('../static/sound/push_up/hand.wav');
+const pushupNothingSound = new Audio('../static/sound/push_up/nothing.wav');
 
 // 3. 시작 오디오 변수
-var startSound = new Audio('../static/sound/start/exercise_start.wav');
-var readySound = new Audio('../static/sound/start/ready.wav');
+const startSound = new Audio('../static/sound/start/exercise_start.wav');
+const readySound = new Audio('../static/sound/start/ready.wav');
 
 // 4. 종료 오디오 변수
-var trainerEndSound = new Audio('../static/sound/end/trainer_end.wav');
-var exerciseEndSound = new Audio('../static/sound/end/exercise_end.wav');
+const trainerEndSound = new Audio('../static/sound/end/trainer_end.wav');
+const exerciseEndSound = new Audio('../static/sound/end/exercise_end.wav');
 
 // 5. 카운트 오디오 변수
-var downSound = new Audio('../static/sound/count/down.wav');
+const downSound = new Audio('../static/sound/count/down.wav');
 
 // 6. 로딩 오디오 변수
-var loadingSound = new Audio('../static/loading/sound/loading_sound.wav');
+const loadingSound = new Audio('../static/loading/sound/loading_sound.wav');
 loadingSound.play();
 
 
@@ -66,7 +66,7 @@ function allSoundStop(){
 }
 
 
-// 트레이너 비디오 종료 시 처리
+// 트레이너 비디오 종료 시 사운드 처리
 function endVideo(){
     trainerEndFlag = false;
     ankleNarrowSound.pause();
