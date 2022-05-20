@@ -46,7 +46,7 @@ function squatRun(data){
         }
 
         // 자세교정 안내 음성
-        if(poseSoundFlag && trainerEndFlag && data.state==="UP" && data.visibility){
+        if(poseSoundFlag && trainerEndFlag && data.state==="UP" && data.visibility && !data.count_check){
             if(data.result['ankle_state'] === "narrow"){
                 ankleWideSound.play();
                 poseSoundFlag = false;
@@ -68,7 +68,7 @@ function squatRun(data){
                 setTimeout(function() { poseSoundFlag = true;}, soundDelay+2000);
             }
         }
-        else if(poseSoundFlag && trainerEndFlag && data.state==="NOTHING" && data.visibility){
+        else if(poseSoundFlag && trainerEndFlag && data.state==="NOTHING" && data.visibility && !data.count_check){
                 squatNothingSound.play();
                 poseSoundFlag = false;
                 setTimeout(function() { poseSoundFlag = true;}, soundDelay);
@@ -97,7 +97,7 @@ function pushupRun(data){
             downSoundFlag = true;
         }
         // 자세교정 안내 음성
-        if(poseSoundFlag && trainerEndFlag && data.state==="UP" && data.visibility){
+        if(poseSoundFlag && trainerEndFlag && data.state==="UP" && data.visibility && !data.count_check){
             if(!data.result['hand_state']){
                 handSound.play();
                 poseSoundFlag = false;
@@ -109,7 +109,7 @@ function pushupRun(data){
                 setTimeout(function() { poseSoundFlag = true;}, soundDelay);
             }
         }
-        else if(poseSoundFlag && trainerEndFlag && data.state==="NOTHING" && data.visibility){
+        else if(poseSoundFlag && trainerEndFlag && data.state==="NOTHING" && data.visibility && !data.count_check){
             pushupNothingSound.play();
             poseSoundFlag = false;
             setTimeout(function() { poseSoundFlag = true;}, soundDelay);
