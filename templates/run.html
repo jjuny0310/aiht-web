@@ -121,7 +121,7 @@
                     <b id="text" style="font-size: 1.5em"><strong id="count">현재 횟수 : 0</strong> / <strong>{{ goal_number }}</strong></b>
                       <div id="btn_group">
                           <!--<button id="fullscreen_btn">전체화면</button>-->
-                          <button id="stop_btn" onclick="stop()">종료</button>
+                          <button id="stop_btn" onclick="stopButtonClick()">종료</button>
                       </div>
                   </div>
               </div>
@@ -143,10 +143,17 @@
   <!-- Template Main JS File -->
   <script src="../static/main/js/main.js"></script>
 
-  <!-- Main JS Files -->
-  <script src="../static/main/js/loading.js"></script>
-  <script src="../static/main/js/human_pose.js"></script>
-  <script src="../static/main/js/fullscreen.js"></script>
+  <!-- run JS Files -->
+  <script src="../static/js/run/sound.js"></script>
+  <script src="../static/js/run/exercises.js"></script>
+  <script src="../static/js/run/humanPose.js"></script>
+  <script src="../static/js/run/result.js"></script>
+
+  <!-- display JS Files -->
+  <script src="../static/js/display/fullScreen.js"></script>
+
+  <!-- loading JS Files -->
+  <script src="../static/js/loading/loading.js"></script>
 
   </main>
 
