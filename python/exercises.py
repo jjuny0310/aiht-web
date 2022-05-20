@@ -1,7 +1,7 @@
 from flask import session
 from tensorflow.keras.models import load_model
 import numpy as np
-from math_formula import *
+from .math_formula import *
 
 # 관절 정의
 NOSE = 0
