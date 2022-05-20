@@ -84,6 +84,11 @@ function pushupRun(data){
 
     // 사용자가 지정한 횟수까지 수행
     if(readyFlag && count < data.goal_number) {
+        // DOWN사운드 출력 후 카운트를 못하고 NOTHING으로 상태가 변하면 플래그 초기화
+        if (!downSoundFlag && data.state==="NOTHING"){
+            downSoundFlag = true;
+        }
+
          // DOWN 체크 사운드
         if (downSoundFlag && data.count_check) {
             downSound.play();
