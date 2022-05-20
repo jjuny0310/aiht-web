@@ -125,7 +125,7 @@ function initSetting(){
 }
 
 // 종료 시
-function runEnd(){
+function runEnd(data){
     allSoundStop();
     exerciseEndFlag = false;
     runStop = false;

@@ -201,7 +201,7 @@ function poseOnResults(results) {
             }
             // 종료 시
             if((data.goal_number === count && exerciseEndFlag) || runStop){
-                runEnd();
+                runEnd(data);
                 // allSoundStop();
                 // exerciseEndFlag = false;
                 // runStop = false;
