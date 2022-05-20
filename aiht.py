@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for
 import pymysql
 from werkzeug.security import generate_password_hash, check_password_hash
-from python import main
+from python.exercises import squat_run, pushup_run
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'keyasdqwmmvfknmttit12314230'
@@ -192,14 +192,14 @@ def exercise_analysis():
 
         # 스쿼트 처리
         if exercise_type == "SQUAT":
-            state, squat_result, visibility_check, session['squat_count'] = main.run(exercise_type, pose_landmarks)
+            state, squat_result, visibility_check, session['squat_count'] = squat_run(pose_landmarks)
             return jsonify(exercise_type=exercise_type, state=state, count=session['squat_count'], result=squat_result,
                            correct_pose=session['squat_pose'], visibility=visibility_check, count_check=session['squat_count_check'],
                            goal_number=goal_number)
 
         # 푸쉬업 처리
         elif exercise_type == "PUSH_UP":
-            state, pushup_result, visibility_check, session['pushup_count'] = main.run(exercise_type, pose_landmarks)
+            state, pushup_result, visibility_check, session['pushup_count'] = pushup_run(pose_landmarks)
             return jsonify(exercise_type=exercise_type, state=state, count=session['pushup_count'], result=pushup_result,
                            correct_pose=session['pushup_pose'], visibility=visibility_check, count_check=session['pushup_count_check'],
                            goal_number=goal_number)
