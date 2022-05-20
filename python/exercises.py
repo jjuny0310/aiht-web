@@ -177,13 +177,14 @@ def squat_run(pose_landmarks):
         # 스쿼트 자세 결과 저장
         squat_result = {"ankle_state": ankle_state, 'foot_state': foot_state}
 
-        # 스쿼트 자세 올바른지 판별 및 카운터
-        if foot_state == "pass" and ankle_state == "pass":
+        # 스쿼트 자세 올바른지 판별 및 카운터(단, 한번 찍고 올라올때는 무시)
+        if (foot_state == "pass" and ankle_state == "pass") or session['squat_count_check']:
             session['squat_pose'] = True
         else:
             session['squat_pose'] = False
             session['squat_count_check'] = False
-
+        
+        # 스쿼트 카운트
         if session['squat_pose'] and session[
             'squat_count_check'] and left_leg_angle > squat_up_angle and right_leg_angle > squat_up_angle:
             squat_count += 1
@@ -296,13 +297,14 @@ def pushup_run(pose_landmarks):
             # 푸쉬업(L) 자세 결과 저장
             pushup_result = {'hand_state': hand_state, 'hip_state': hip_state}
 
-            # 푸쉬업(L) 자세 올바른지 판별 및 카운터
-            if hand_state and hip_state:
+            # 푸쉬업(L) 자세 올바른지 판별 및 카운터(단, 한번 찍고 올라올때는 무시)
+            if (hand_state and hip_state) or session['pushup_count_check'] :
                 session['pushup_pose'] = True
             else:
                 session['pushup_pose'] = False
                 session['pushup_count_check'] = False
-
+            
+            # 푸쉬업 카운트
             if session['pushup_pose'] and session['pushup_count_check'] and left_arm_angle > pushup_up_angle:
                 pushup_count += 1
                 session['pushup_count_check'] = False

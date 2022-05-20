@@ -30,10 +30,6 @@ function squatRun(data){
 
     // 사용자가 지정한 횟수까지 수행
     if(readyFlag && count < data.goal_number){
-        // DOWN에서 자세 틀렸을 때 UP에서 downSoundFlag 초기화
-        if(data.state==="UP" && !downSoundFlag){
-            downSoundFlag = true
-        }
          // DOWN 체크 사운드
         if(downSoundFlag && data.count_check){
             downSound.play();
@@ -88,10 +84,6 @@ function pushupRun(data){
 
     // 사용자가 지정한 횟수까지 수행
     if(readyFlag && count < data.goal_number) {
-        // DOWN에서 자세 틀렸을 때 UP에서 downSoundFlag 초기화
-        if(data.state==="UP" && !downSoundFlag){
-            downSoundFlag = true
-        }
          // DOWN 체크 사운드
         if (downSoundFlag && data.count_check) {
             downSound.play();
