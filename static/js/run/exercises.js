@@ -15,7 +15,7 @@ var runStop = false;
 
 LoadingWithMask();
 
-// 스쿼트 처리
+// 스쿼트 피드백
 function squatRun(data){
     correct_pose = data.correct_pose;
     exerciseType = "스쿼트"
@@ -65,7 +65,7 @@ function squatRun(data){
     }
 }
 
-// 푸쉬업 처리
+// 푸쉬업 피드백
 function pushupRun(data){
     correct_pose = data.correct_pose;
     exerciseType = "푸쉬업"
@@ -104,7 +104,7 @@ function pushupRun(data){
     }
 }
 
-// 로딩 완료 시 초기세팅
+// 로딩 완료 시 초기 설정
 function initSetting(){
     closeLoadingWithMask();
     loadingSound.pause();
