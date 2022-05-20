@@ -16,7 +16,7 @@ var runStop = false;
 LoadingWithMask();
 
 // 스쿼트 처리
-function squatRun(){
+function squatRun(data){
     correct_pose = data.correct_pose;
     exerciseType = "스쿼트"
 
@@ -66,7 +66,7 @@ function squatRun(){
 }
 
 // 푸쉬업 처리
-function pushupRun(){
+function pushupRun(data){
     correct_pose = data.correct_pose;
     exerciseType = "푸쉬업"
 
